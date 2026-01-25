@@ -1,65 +1,61 @@
-
-
-import { useEffect, useState } from "react";
-import { loadCards } from "./data/loadCards";
-
-const CARDS_URL = `${import.meta.env.BASE_URL}data/cards.csv`;
+import { useEffect, useMemo, useState } from "react";
+import { PRESET_DEFS, PRESET_ORDER } from "./data/presets";
+import { ALL_CSV_FILES } from "./data/csvSources";
+import { loadManyCsvFiles } from "./services/loadCsv";
+import { applyFilters } from "./utils/applyFilters";
 
 export default function App() {
-  const [cards, setCards] = useState([]);
-  const [idx, setIdx] = useState(0);
-  const [error, setError] = useState(null);
+  const [rows, setRows] = useState([]);
+  const [activePresetId, setActivePresetId] = useState(null);
 
+  // Load all CSV files (combined dataset)
   useEffect(() => {
-    let cancelled = false;
-
-    (async () => {
-      try {
-        const data = await loadCards(CARDS_URL);
-        if (!cancelled) {
-          setCards(data);
-          console.log("Loaded cards:", data.length);
-          console.log("CSV columns:", Object.keys(data[0] || {}));
-          console.log("First row:", data[0]);
-        }
-      } catch (e) {
-        if (!cancelled) setError(e);
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-      
-    };
+    loadManyCsvFiles(ALL_CSV_FILES)
+      .then(setRows)
+      .catch((e) => console.error(e));
   }, []);
 
-  if (error) {
-    return (
-      <div style={{ padding: 16 }}>
-        <h2>CSV load failed</h2>
-        <pre>{String(error.message || error)}</pre>
-        <div>URL tried: {CARDS_URL}</div>
-      </div>
-    );
-  }
+  const preset = activePresetId ? PRESET_DEFS[activePresetId] : null;
 
-  if (!cards.length) return <div style={{ padding: 16 }}>Loading cards…</div>;
-
-  const card = cards[idx];
+  const filtered = useMemo(() => {
+    return applyFilters(rows, { preset });
+  }, [rows, preset]);
 
   return (
-    <div style={{ padding: 16 }}>
-      <div style={{ marginBottom: 12 }}>
-        Card {idx + 1} / {cards.length}
+    <div style={{ padding: 16, fontFamily: "system-ui" }}>
+      <h1>MutationTrainer React (Step 1)</h1>
+
+      <p>
+        Loaded rows: <b>{rows.length}</b> | After filters: <b>{filtered.length}</b>
+      </p>
+
+      <h2>Preset packs</h2>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        {PRESET_ORDER.map((id) => {
+          const isOn = id === activePresetId;
+          return (
+            <button
+              key={id}
+              onClick={() => setActivePresetId(isOn ? null : id)}
+              style={{
+                padding: "8px 12px",
+                borderRadius: 999,
+                border: "1px solid #ccc",
+                cursor: "pointer",
+                background: isOn ? "#111" : "#fff",
+                color: isOn ? "#fff" : "#111",
+              }}
+            >
+              {PRESET_DEFS[id].title}
+            </button>
+          );
+        })}
       </div>
 
-      <pre style={{ whiteSpace: "pre-wrap" }}>
-        {JSON.stringify(card, null, 2)}
+      <h2 style={{ marginTop: 16 }}>First 3 cards (debug)</h2>
+      <pre style={{ whiteSpace: "pre-wrap", fontSize: 12 }}>
+        {JSON.stringify(filtered.slice(0, 3), null, 2)}
       </pre>
-
-      <button onClick={() => setIdx((i) => (i + 1) % cards.length)} style={{ marginTop: 12 }}>
-        Next
-      </button>
     </div>
   );
 }

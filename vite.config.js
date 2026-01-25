@@ -1,4 +1,4 @@
-impor:contentReference[oaicite:12]{index=12}m 'vite'
+import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
