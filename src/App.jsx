@@ -5,6 +5,8 @@ import { loadManyCsvFiles } from "./services/loadCsv";
 
 import Header from "./components/Header";
 import PresetPacks from "./components/PresetPacks";
+import ModeToggle from "./components/ModeToggle";
+import TrainerCard from "./components/TrainerCard";
 import DebugPanel from "./components/DebugPanel";
 
 function AppInner() {
@@ -31,7 +33,13 @@ function AppInner() {
     <div style={{ padding: 16, fontFamily: "system-ui" }}>
       <Header />
       <PresetPacks />
-      <DebugPanel />
+      <ModeToggle />
+      <TrainerCard />
+
+      <details style={{ marginTop: 16 }}>
+        <summary style={{ cursor: "pointer" }}>Show debug</summary>
+        <DebugPanel />
+      </details>
     </div>
   );
 }
