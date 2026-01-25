@@ -19,71 +19,70 @@ const KEY_MAP = {
   "Why-Cym": "whyCym",
 };
 
-function normaliseRow(row, filename) {
-  const out = { __source: filename };
+// Normalise for comparisons: lowercase and remove non-alphanumerics
+function canon(s) {
+  return (s ?? "")
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ""); // "Place names" -> "placenames"
+}
 
-  for (const [k, v] of Object.entries(row)) {
-    const cleanVal = typeof v === "string" ? v.trim() : v;
+// Split cells that may contain multiple tokens: un|dwy, un, dwy, un/dwy etc
+function tokens(s) {
+  const raw = (s ?? "").toString().trim();
+  if (!raw) return [];
+  return raw
+    .split(/[\s,;|/]+/g)
+    .map(canon)
+    .filter(Boolean);
+}
 
-    // Keep the original key (optional but handy for debugging)
-    out[k] = cleanVal;
+function matchesToken(cellValue, allowedSet) {
+  // allowedSet contains canonical tokens (e.g. "un", "dwy")
+  const t = tokens(cellValue);
+  return t.some((x) => allowedSet.has(x));
+}
 
-    // Also write the canonical key if we have a mapping
-    const mapped = KEY_MAP[k];
-    if (mapped) out[mapped] = cleanVal;
+function matchesCategory(cellValue, presetCategory) {
+  const c = canon(cellValue);
+
+  // Allow a couple of common variants/synonyms
+  const preset = canon(presetCategory);
+
+  // e.g. preset "PlaceName" should also match "placenames", "place-names", "place names"
+  if (preset === "placename") {
+    return c === "placename" || c === "placenames" || c === "placenamecards";
+  }
+  if (preset === "article") {
+    return c === "article" || c === "articles";
   }
 
-  return out;
-}
-
-export async function loadCsvFromPublicData(filename) {
-  const url = `/data/${filename}`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.status}`);
-
-  const csvText = await res.text();
-
-  const parsed = Papa.parse(csvText, {
-    header: true,
-    skipEmptyLines: true,
-  });
-
-  if (parsed.errors?.length) {
-    console.warn(`CSV parse warnings for ${filename}`, parsed.errors);
-  }
-
-  return parsed.data.map((row) => normaliseRow(row, filename));
-}
-
-export async function loadManyCsvFiles(filenames) {
-  const chunks = await Promise.all(filenames.map(loadCsvFromPublicData));
-  return chunks.flat();
-}
-
-// src/utils/applyFilters.js
-
-function norm(s) {
-  return (s ?? "").toString().trim().toLowerCase();
+  return c === preset;
 }
 
 export function applyFilters(rows, state) {
   let out = [...rows];
   const preset = state.preset;
 
+  // 1) Preset sourceScope (restrict to certain CSV files)
   if (preset?.sourceScope?.length) {
-    const allowed = new Set(preset.sourceScope.map(norm));
-    out = out.filter((r) => allowed.has(norm(r.__source)));
+    const allowed = new Set(preset.sourceScope.map(canon));
+    out = out.filter((r) => allowed.has(canon(r.__source)));
   }
 
+  // 2) Preset category
   if (preset?.category) {
-    const c = norm(preset.category);
-    out = out.filter((r) => norm(r.category) === c);
+    out = out.filter((r) => matchesCategory(r.category, preset.category));
   }
 
+  // 3) Preset triggers
   if (preset?.triggers?.length) {
-    const allowed = new Set(preset.triggers.map(norm));
-    out = out.filter((r) => allowed.has(norm(r.trigger)));
+    const allowedTriggers = new Set(preset.triggers.map(canon));
+    out = out.filter((r) => matchesToken(r.trigger, allowedTriggers));
   }
+
+  // (User filters can be added back in later)
 
   return out;
 }

@@ -1,10 +1,51 @@
 // src/services/loadCsv.js
 import Papa from "papaparse";
 
-/**
- * Load a CSV from /data/FILE.csv and return rows.
- * Adds __source so we can later filter by sourceScope like the old app.
- */
+// Canonicalise header keys so we can match even if the CSV has BOM, spaces, casing differences, etc.
+function canonKey(k) {
+  return (k ?? "")
+    .toString()
+    .replace(/^\uFEFF/, "") // strip BOM if present
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ""); // remove spaces/punctuation
+}
+
+// Map canonicalised CSV headers -> canonical row fields used by the React app
+const KEY_MAP_CANON = {
+  cardid: "cardId",
+  rulefamily: "family",
+  rulecategory: "category",
+  trigger: "trigger",
+  base: "base",
+  translate: "translate",
+  wordcategory: "wordCategory",
+  before: "before",
+  after: "after",
+  answer: "answer",
+  outcome: "outcome",
+  translatesent: "translateSent",
+  why: "why",
+  whycym: "whyCym", // handles "Why-Cym" or "Why Cym"
+};
+
+function normaliseRow(row, filename) {
+  const out = { __source: filename };
+
+  for (const [rawKey, rawVal] of Object.entries(row)) {
+    const cleanVal = typeof rawVal === "string" ? rawVal.trim() : rawVal;
+
+    // Keep original key (useful for debugging)
+    out[rawKey] = cleanVal;
+
+    // Also map to canonical key
+    const mapped = KEY_MAP_CANON[canonKey(rawKey)];
+    if (mapped) out[mapped] = cleanVal;
+  }
+
+  return out;
+}
+
 export async function loadCsvFromPublicData(filename) {
   const url = `/data/${filename}`;
   const res = await fetch(url);
@@ -21,24 +62,15 @@ export async function loadCsvFromPublicData(filename) {
     console.warn(`CSV parse warnings for ${filename}`, parsed.errors);
   }
 
-  // Attach __source and also trim string fields
-  const rows = parsed.data.map((row) => {
-    const clean = {};
-    for (const [k, v] of Object.entries(row)) {
-      clean[k] = typeof v === "string" ? v.trim() : v;
-    }
-    clean.__source = filename;
-    return clean;
-  });
+  // Filter out any completely empty rows Papa sometimes returns
+  const rows = (parsed.data || []).filter((r) =>
+    r && Object.values(r).some((v) => (v ?? "").toString().trim() !== "")
+  );
 
-  return rows;
+  return rows.map((row) => normaliseRow(row, filename));
 }
 
-/**
- * Load multiple CSV files and merge rows.
- */
 export async function loadManyCsvFiles(filenames) {
   const chunks = await Promise.all(filenames.map(loadCsvFromPublicData));
   return chunks.flat();
 }
-
