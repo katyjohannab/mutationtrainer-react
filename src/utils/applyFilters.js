@@ -1,60 +1,88 @@
+// src/services/loadCsv.js
+import Papa from "papaparse";
+
+// Map your CSV headers -> canonical keys used in the React app
+const KEY_MAP = {
+  CardId: "cardId",
+  RuleFamily: "family",
+  RuleCategory: "category",
+  Trigger: "trigger",
+  Base: "base",
+  Translate: "translate",
+  WordCategory: "wordCategory",
+  Before: "before",
+  After: "after",
+  Answer: "answer",
+  Outcome: "outcome",
+  TranslateSent: "translateSent",
+  Why: "why",
+  "Why-Cym": "whyCym",
+};
+
+function normaliseRow(row, filename) {
+  const out = { __source: filename };
+
+  for (const [k, v] of Object.entries(row)) {
+    const cleanVal = typeof v === "string" ? v.trim() : v;
+
+    // Keep the original key (optional but handy for debugging)
+    out[k] = cleanVal;
+
+    // Also write the canonical key if we have a mapping
+    const mapped = KEY_MAP[k];
+    if (mapped) out[mapped] = cleanVal;
+  }
+
+  return out;
+}
+
+export async function loadCsvFromPublicData(filename) {
+  const url = `/data/${filename}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.status}`);
+
+  const csvText = await res.text();
+
+  const parsed = Papa.parse(csvText, {
+    header: true,
+    skipEmptyLines: true,
+  });
+
+  if (parsed.errors?.length) {
+    console.warn(`CSV parse warnings for ${filename}`, parsed.errors);
+  }
+
+  return parsed.data.map((row) => normaliseRow(row, filename));
+}
+
+export async function loadManyCsvFiles(filenames) {
+  const chunks = await Promise.all(filenames.map(loadCsvFromPublicData));
+  return chunks.flat();
+}
+
 // src/utils/applyFilters.js
 
 function norm(s) {
   return (s ?? "").toString().trim().toLowerCase();
 }
 
-/**
- * Apply preset layer first, then user filters.
- *
- * state fields expected:
- * - preset: { sourceScope?, triggers?, category? } OR null
- * - families: Set<string> (optional)
- * - categories: Set<string> (optional)
- * - triggerQuery: string (optional)
- */
 export function applyFilters(rows, state) {
   let out = [...rows];
-
   const preset = state.preset;
 
-  // 1) Preset sourceScope (restrict to certain CSV files)
   if (preset?.sourceScope?.length) {
     const allowed = new Set(preset.sourceScope.map(norm));
     out = out.filter((r) => allowed.has(norm(r.__source)));
   }
 
-  // 2) Preset category
   if (preset?.category) {
     const c = norm(preset.category);
     out = out.filter((r) => norm(r.category) === c);
   }
 
-  // 3) Preset triggers
   if (preset?.triggers?.length) {
-    const allowedTriggers = new Set(preset.triggers.map(norm));
-    out = out.filter((r) => allowedTriggers.has(norm(r.trigger)));
-  }
-
-  // ---- user filters (later you’ll hook these to the UI) ----
-
-  // Families (Soft / Aspirate / Nasal / None), if your CSV has a field like family or mutationType
-  if (state.families && state.families.size > 0) {
-    const allowed = new Set([...state.families].map(norm));
-    // change 'family' below if your CSV column name differs
-    out = out.filter((r) => allowed.has(norm(r.family)));
-  }
-
-  // Categories (user-selected)
-  if (state.categories && state.categories.size > 0) {
-    const allowed = new Set([...state.categories].map(norm));
-    out = out.filter((r) => allowed.has(norm(r.category)));
-  }
-
-  // Trigger query (free text)
-  if (state.triggerQuery && norm(state.triggerQuery).length > 0) {
-    const q = norm(state.triggerQuery);
-    out = out.filter((r) => norm(r.trigger).includes(q));
+    const allowed = new Set(preset.triggers.map(norm));
+    out = out.filter((r) => allowed.has(norm(r.trigger)));
   }
 
   return out;
