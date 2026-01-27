@@ -30,9 +30,9 @@ export default function PracticeCard({ row, onResult }) {
 
   const answer = row?.answer ?? row?.Answer ?? "";
 
-  // Explanations are baked into CSV:
+  // Explanations 
   // English: Why
-  // Welsh:   Why-Cym  (normalised to whyCym by your loader)
+  // Welsh:   Why-Cym  (normalised to whyCym by loader)
   const whyEn = row?.why ?? row?.Why ?? "";
   const whyCy = row?.whyCym ?? row?.["Why-Cym"] ?? row?.WhyCym ?? "";
 
@@ -74,8 +74,15 @@ export default function PracticeCard({ row, onResult }) {
       <div style={{ fontSize: 18, lineHeight: 1.5 }}>
         <span>{sent.before}</span>
         <span style={{ fontWeight: 700, padding: "0 6px" }}>
-          {revealed ? answer : "_____"}
+            {revealed ? (
+                answer
+             ) : (
+                <span style={{ color: "#666", fontStyle: "italic" }}>
+                {sent.base || "_____"}
+                </span>
+            )}
         </span>
+
         <span>{sent.after}</span>
       </div>
 

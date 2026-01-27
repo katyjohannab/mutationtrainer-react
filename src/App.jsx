@@ -5,10 +5,15 @@ import { loadManyCsvFiles } from "./services/loadCsv";
 import { applyFilters } from "./utils/applyFilters";
 
 import PracticeCard from "./components/PracticeCard";
+import LanguageToggle from "./components/LanguageToggle";
+import { useI18n } from "./i18n/I18nContext";
+
 import { loadLeitnerMap, updateLeitner } from "./utils/leitner";
 import { getCardKey, pickRandomIndex, pickSmartIndex } from "./utils/pickNext";
 
 export default function App() {
+  const { t } = useI18n();
+
   const [rows, setRows] = useState([]);
   const [activePresetId, setActivePresetId] = useState(null);
 
@@ -17,11 +22,9 @@ export default function App() {
 
   const [currentIdx, setCurrentIdx] = useState(-1);
 
-  // keep a small “recently shown” set to avoid annoying repeats in random mode
+  // avoid annoying repeats in random mode
   const recentRef = useRef([]);
-  const recentSet = useMemo(() => new Set(recentRef.current), [currentIdx]);
 
-  // Load all CSV files (combined dataset)
   useEffect(() => {
     loadManyCsvFiles(ALL_CSV_FILES)
       .then(setRows)
@@ -34,25 +37,28 @@ export default function App() {
     return applyFilters(rows, { preset });
   }, [rows, preset]);
 
-  // choose an initial card whenever the deck changes
+  // choose an initial card whenever the deck or mode changes
   useEffect(() => {
     if (!filtered.length) {
       setCurrentIdx(-1);
       return;
     }
-    const idx = mode === "smart"
-      ? pickSmartIndex(filtered, leitnerMap)
-      : pickRandomIndex(filtered, new Set());
+
+    const idx =
+      mode === "smart"
+        ? pickSmartIndex(filtered, leitnerMap)
+        : pickRandomIndex(filtered, new Set());
+
     setCurrentIdx(idx);
     recentRef.current = [];
-  }, [filtered, mode]); // intentionally not depending on leitnerMap to avoid jumpiness
+    // intentionally not depending on leitnerMap to avoid jumpiness
+  }, [filtered, mode]);
 
   const currentRow = currentIdx >= 0 ? filtered[currentIdx] : null;
 
   function pushRecent(key) {
     const arr = recentRef.current;
     arr.push(key);
-    // cap to last ~12
     while (arr.length > 12) arr.shift();
     recentRef.current = arr;
   }
@@ -60,28 +66,29 @@ export default function App() {
   function pickNext(nextLeitnerMap) {
     if (!filtered.length) return;
 
-    const idx = mode === "smart"
-      ? pickSmartIndex(filtered, nextLeitnerMap)
-      : pickRandomIndex(filtered, new Set(recentRef.current));
+    const idx =
+      mode === "smart"
+        ? pickSmartIndex(filtered, nextLeitnerMap)
+        : pickRandomIndex(filtered, new Set(recentRef.current));
 
     setCurrentIdx(idx);
   }
 
-  function onResult({ result, guess, expected }) {
-    // "next" is just navigation; do not update Leitner
+  function onResult({ result }) {
+    // "next" is navigation only; do not update Leitner
     if (result === "next") {
       pickNext(leitnerMap);
       return;
     }
 
-    // update Leitner for smart scheduling (also harmless in random mode)
+    // update Leitner for scheduling (also fine in random mode)
     const key = getCardKey(currentRow, currentIdx);
     pushRecent(key);
 
-    const nextMap = updateLeitner(leitnerMap, key, result === "wrong" ? "wrong" : result);
+    const nextMap = updateLeitner(leitnerMap, key, result);
     setLeitnerMap(nextMap);
 
-    // move on after any “terminal” result
+    // move on after any terminal result
     if (result === "correct" || result === "wrong" || result === "revealed" || result === "skipped") {
       pickNext(nextMap);
     }
@@ -89,31 +96,49 @@ export default function App() {
 
   return (
     <div style={{ padding: 16, fontFamily: "system-ui" }}>
-      <h1>MutationTrainer React</h1>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
+      <h1 style={{ margin: 0 }}>{t("appTitle")}</h1>
+       <LanguageToggle />
+      </div>
 
       <div style={{ marginTop: 10, display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
         <div>
-          <b>Mode:</b>{" "}
+          <b>{t("mode")}:</b>{" "}
           <button
             onClick={() => setMode("random")}
-            style={{ padding: "6px 10px", borderRadius: 999, marginRight: 6, background: mode === "random" ? "#111" : "#fff", color: mode === "random" ? "#fff" : "#111" }}
+            style={{
+              padding: "6px 10px",
+              borderRadius: 999,
+              marginRight: 6,
+              border: "1px solid #ccc",
+              cursor: "pointer",
+              background: mode === "random" ? "#111" : "#fff",
+              color: mode === "random" ? "#fff" : "#111",
+            }}
           >
-            Random
+            {t("random")}
           </button>
           <button
             onClick={() => setMode("smart")}
-            style={{ padding: "6px 10px", borderRadius: 999, background: mode === "smart" ? "#111" : "#fff", color: mode === "smart" ? "#fff" : "#111" }}
+            style={{
+              padding: "6px 10px",
+              borderRadius: 999,
+              border: "1px solid #ccc",
+              cursor: "pointer",
+              background: mode === "smart" ? "#111" : "#fff",
+              color: mode === "smart" ? "#fff" : "#111",
+            }}
           >
-            Smart (Leitner)
+            {t("smart")}
           </button>
         </div>
 
         <div>
-          Loaded: <b>{rows.length}</b> | Deck: <b>{filtered.length}</b>
+          {t("loaded")}: <b>{rows.length}</b> | {t("deck")}: <b>{filtered.length}</b>
         </div>
       </div>
 
-      <h2 style={{ marginTop: 16 }}>Preset packs</h2>
+      <h2 style={{ marginTop: 16 }}>{t("presetPacks")}</h2>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
         {PRESET_ORDER.map((id) => {
           const isOn = id === activePresetId;
@@ -136,10 +161,10 @@ export default function App() {
         })}
       </div>
 
-      <h2 style={{ marginTop: 16 }}>Practice</h2>
+      <h2 style={{ marginTop: 16 }}>{t("practice")}</h2>
       {!currentRow ? (
         <div style={{ marginTop: 12, padding: 12, border: "1px solid #ddd", borderRadius: 12 }}>
-          No cards available. Check your filters/preset.
+          {t("noCards")}
         </div>
       ) : (
         <PracticeCard row={currentRow} onResult={onResult} />
