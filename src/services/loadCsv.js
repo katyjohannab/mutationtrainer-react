@@ -47,28 +47,24 @@ function normaliseRow(row, filename) {
 }
 
 export async function loadCsvFromPublicData(filename) {
-  const url = new URL(`data/${filename}`, import.meta.env.BASE_URL).toString();
+  const base = import.meta.env.BASE_URL || "/";
+  const url = `${base}data/${filename}`;
+
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.status}`);
 
   const csvText = await res.text();
+  const parsed = Papa.parse(csvText, { header: true, skipEmptyLines: true });
 
-  const parsed = Papa.parse(csvText, {
-    header: true,
-    skipEmptyLines: true,
-  });
+  if (parsed.errors?.length) console.warn(`CSV parse warnings for ${filename}`, parsed.errors);
 
-  if (parsed.errors?.length) {
-    console.warn(`CSV parse warnings for ${filename}`, parsed.errors);
-  }
-
-  // Filter out any completely empty rows Papa sometimes returns
   const rows = (parsed.data || []).filter((r) =>
     r && Object.values(r).some((v) => (v ?? "").toString().trim() !== "")
   );
 
   return rows.map((row) => normaliseRow(row, filename));
 }
+
 
 export async function loadManyCsvFiles(filenames) {
   const chunks = await Promise.all(filenames.map(loadCsvFromPublicData));
