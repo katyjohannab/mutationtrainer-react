@@ -37,23 +37,6 @@ export default function App() {
     return applyFilters(rows, { preset });
   }, [rows, preset]);
 
-  // choose an initial card whenever the deck or mode changes
-  useEffect(() => {
-    if (!filtered.length) {
-      setCurrentIdx(-1);
-      return;
-    }
-
-    const idx =
-      mode === "smart"
-        ? pickSmartIndex(filtered, leitnerMap)
-        : pickRandomIndex(filtered, new Set());
-
-    setCurrentIdx(idx);
-    recentRef.current = [];
-    // intentionally not depending on leitnerMap to avoid jumpiness
-  }, [filtered, mode]);
-
   const currentRow = currentIdx >= 0 ? filtered[currentIdx] : null;
 
   function pushRecent(key) {
@@ -74,34 +57,67 @@ export default function App() {
     setCurrentIdx(idx);
   }
 
+  // choose an initial card whenever the deck or mode changes
+  useEffect(() => {
+    if (!filtered.length) {
+      setCurrentIdx(-1);
+      return;
+    }
+
+    const idx =
+      mode === "smart"
+        ? pickSmartIndex(filtered, leitnerMap)
+        : pickRandomIndex(filtered, new Set());
+
+    setCurrentIdx(idx);
+    recentRef.current = [];
+    // intentionally not depending on leitnerMap to avoid jumpiness
+  }, [filtered, mode, leitnerMap]);
+
   function onResult({ result }) {
-    // "next" is navigation only; do not update Leitner
+    // Only "next" advances. Everything else just updates Leitner.
     if (result === "next") {
       pickNext(leitnerMap);
       return;
     }
 
-    // update Leitner for scheduling (also fine in random mode)
+    // If for any reason we don't have a current card, just ignore.
+    if (!currentRow) return;
+
+    // Update Leitner scheduling (fine in both random & smart mode)
     const key = getCardKey(currentRow, currentIdx);
     pushRecent(key);
 
     const nextMap = updateLeitner(leitnerMap, key, result);
     setLeitnerMap(nextMap);
 
-    // move on after any terminal result
-    if (result === "correct" || result === "wrong" || result === "revealed" || result === "skipped") {
-      pickNext(nextMap);
-    }
+    // IMPORTANT: DO NOT auto-advance here.
   }
 
   return (
     <div style={{ padding: 16, fontFamily: "system-ui" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
-      <h1 style={{ margin: 0 }}>{t("appTitle")}</h1>
-       <LanguageToggle />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 12,
+          flexWrap: "wrap",
+        }}
+      >
+        <h1 style={{ margin: 0 }}>{t("appTitle")}</h1>
+        <LanguageToggle />
       </div>
 
-      <div style={{ marginTop: 10, display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+      <div
+        style={{
+          marginTop: 10,
+          display: "flex",
+          gap: 10,
+          flexWrap: "wrap",
+          alignItems: "center",
+        }}
+      >
         <div>
           <b>{t("mode")}:</b>{" "}
           <button
@@ -134,7 +150,8 @@ export default function App() {
         </div>
 
         <div>
-          {t("loaded")}: <b>{rows.length}</b> | {t("deck")}: <b>{filtered.length}</b>
+          {t("loaded")}: <b>{rows.length}</b> | {t("deck")}:{" "}
+          <b>{filtered.length}</b>
         </div>
       </div>
 
@@ -163,7 +180,14 @@ export default function App() {
 
       <h2 style={{ marginTop: 16 }}>{t("practice")}</h2>
       {!currentRow ? (
-        <div style={{ marginTop: 12, padding: 12, border: "1px solid #ddd", borderRadius: 12 }}>
+        <div
+          style={{
+            marginTop: 12,
+            padding: 12,
+            border: "1px solid #ddd",
+            borderRadius: 12,
+          }}
+        >
           {t("noCards")}
         </div>
       ) : (
@@ -172,3 +196,4 @@ export default function App() {
     </div>
   );
 }
+

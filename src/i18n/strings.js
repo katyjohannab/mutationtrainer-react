@@ -26,8 +26,10 @@ export const STRINGS = {
     revealed: "👁️ Datgelwyd",
     skipped: "⏭️ Hepgorwyd",
     expected: "Disgwylwyd",
-    notQuite: "❌ Ddim yn hollol"
+    notQuite: "❌ Ddim yn hollol",
+    placeholderType: "Teipiwch y ffurf wedi treiglo…"
   },
+
   en: {
     appTitle: "Mutation Trainer",
     mode: "Mode",
@@ -54,5 +56,6 @@ export const STRINGS = {
     revealed: "👁️ Revealed",
     skipped: "⏭️ Skipped",
     notQuite: "❌ Not quite",
+    placeholderType: "Type the mutated form…"
   },
 };

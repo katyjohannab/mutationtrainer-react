@@ -30,59 +30,69 @@ export default function PracticeCard({ row, onResult }) {
 
   const answer = row?.answer ?? row?.Answer ?? "";
 
-  // Explanations 
-  // English: Why
-  // Welsh:   Why-Cym  (normalised to whyCym by loader)
+  // explanations baked into CSV
   const whyEn = row?.why ?? row?.Why ?? "";
   const whyCy = row?.whyCym ?? row?.["Why-Cym"] ?? row?.WhyCym ?? "";
 
-  // Preferred explanation depends on lang, but we fall back if missing.
-  const explanation =
-    lang === "cy" ? (whyCy || whyEn) : (whyEn || whyCy);
+  // pick by language (fallback if missing)
+  const explanation = lang === "cy" ? (whyCy || whyEn) : (whyEn || whyCy);
 
-  // English translation sentence: only show in EN mode (recommended)
+  // English translation sentence: show only in EN mode
   const translate = row?.translateSent ?? row?.TranslateSent ?? "";
   const showTranslate = lang === "en" && Boolean(translate);
 
+  // v1 hint: first letter of correct answer (without revealing full answer)
+  const firstLetter = (String(answer).trim()[0] || "").toUpperCase();
+  const hintText = firstLetter ? `${t("hint")}: ${firstLetter}…` : "";
+
+  const disabledInput = revealed; // once revealed, lock it
+
+  const goNext = () => {
+    onResult?.({ result: "next" });
+  };
+
   const onCheck = () => {
+    // if already revealed, treat as Next (nice UX)
+    if (revealed) {
+      goNext();
+      return;
+    }
+
     const ok = checkAnswer(row, guess);
     const result = ok ? "correct" : "wrong";
+
+    setRevealed(true);
     setLast(result);
     onResult?.({ result, guess, expected: answer });
   };
 
   const onReveal = () => {
+    if (revealed) return;
     setRevealed(true);
     setLast("revealed");
     onResult?.({ result: "revealed", guess, expected: answer });
   };
 
   const onSkip = () => {
+    if (revealed) return;
     setRevealed(true);
     setLast("skipped");
     onResult?.({ result: "skipped", guess: "", expected: answer });
   };
-
-  const onNext = () => {
-    onResult?.({ result: "next" });
-  };
-
-  const disabledInput = revealed || last === "correct";
 
   return (
     <div style={{ border: "1px solid #ddd", borderRadius: 12, padding: 16, marginTop: 12 }}>
       <div style={{ fontSize: 18, lineHeight: 1.5 }}>
         <span>{sent.before}</span>
         <span style={{ fontWeight: 700, padding: "0 6px" }}>
-            {revealed ? (
-                answer
-             ) : (
-                <span style={{ color: "#666", fontStyle: "italic" }}>
-                {sent.base || "_____"}
-                </span>
-            )}
+          {revealed ? (
+            answer
+          ) : (
+            <span style={{ color: "#666", fontStyle: "italic" }}>
+              {sent.base || "_____"}
+            </span>
+          )}
         </span>
-
         <span>{sent.after}</span>
       </div>
 
@@ -97,7 +107,7 @@ export default function PracticeCard({ row, onResult }) {
           value={guess}
           onChange={(e) => setGuess(e.target.value)}
           disabled={disabledInput}
-          placeholder={t("placeholderType")}
+          placeholder={t("placeholderType") ?? "Type the mutated form…"}
           style={{
             padding: "10px 12px",
             borderRadius: 10,
@@ -106,12 +116,16 @@ export default function PracticeCard({ row, onResult }) {
             opacity: disabledInput ? 0.7 : 1,
           }}
           onKeyDown={(e) => {
-            if (e.key === "Enter") onCheck();
+            if (e.key === "Enter") {
+              // Enter: Check when not revealed, Next when revealed
+              onCheck();
+            }
           }}
         />
 
-        <button onClick={onCheck} disabled={disabledInput} style={{ padding: "10px 12px", borderRadius: 10 }}>
-          {t("check")}
+        {/* Check becomes Next after revealed */}
+        <button onClick={onCheck} style={{ padding: "10px 12px", borderRadius: 10 }}>
+          {revealed ? t("next") : t("check")}
         </button>
 
         <button onClick={() => setShowHint((s) => !s)} style={{ padding: "10px 12px", borderRadius: 10 }}>
@@ -126,25 +140,35 @@ export default function PracticeCard({ row, onResult }) {
           {t("skip")}
         </button>
 
-        <button onClick={onNext} style={{ padding: "10px 12px", borderRadius: 10 }}>
+        {/* Explicit Next button too (optional but clear) */}
+        <button onClick={goNext} disabled={!revealed} style={{ padding: "10px 12px", borderRadius: 10 }}>
           {t("next")}
         </button>
       </div>
 
-      {showHint && explanation ? (
-        <div style={{ marginTop: 12, padding: 12, borderRadius: 10, background: "#f7f7f7" }}>
+      {/* Hint (first-letter) */}
+      {showHint && hintText ? (
+        <div style={{ marginTop: 10, padding: 10, borderRadius: 10, background: "#f7f7f7" }}>
+          {hintText}
+        </div>
+      ) : null}
+
+      {/* Explanation: show only once revealed OR when user asks for hint  */}
+      {revealed && explanation ? (
+        <div style={{ marginTop: 10, padding: 12, borderRadius: 10, background: "#f7f7f7" }}>
           <div>
             <b>{t("why")}:</b> {explanation}
           </div>
         </div>
       ) : null}
 
+      {/* Feedback */}
       {last ? (
         <div style={{ marginTop: 10, fontWeight: 600 }}>
           {last === "correct" ? t("correct") : null}
           {last === "wrong" ? `${t("notQuite")} (${t("expected")}: ${answer})` : null}
-          {last === "revealed" ? `${t("revealed")}: ${answer}` : null}
-          {last === "skipped" ? `${t("skipped")} (${t("expected")}: ${answer})` : null}
+          {last === "revealed" ? `${t("revealed") ?? "👁️ Revealed"}: ${answer}` : null}
+          {last === "skipped" ? `${t("skipped") ?? "⏭️ Skipped"} (${t("expected")}: ${answer})` : null}
         </div>
       ) : null}
     </div>
