@@ -47,7 +47,7 @@ function normaliseRow(row, filename) {
 }
 
 export async function loadCsvFromPublicData(filename) {
-  const url = `/data/${filename}`;
+  const url = new URL(`data/${filename}`, import.meta.env.BASE_URL).toString();
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.status}`);
 
