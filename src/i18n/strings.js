@@ -9,25 +9,39 @@ export const STRINGS = {
     practice: "Ymarfer",
     loaded: "Wedi llwytho",
     deck: "Pecyn",
+
     check: "Gwirio",
     hint: "Awgrym",
     reveal: "Datgelu",
     skip: "Hepgor",
     next: "Nesaf",
+
     typeMode: "Teipio",
     tapMode: "Tapio",
     inputMode: "Dull ateb",
+
     noCards: "Dim cardiau ar gael. Gwiriwch eich hidlwyr/pecyn.",
+
     correct: "✅ Iawn",
+    notQuite: "❌ Ddim yn hollol",
     expected: "Disgwylwyd",
+
     showDebug: "Dangos dadfygio",
     why: "Pam",
+
     placeholderType: "Teipiwch y ffurf wedi treiglo…",
     revealed: "👁️ Datgelwyd",
     skipped: "⏭️ Hepgorwyd",
-    expected: "Disgwylwyd",
-    notQuite: "❌ Ddim yn hollol",
-    placeholderType: "Teipiwch y ffurf wedi treiglo…"
+
+    // Preset pack titles + descriptions
+    "preset.starterPreps.title": "Pecynnau dechrau",
+    "preset.starterPreps.desc": "Set tywysedig i gynhesu.",
+    "preset.numbers1to10.title": "Rhifau 1–10",
+    "preset.numbers1to10.desc": "Cardiau sy’n cael eu sbarduno gan rifau 1–10 ar draws pob CSV.",
+    "preset.articles.title": "Y fannod",
+    "preset.articles.desc": "Ffocws ar y fannod (Sylfaen).",
+    "preset.placeNames.title": "Enwau lleoedd",
+    "preset.placeNames.desc": "Cardiau enwau lleoedd ar draws pob CSV.",
   },
 
   en: {
@@ -39,23 +53,38 @@ export const STRINGS = {
     practice: "Practice",
     loaded: "Loaded",
     deck: "Deck",
+
     check: "Check",
     hint: "Hint",
     reveal: "Reveal",
     skip: "Skip",
     next: "Next",
+
     typeMode: "Type",
     tapMode: "Tap",
     inputMode: "Answer mode",
+
     noCards: "No cards available. Check your filters/preset.",
+
     correct: "✅ Correct",
+    notQuite: "❌ Not quite",
     expected: "Expected",
+
     showDebug: "Show debug",
     why: "Why",
+
     placeholderType: "Type the mutated form…",
     revealed: "👁️ Revealed",
     skipped: "⏭️ Skipped",
-    notQuite: "❌ Not quite",
-    placeholderType: "Type the mutated form…"
+
+    // Preset pack titles + descriptions
+    "preset.starterPreps.title": "Starter preps",
+    "preset.starterPreps.desc": "A curated guided set to warm up.",
+    "preset.numbers1to10.title": "Numbers 1–10",
+    "preset.numbers1to10.desc": "Cards triggered by numbers 1–10 across all CSVs.",
+    "preset.articles.title": "Articles",
+    "preset.articles.desc": "Article focus (Sylfaen).",
+    "preset.placeNames.title": "Place names",
+    "preset.placeNames.desc": "Place name cards across all CSVs.",
   },
 };

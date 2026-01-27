@@ -24,6 +24,12 @@ export default function App() {
 
   // avoid annoying repeats in random mode
   const recentRef = useRef([]);
+  // always have the latest Leitner map available synchronously
+  const leitnerRef = useRef(leitnerMap);
+
+  useEffect(() => {
+    leitnerRef.current = leitnerMap;
+  }, [leitnerMap]);
 
   useEffect(() => {
     loadManyCsvFiles(ALL_CSV_FILES)
@@ -46,52 +52,57 @@ export default function App() {
     recentRef.current = arr;
   }
 
-  function pickNext(nextLeitnerMap) {
+  function pickNext(mapToUse) {
     if (!filtered.length) return;
 
     const idx =
       mode === "smart"
-        ? pickSmartIndex(filtered, nextLeitnerMap)
+        ? pickSmartIndex(filtered, mapToUse)
         : pickRandomIndex(filtered, new Set(recentRef.current));
 
     setCurrentIdx(idx);
   }
 
-  // choose an initial card whenever the deck or mode changes
+  // Pick an initial card ONLY when the deck or mode changes.
+  // CRITICAL: do NOT depend on leitnerMap here, or it will jump on Check.
   useEffect(() => {
     if (!filtered.length) {
       setCurrentIdx(-1);
+      recentRef.current = [];
       return;
     }
 
-    const idx =
-      mode === "smart"
-        ? pickSmartIndex(filtered, leitnerMap)
-        : pickRandomIndex(filtered, new Set());
+    // If currentIdx is invalid for the new deck, re-pick.
+    if (currentIdx >= filtered.length || currentIdx < 0) {
+      const idx =
+        mode === "smart"
+          ? pickSmartIndex(filtered, leitnerRef.current)
+          : pickRandomIndex(filtered, new Set());
+      setCurrentIdx(idx);
+      recentRef.current = [];
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filtered, mode]); // <-- NO leitnerMap
 
-    setCurrentIdx(idx);
-    recentRef.current = [];
-    // intentionally not depending on leitnerMap to avoid jumpiness
-  }, [filtered, mode, leitnerMap]);
+  function onResult(payload) {
+    const result = payload?.result;
 
-  function onResult({ result }) {
-    // Only "next" advances. Everything else just updates Leitner.
+    // Only "next" advances
     if (result === "next") {
-      pickNext(leitnerMap);
+      pickNext(leitnerRef.current);
       return;
     }
 
-    // If for any reason we don't have a current card, just ignore.
+    // grading only: update Leitner but do NOT navigate
     if (!currentRow) return;
 
-    // Update Leitner scheduling (fine in both random & smart mode)
     const key = getCardKey(currentRow, currentIdx);
     pushRecent(key);
 
-    const nextMap = updateLeitner(leitnerMap, key, result);
+    const nextMap = updateLeitner(leitnerRef.current, key, result);
     setLeitnerMap(nextMap);
 
-    // IMPORTANT: DO NOT auto-advance here.
+    // IMPORTANT: no pickNext() here
   }
 
   return (
@@ -159,6 +170,9 @@ export default function App() {
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
         {PRESET_ORDER.map((id) => {
           const isOn = id === activePresetId;
+          const def = PRESET_DEFS[id];
+          const label = def?.titleKey ? t(def.titleKey) : def?.title ?? id;
+
           return (
             <button
               key={id}
@@ -172,7 +186,7 @@ export default function App() {
                 color: isOn ? "#fff" : "#111",
               }}
             >
-              {PRESET_DEFS[id].title}
+              {label}
             </button>
           );
         })}
@@ -196,4 +210,3 @@ export default function App() {
     </div>
   );
 }
-
