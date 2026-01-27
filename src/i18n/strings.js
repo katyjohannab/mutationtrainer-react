@@ -15,6 +15,8 @@ export const STRINGS = {
     reveal: "Datgelu",
     skip: "Hepgor",
     next: "Nesaf",
+    hear: "Clywed",
+    loading: "Llwytho...",
 
     typeMode: "Teipio",
     tapMode: "Tapio",
@@ -59,6 +61,8 @@ export const STRINGS = {
     reveal: "Reveal",
     skip: "Skip",
     next: "Next",
+    hear: "Hear",
+    loading: "Loading...",
 
     typeMode: "Type",
     tapMode: "Tap",

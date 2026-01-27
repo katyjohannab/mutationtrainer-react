@@ -1,32 +1,16 @@
 // src/services/ttsPolly.js
-
+// Fallback to existing Lambda URL for now.
 const POLLY_FUNCTION_URL =
+  import.meta.env.VITE_POLLY_FUNCTION_URL ||
   "https://pl6xqfeht2hhbruzlhm3imcpya0upied.lambda-url.eu-west-2.on.aws/";
 
-// Simple in-memory cache: sentence -> object URL
-const ttsCache = new Map();
-const MAX_CACHE = 60; // stop unbounded growth
+const ttsCache = new Map(); // key: sentence string -> objectURL
+let currentAudio = null;
 
-function cacheSet(key, url) {
-  if (ttsCache.has(key)) ttsCache.delete(key); // refresh insertion order
-  ttsCache.set(key, url);
-  while (ttsCache.size > MAX_CACHE) {
-    const oldestKey = ttsCache.keys().next().value;
-    const oldestUrl = ttsCache.get(oldestKey);
-    ttsCache.delete(oldestKey);
-    // Revoke to free memory
-    try {
-      if (oldestUrl && oldestUrl.startsWith("blob:")) URL.revokeObjectURL(oldestUrl);
-    } catch {}
-  }
-}
-
-// Build a clean sentence string: before + answer + after with punctuation spacing fixed.
-// Works with canonical keys OR original CSV headers.
-export function buildCompleteSentenceFromRow(row) {
-  const before = (row?.before ?? row?.Before ?? "").trimEnd();
-  const answer = (row?.answer ?? row?.Answer ?? "").trim();
-  const after = (row?.after ?? row?.After ?? "").trimStart();
+export function buildCompleteSentence(card) {
+  const before = String(card?.before ?? card?.Before ?? "").trimEnd();
+  const answer = String(card?.answer ?? card?.Answer ?? "").trim();
+  const after = String(card?.after ?? card?.After ?? "").trimStart();
 
   let s = [before, answer, after].filter(Boolean).join(" ");
   s = s.replace(/\s+/g, " ").trim();
@@ -34,39 +18,36 @@ export function buildCompleteSentenceFromRow(row) {
   return s;
 }
 
-async function toAudioUrlFromResponse(res) {
-  const ct = (res.headers.get("content-type") || "").toLowerCase();
-
-  // Lambda returns raw audio
-  if (ct.includes("audio") || ct.includes("octet-stream")) {
-    const buf = await res.arrayBuffer();
-    const blob = new Blob([buf], { type: "audio/mpeg" });
-    return URL.createObjectURL(blob);
-  }
-
-  // Or Lambda returns JSON
-  const j = await res.json();
-
-  if (j.url) return j.url;
-
-  const b64 = j.audioBase64 || j.audioContent;
-  if (b64) {
-    const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
-    const blob = new Blob([bytes], { type: "audio/mpeg" });
-    return URL.createObjectURL(blob);
-  }
-
-  throw new Error("TTS response wasn't audio and didn't include url/audioBase64/audioContent.");
+function getEnglishText(card) {
+  // In your CSVs you already have TranslateSent (EN translation of the full sentence).
+  // If it’s missing, we fall back to the Welsh sentence.
+  const en = String(card?.translateSent ?? card?.TranslateSent ?? "").trim();
+  return en || buildCompleteSentence(card);
 }
 
-export async function playPollySentence(sentence) {
+export function getSpeakText(card, speakLang = "cy") {
+  return speakLang === "en" ? getEnglishText(card) : buildCompleteSentence(card);
+}
+
+export async function playPollyText(sentence) {
   if (!sentence) throw new Error("No sentence to speak.");
   if (!POLLY_FUNCTION_URL) throw new Error("POLLY_FUNCTION_URL isn't set.");
 
-  const key = sentence.trim();
-  const cachedUrl = ttsCache.get(key);
+  // If user taps repeatedly: stop previous audio first
+  if (currentAudio) {
+    try {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    } catch {
+      // ignore
+    }
+    currentAudio = null;
+  }
+
+  const cachedUrl = ttsCache.get(sentence);
   if (cachedUrl) {
     const audio = new Audio(cachedUrl);
+    currentAudio = audio;
     await audio.play();
     return;
   }
@@ -74,7 +55,8 @@ export async function playPollySentence(sentence) {
   const res = await fetch(POLLY_FUNCTION_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text: key }),
+    // Keep request shape the same as your old app: { text }
+    body: JSON.stringify({ text: sentence }),
   });
 
   if (!res.ok) {
@@ -82,9 +64,33 @@ export async function playPollySentence(sentence) {
     throw new Error(msg || `TTS failed (${res.status})`);
   }
 
-  const url = await toAudioUrlFromResponse(res);
-  cacheSet(key, url);
+  const ct = (res.headers.get("content-type") || "").toLowerCase();
+  let url = null;
 
+  if (ct.includes("audio") || ct.includes("octet-stream")) {
+    const buf = await res.arrayBuffer();
+    const blob = new Blob([buf], { type: "audio/mpeg" });
+    url = URL.createObjectURL(blob);
+  } else {
+    const j = await res.json();
+    if (j.url) url = j.url;
+    else if (j.audioBase64 || j.audioContent) {
+      const b64 = j.audioBase64 || j.audioContent;
+      const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+      const blob = new Blob([bytes], { type: "audio/mpeg" });
+      url = URL.createObjectURL(blob);
+    } else {
+      throw new Error("TTS response had no audio payload (url/audioBase64/audioContent).");
+    }
+  }
+
+  ttsCache.set(sentence, url);
   const audio = new Audio(url);
+  currentAudio = audio;
   await audio.play();
+}
+
+export async function playPollyForCard(card, speakLang = "cy") {
+  const text = getSpeakText(card, speakLang);
+  return playPollyText(text);
 }
