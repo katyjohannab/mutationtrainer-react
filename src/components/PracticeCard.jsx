@@ -1,6 +1,6 @@
-// src/components/PracticeCard.jsx
 import { useEffect, useMemo, useState } from "react";
 import { checkAnswer } from "../utils/checkAnswer";
+import { useI18n } from "../i18n/I18nContext";
 
 function buildSentence(row) {
   const before = row?.before ?? row?.Before ?? "";
@@ -10,6 +10,8 @@ function buildSentence(row) {
 }
 
 export default function PracticeCard({ row, onResult }) {
+  const { t, lang } = useI18n();
+
   const [guess, setGuess] = useState("");
   const [showHint, setShowHint] = useState(false);
   const [revealed, setRevealed] = useState(false);
@@ -18,7 +20,6 @@ export default function PracticeCard({ row, onResult }) {
   const sent = useMemo(() => buildSentence(row), [row]);
 
   useEffect(() => {
-    // reset when card changes
     setGuess("");
     setShowHint(false);
     setRevealed(false);
@@ -28,9 +29,20 @@ export default function PracticeCard({ row, onResult }) {
   if (!row) return null;
 
   const answer = row?.answer ?? row?.Answer ?? "";
-  const why = row?.why ?? row?.Why ?? "";
-  const whyCym = row?.whyCym ?? row?.["Why-Cym"] ?? row?.WhyCym ?? "";
+
+  // Explanations are baked into CSV:
+  // English: Why
+  // Welsh:   Why-Cym  (normalised to whyCym by your loader)
+  const whyEn = row?.why ?? row?.Why ?? "";
+  const whyCy = row?.whyCym ?? row?.["Why-Cym"] ?? row?.WhyCym ?? "";
+
+  // Preferred explanation depends on lang, but we fall back if missing.
+  const explanation =
+    lang === "cy" ? (whyCy || whyEn) : (whyEn || whyCy);
+
+  // English translation sentence: only show in EN mode (recommended)
   const translate = row?.translateSent ?? row?.TranslateSent ?? "";
+  const showTranslate = lang === "en" && Boolean(translate);
 
   const onCheck = () => {
     const ok = checkAnswer(row, guess);
@@ -67,7 +79,7 @@ export default function PracticeCard({ row, onResult }) {
         <span>{sent.after}</span>
       </div>
 
-      {translate ? (
+      {showTranslate ? (
         <div style={{ marginTop: 6, color: "#555", fontSize: 13 }}>
           {translate}
         </div>
@@ -78,7 +90,7 @@ export default function PracticeCard({ row, onResult }) {
           value={guess}
           onChange={(e) => setGuess(e.target.value)}
           disabled={disabledInput}
-          placeholder="Type the mutated form…"
+          placeholder={t("placeholderType")}
           style={{
             padding: "10px 12px",
             borderRadius: 10,
@@ -92,39 +104,40 @@ export default function PracticeCard({ row, onResult }) {
         />
 
         <button onClick={onCheck} disabled={disabledInput} style={{ padding: "10px 12px", borderRadius: 10 }}>
-          Check
+          {t("check")}
         </button>
 
         <button onClick={() => setShowHint((s) => !s)} style={{ padding: "10px 12px", borderRadius: 10 }}>
-          Hint
+          {t("hint")}
         </button>
 
         <button onClick={onReveal} disabled={revealed} style={{ padding: "10px 12px", borderRadius: 10 }}>
-          Reveal
+          {t("reveal")}
         </button>
 
         <button onClick={onSkip} disabled={revealed} style={{ padding: "10px 12px", borderRadius: 10 }}>
-          Skip
+          {t("skip")}
         </button>
 
         <button onClick={onNext} style={{ padding: "10px 12px", borderRadius: 10 }}>
-          Next
+          {t("next")}
         </button>
       </div>
 
-      {showHint && (why || whyCym) ? (
+      {showHint && explanation ? (
         <div style={{ marginTop: 12, padding: 12, borderRadius: 10, background: "#f7f7f7" }}>
-          {why ? <div style={{ marginBottom: 8 }}><b>Why:</b> {why}</div> : null}
-          {whyCym ? <div><b>Pam:</b> {whyCym}</div> : null}
+          <div>
+            <b>{t("why")}:</b> {explanation}
+          </div>
         </div>
       ) : null}
 
       {last ? (
         <div style={{ marginTop: 10, fontWeight: 600 }}>
-          {last === "correct" ? "✅ Correct" : null}
-          {last === "wrong" ? `❌ Not quite (expected: ${answer})` : null}
-          {last === "revealed" ? `👁️ Revealed: ${answer}` : null}
-          {last === "skipped" ? `⏭️ Skipped (answer: ${answer})` : null}
+          {last === "correct" ? t("correct") : null}
+          {last === "wrong" ? `${t("notQuite")} (${t("expected")}: ${answer})` : null}
+          {last === "revealed" ? `${t("revealed")}: ${answer}` : null}
+          {last === "skipped" ? `${t("skipped")} (${t("expected")}: ${answer})` : null}
         </div>
       ) : null}
     </div>
