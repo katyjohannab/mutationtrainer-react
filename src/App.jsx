@@ -1,19 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { PRESET_DEFS, PRESET_ORDER } from "./data/presets";
+import { PRESET_DEFS } from "./data/presets";
 import { ALL_CSV_FILES } from "./data/csvSources";
 import { loadManyCsvFiles } from "./services/loadCsv";
 import { applyFilters } from "./utils/applyFilters";
 
-import PracticeCard from "./components/PracticeCard";
 import Header from "./components/Header";
-import { useI18n } from "./i18n/I18nContext";
+import FlashcardArea from "./components/FlashcardArea";
+import FiltersPanel from "./components/FiltersPanel";
+import FilterDrawer from "./components/FilterDrawer";
 
 import { loadLeitnerMap, updateLeitner } from "./utils/leitner";
 import { getCardKey, pickRandomIndex, pickSmartIndex } from "./utils/pickNext";
 
 export default function App() {
-  const { t } = useI18n();
-
   const [rows, setRows] = useState([]);
   const [activePresetId, setActivePresetId] = useState(null);
 
@@ -21,6 +20,7 @@ export default function App() {
   const [leitnerMap, setLeitnerMap] = useState(() => loadLeitnerMap());
 
   const [currentIdx, setCurrentIdx] = useState(-1);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   // avoid annoying repeats in random mode
   const recentRef = useRef([]);
@@ -105,105 +105,46 @@ export default function App() {
     // IMPORTANT: no pickNext() here
   }
 
-  const presetTitle = preset
-    ? preset.titleKey
-      ? t(preset.titleKey)
-      : preset.title ?? null
-    : null;
+  function handleTogglePreset(id) {
+    setActivePresetId((prev) => (prev === id ? null : id));
+  }
 
   return (
     <div className="min-h-full">
       <Header
-        presetTitle={presetTitle}
-        hasActivePreset={Boolean(activePresetId)}
-        onClearPreset={() => setActivePresetId(null)}
         onOpenHelp={() => {}}
         onOpenStats={() => {}}
-        onOpenFilters={() => {}}
+        onOpenFilters={() => setFiltersOpen(true)}
       />
 
-      <div className="mx-auto max-w-5xl px-4 py-4">
-        {/* Mode + counts */}
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm font-semibold text-gray-700">
-              {t("mode")}:
-            </span>
+      <main className="mx-auto w-full max-w-6xl px-4 py-4">
+        <div className="flex flex-col gap-6 md:flex-row">
+          <FlashcardArea
+            className="flex-1"
+            mode={mode}
+            onModeChange={setMode}
+            rowsCount={rows.length}
+            filteredCount={filtered.length}
+            currentRow={currentRow}
+            onResult={onResult}
+          />
 
-            <button
-              type="button"
-              onClick={() => setMode("random")}
-              className={`mt-pill ${mode === "random" ? "mt-pill-on" : ""}`}
-            >
-              {t("random")}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setMode("smart")}
-              className={`mt-pill ${mode === "smart" ? "mt-pill-on" : ""}`}
-            >
-              {t("smart")}
-            </button>
-
-            <span className="ml-2 text-sm text-gray-600">
-              {t("loaded")}:{" "}
-              <span className="font-semibold text-gray-900">{rows.length}</span>
-              <span className="mx-2 text-gray-300">|</span>
-              {t("deck")}:{" "}
-              <span className="font-semibold text-gray-900">
-                {filtered.length}
-              </span>
-            </span>
-          </div>
+          <aside className="hidden md:block md:w-1/3">
+            <FiltersPanel
+              activePresetId={activePresetId}
+              onTogglePreset={handleTogglePreset}
+            />
+          </aside>
         </div>
+      </main>
 
-        {/* Preset packs */}
-        <div className="mt-6">
-          <h2 className="text-base font-semibold text-gray-900">
-            {t("presetPacks")}
-          </h2>
-
-          <div className="mt-3 flex flex-wrap gap-2">
-            {PRESET_ORDER.map((id) => {
-              const isOn = id === activePresetId;
-              const def = PRESET_DEFS[id];
-              const label = def?.titleKey ? t(def.titleKey) : def?.title ?? id;
-
-              return (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => setActivePresetId(isOn ? null : id)}
-                  className={`mt-pill ${isOn ? "mt-pill-on" : ""}`}
-                >
-                  {label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Practice */}
-        <div className="mt-6">
-          <h2 className="text-base font-semibold text-gray-900">
-            {t("practice")}
-          </h2>
-
-          {!currentRow ? (
-            <div className="mt-3 rounded-2xl border border-gray-200 bg-white p-4 text-sm text-gray-700 shadow-sm">
-              {t("noCards")}
-            </div>
-          ) : (
-            <div className="mt-3">
-              <PracticeCard row={currentRow} onResult={onResult} />
-            </div>
-          )}
-        </div>
-      </div>
+      <FilterDrawer open={filtersOpen} onOpenChange={setFiltersOpen}>
+        <FiltersPanel
+          activePresetId={activePresetId}
+          onTogglePreset={handleTogglePreset}
+          className="border-0 shadow-none p-0"
+        />
+      </FilterDrawer>
     </div>
   );
 }
-
-
-<div className="bg-cymruRed-600 text-white p-2">test colour</div>

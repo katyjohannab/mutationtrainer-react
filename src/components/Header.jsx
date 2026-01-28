@@ -5,22 +5,21 @@ import {
   ChartBarIcon,
   FunnelIcon,
   LanguageIcon,
-  XMarkIcon,
 } from "@heroicons/react/24/outline";
 
 export default function Header({
-  presetTitle,
-  hasActivePreset,
-  onClearPreset,
   onOpenHelp,
   onOpenStats,
   onOpenFilters,
 }) {
   const { lang, setLang, t } = useI18n();
   const toggleLang = () => setLang(lang === "cy" ? "en" : "cy");
+  const title = t("appTitle");
+  const [titleFirst, ...titleRest] = title.split(" ");
+  const titleTail = titleRest.join(" ");
 
   return (
-    <header className="sticky top-0 z-40 flex items-center justify-between px-4 py-2 bg-white/90 backdrop-blur border-b border-gray-200">
+    <header className="sticky top-0 z-40 flex items-center justify-between px-4 py-2 bg-white/90 backdrop-blur border-b border-gray-300">
       <div className="flex items-center gap-2 min-w-0">
         <img
           src="/dragon.png"
@@ -28,26 +27,15 @@ export default function Header({
           className="h-8 w-8 drop-shadow shrink-0"
           aria-hidden="true"
         />
-        <h1 className="text-lg sm:text-xl font-bold tracking-tight truncate">
-          {t("appTitle")}
-        </h1>
-
-        <div className="hidden lg:flex items-center gap-2 ml-3">
-          {presetTitle ? (
-            <span className="mt-pill mt-pill-on" title={t("headerFocus")}>
-              {t("headerFocus")}: {presetTitle}
-            </span>
-          ) : (
-            <span className="text-sm text-gray-500">{t("headerNoFocus")}</span>
-          )}
-
-          {hasActivePreset ? (
-            <button type="button" className="mt-btn" onClick={onClearPreset}>
-              <XMarkIcon className="h-5 w-5" aria-hidden="true" />
-              <span className="hidden sm:inline">{t("headerClearFocus")}</span>
-            </button>
+        <h1 className="text-xl font-bold tracking-tight truncate">
+          <span>{titleFirst}</span>
+          {titleTail ? (
+            <>
+              {" "}
+              <span className="text-emerald-800">{titleTail}</span>
+            </>
           ) : null}
-        </div>
+        </h1>
       </div>
 
       <div className="flex items-center gap-2">
@@ -58,7 +46,7 @@ export default function Header({
           aria-label={t("headerSwitchLang")}
         >
           <LanguageIcon className="h-5 w-5" aria-hidden="true" />
-          <span className="hidden sm:inline">{lang.toUpperCase()}</span>
+          <span className="hidden sm:inline">EN/CY</span>
           <span className="sr-only">{t("headerSwitchLang")}</span>
         </button>
 
