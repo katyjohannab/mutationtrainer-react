@@ -6,6 +6,7 @@ import { applyFilters } from "./utils/applyFilters";
 
 import PracticeCard from "./components/PracticeCard";
 import LanguageToggle from "./components/LanguageToggle";
+import Header from "./components/Header";
 import { useI18n } from "./i18n/I18nContext";
 
 import { loadLeitnerMap, updateLeitner } from "./utils/leitner";
@@ -106,107 +107,99 @@ export default function App() {
   }
 
   return (
-    <div style={{ padding: 16, fontFamily: "system-ui" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: 12,
-          flexWrap: "wrap",
-        }}
-      >
-        <h1 style={{ margin: 0 }}>{t("appTitle")}</h1>
-        <LanguageToggle />
-      </div>
+    <div className="min-h-full">
+      {/* New header (bilingual + preset-aware) */}
+      <Header
+        onOpenHelp={() => {}}
+        onOpenStats={() => {}}
+        onOpenFilters={() => {}}
+      />
 
-      <div
-        style={{
-          marginTop: 10,
-          display: "flex",
-          gap: 10,
-          flexWrap: "wrap",
-          alignItems: "center",
-        }}
-      >
-        <div>
-          <b>{t("mode")}:</b>{" "}
-          <button
-            onClick={() => setMode("random")}
-            style={{
-              padding: "6px 10px",
-              borderRadius: 999,
-              marginRight: 6,
-              border: "1px solid #ccc",
-              cursor: "pointer",
-              background: mode === "random" ? "#111" : "#fff",
-              color: mode === "random" ? "#fff" : "#111",
-            }}
-          >
-            {t("random")}
-          </button>
-          <button
-            onClick={() => setMode("smart")}
-            style={{
-              padding: "6px 10px",
-              borderRadius: 999,
-              border: "1px solid #ccc",
-              cursor: "pointer",
-              background: mode === "smart" ? "#111" : "#fff",
-              color: mode === "smart" ? "#fff" : "#111",
-            }}
-          >
-            {t("smart")}
-          </button>
-        </div>
+      <div className="mx-auto max-w-5xl px-4 py-4">
+        {/* Top controls row */}
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-sm font-semibold text-gray-700">
+              {t("mode")}:
+            </span>
 
-        <div>
-          {t("loaded")}: <b>{rows.length}</b> | {t("deck")}:{" "}
-          <b>{filtered.length}</b>
-        </div>
-      </div>
-
-      <h2 style={{ marginTop: 16 }}>{t("presetPacks")}</h2>
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        {PRESET_ORDER.map((id) => {
-          const isOn = id === activePresetId;
-          const def = PRESET_DEFS[id];
-          const label = def?.titleKey ? t(def.titleKey) : def?.title ?? id;
-
-          return (
             <button
-              key={id}
-              onClick={() => setActivePresetId(isOn ? null : id)}
-              style={{
-                padding: "8px 12px",
-                borderRadius: 999,
-                border: "1px solid #ccc",
-                cursor: "pointer",
-                background: isOn ? "#111" : "#fff",
-                color: isOn ? "#fff" : "#111",
-              }}
+              type="button"
+              onClick={() => setMode("random")}
+              className={`mt-pill ${
+                mode === "random" ? "mt-pill-on" : ""
+              }`}
             >
-              {label}
+              {t("random")}
             </button>
-          );
-        })}
-      </div>
 
-      <h2 style={{ marginTop: 16 }}>{t("practice")}</h2>
-      {!currentRow ? (
-        <div
-          style={{
-            marginTop: 12,
-            padding: 12,
-            border: "1px solid #ddd",
-            borderRadius: 12,
-          }}
-        >
-          {t("noCards")}
+            <button
+              type="button"
+              onClick={() => setMode("smart")}
+              className={`mt-pill ${
+                mode === "smart" ? "mt-pill-on" : ""
+              }`}
+            >
+              {t("smart")}
+            </button>
+          </div>
+
+          {/* Keep your existing LanguageToggle too, until we remove it later */}
+          <div className="flex items-center gap-2">
+            <LanguageToggle />
+          </div>
         </div>
-      ) : (
-        <PracticeCard row={currentRow} onResult={onResult} />
-      )}
+
+        {/* Counts */}
+        <div className="mt-3 text-sm text-gray-600">
+          {t("loaded")}: <span className="font-semibold">{rows.length}</span>
+          <span className="mx-2 text-gray-300">|</span>
+          {t("deck")}: <span className="font-semibold">{filtered.length}</span>
+        </div>
+
+        {/* Preset packs */}
+        <div className="mt-6">
+          <h2 className="text-base font-semibold text-gray-900">
+            {t("presetPacks")}
+          </h2>
+
+          <div className="mt-3 flex flex-wrap gap-2">
+            {PRESET_ORDER.map((id) => {
+              const isOn = id === activePresetId;
+              const def = PRESET_DEFS[id];
+              const label = def?.titleKey ? t(def.titleKey) : def?.title ?? id;
+
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => setActivePresetId(isOn ? null : id)}
+                  className={`mt-pill ${isOn ? "mt-pill-on" : ""}`}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Practice */}
+        <div className="mt-6">
+          <h2 className="text-base font-semibold text-gray-900">
+            {t("practice")}
+          </h2>
+
+          {!currentRow ? (
+            <div className="mt-3 rounded-2xl border border-gray-200 bg-white p-4 text-sm text-gray-700 shadow-sm">
+              {t("noCards")}
+            </div>
+          ) : (
+            <div className="mt-3">
+              <PracticeCard row={currentRow} onResult={onResult} />
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

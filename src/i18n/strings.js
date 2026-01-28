@@ -1,7 +1,7 @@
 // src/i18n/strings.js
 export const STRINGS = {
   cy: {
-    appTitle: "Hyfforddwr Treiglo",
+    appTitle: "Hyfforddwr Treiglad",
     mode: "Modd",
     random: "Ar hap",
     smart: "Clyfar (Leitner)",
@@ -34,6 +34,15 @@ export const STRINGS = {
     placeholderType: "Teipiwch y ffurf wedi treiglo…",
     revealed: "👁️ Datgelwyd",
     skipped: "⏭️ Hepgorwyd",
+
+    headerHelp: "Cymorth",
+    headerStats: "Ystadegau",
+    headerFilters: "Hidlwyr",
+    headerFocus: "Ffocws",
+    headerNoFocus: "Dim ffocws",
+    headerClearFocus: "Clirio ffocws",
+    headerSwitchLang: "Newid iaith",
+
 
     // Preset pack titles + descriptions
     "preset.starterPreps.title": "Pecynnau dechrau",
@@ -80,6 +89,14 @@ export const STRINGS = {
     placeholderType: "Type the mutated form…",
     revealed: "👁️ Revealed",
     skipped: "⏭️ Skipped",
+
+    headerHelp: "Help",
+    headerStats: "Stats",
+    headerFilters: "Filters",
+    headerFocus: "Focus",
+    headerNoFocus: "No focus",
+    headerClearFocus: "Clear focus",
+    headerSwitchLang: "Switch language",  
 
     // Preset pack titles + descriptions
     "preset.starterPreps.title": "Starter preps",
