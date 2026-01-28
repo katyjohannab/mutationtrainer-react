@@ -5,7 +5,6 @@ import { loadManyCsvFiles } from "./services/loadCsv";
 import { applyFilters } from "./utils/applyFilters";
 
 import PracticeCard from "./components/PracticeCard";
-import LanguageToggle from "./components/LanguageToggle";
 import Header from "./components/Header";
 import { useI18n } from "./i18n/I18nContext";
 
@@ -106,17 +105,25 @@ export default function App() {
     // IMPORTANT: no pickNext() here
   }
 
+  const presetTitle = preset
+    ? preset.titleKey
+      ? t(preset.titleKey)
+      : preset.title ?? null
+    : null;
+
   return (
     <div className="min-h-full">
-      {/* New header (bilingual + preset-aware) */}
       <Header
+        presetTitle={presetTitle}
+        hasActivePreset={Boolean(activePresetId)}
+        onClearPreset={() => setActivePresetId(null)}
         onOpenHelp={() => {}}
         onOpenStats={() => {}}
         onOpenFilters={() => {}}
       />
 
       <div className="mx-auto max-w-5xl px-4 py-4">
-        {/* Top controls row */}
+        {/* Mode + counts */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-sm font-semibold text-gray-700">
@@ -126,9 +133,7 @@ export default function App() {
             <button
               type="button"
               onClick={() => setMode("random")}
-              className={`mt-pill ${
-                mode === "random" ? "mt-pill-on" : ""
-              }`}
+              className={`mt-pill ${mode === "random" ? "mt-pill-on" : ""}`}
             >
               {t("random")}
             </button>
@@ -136,25 +141,21 @@ export default function App() {
             <button
               type="button"
               onClick={() => setMode("smart")}
-              className={`mt-pill ${
-                mode === "smart" ? "mt-pill-on" : ""
-              }`}
+              className={`mt-pill ${mode === "smart" ? "mt-pill-on" : ""}`}
             >
               {t("smart")}
             </button>
-          </div>
 
-          {/* Keep your existing LanguageToggle too, until we remove it later */}
-          <div className="flex items-center gap-2">
-            <LanguageToggle />
+            <span className="ml-2 text-sm text-gray-600">
+              {t("loaded")}:{" "}
+              <span className="font-semibold text-gray-900">{rows.length}</span>
+              <span className="mx-2 text-gray-300">|</span>
+              {t("deck")}:{" "}
+              <span className="font-semibold text-gray-900">
+                {filtered.length}
+              </span>
+            </span>
           </div>
-        </div>
-
-        {/* Counts */}
-        <div className="mt-3 text-sm text-gray-600">
-          {t("loaded")}: <span className="font-semibold">{rows.length}</span>
-          <span className="mx-2 text-gray-300">|</span>
-          {t("deck")}: <span className="font-semibold">{filtered.length}</span>
         </div>
 
         {/* Preset packs */}
@@ -203,3 +204,6 @@ export default function App() {
     </div>
   );
 }
+
+
+<div className="bg-cymruRed-600 text-white p-2">test colour</div>
