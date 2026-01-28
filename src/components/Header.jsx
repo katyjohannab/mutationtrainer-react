@@ -6,6 +6,7 @@ import {
   FunnelIcon,
   LanguageIcon,
 } from "@heroicons/react/24/outline";
+import { Button } from "./ui/button";
 
 export default function Header({
   onOpenHelp,
@@ -14,10 +15,6 @@ export default function Header({
 }) {
   const { lang, setLang, t } = useI18n();
   const toggleLang = () => setLang(lang === "cy" ? "en" : "cy");
-  const title = t("appTitle");
-  const [titleFirst, ...titleRest] = title.split(" ");
-  const titleTail = titleRest.join(" ");
-
   return (
     <header className="sticky top-0 z-40 flex items-center justify-between px-4 py-2 bg-white/90 backdrop-blur border-b border-gray-300">
       <div className="flex items-center gap-2 min-w-0">
@@ -27,58 +24,50 @@ export default function Header({
           className="h-8 w-8 drop-shadow shrink-0"
           aria-hidden="true"
         />
-        <h1 className="text-xl font-bold tracking-tight truncate">
-          <span>{titleFirst}</span>
-          {titleTail ? (
-            <>
-              {" "}
-              <span className="text-emerald-800">{titleTail}</span>
-            </>
-          ) : null}
+        <h1 className="text-xl font-bold tracking-tight">
+          Hyfforddwr <span className="text-emerald-800">Treiglad</span>
         </h1>
       </div>
 
       <div className="flex items-center gap-2">
-        <button
-          type="button"
-          className="mt-btn"
+        <Button
+          variant="default"
+          size="default"
           onClick={toggleLang}
           aria-label={t("headerSwitchLang")}
         >
           <LanguageIcon className="h-5 w-5" aria-hidden="true" />
           <span className="hidden sm:inline">EN/CY</span>
           <span className="sr-only">{t("headerSwitchLang")}</span>
-        </button>
+        </Button>
 
-        <button
-          type="button"
-          className="mt-iconbtn"
+        <Button
+          variant="icon"
+          size="icon"
           onClick={onOpenHelp}
           aria-label={t("headerHelp")}
         >
           <QuestionMarkCircleIcon className="h-5 w-5" aria-hidden="true" />
-          <span className="sr-only">{t("headerHelp")}</span>
-        </button>
+        </Button>
 
-        <button
-          type="button"
-          className="mt-iconbtn"
+        <Button
+          variant="icon"
+          size="icon"
           onClick={onOpenStats}
           aria-label={t("headerStats")}
         >
           <ChartBarIcon className="h-5 w-5" aria-hidden="true" />
-          <span className="sr-only">{t("headerStats")}</span>
-        </button>
+        </Button>
 
-        <button
-          type="button"
-          className="mt-btn md:hidden"
+        <Button
+          variant="default"
+          size="default"
+          className="md:hidden"
           onClick={onOpenFilters}
-          aria-label={t("headerFilters")}
         >
           <FunnelIcon className="h-5 w-5" aria-hidden="true" />
           <span>{t("headerFilters")}</span>
-        </button>
+        </Button>
       </div>
     </header>
   );

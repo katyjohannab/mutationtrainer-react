@@ -39,28 +39,3 @@
     text-decoration: underline;
   }
 }
-
-@layer components {
-  .mt-btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-3 py-2 text-sm font-medium
-      border border-gray-200 bg-white/90 backdrop-blur
-      hover:bg-gray-50 active:scale-[0.99]
-      focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700/40;
-  }
-
- .mt-iconbtn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-2 py-2 text-sm font-medium
-      border border-gray-200 bg-white/90 backdrop-blur
-      hover:bg-gray-50 active:scale-[0.99]
-      focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700/40;
-  }
-
-  .mt-pill {
-    @apply inline-flex items-center rounded-full px-3 py-1 text-sm border border-gray-200 bg-white
-      hover:bg-gray-50;
-  }
-
-  .mt-pill-on {
-    @apply border-emerald-800/30 bg-emerald-50 text-emerald-900;
-  }
-}

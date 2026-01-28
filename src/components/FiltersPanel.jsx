@@ -1,6 +1,7 @@
 import { PRESET_DEFS, PRESET_ORDER } from "../data/presets";
 import { useI18n } from "../i18n/I18nContext";
 import { cn } from "../lib/cn";
+import { Button } from "./ui/button";
 
 export default function FiltersPanel({
   className,
@@ -27,15 +28,16 @@ export default function FiltersPanel({
           const label = def?.titleKey ? t(def.titleKey) : def?.title ?? id;
 
           return (
-            <button
+            <Button
               key={id}
               type="button"
+              variant="pill"
+              active={isOn}
               onClick={() => onTogglePreset(id)}
-              className={`mt-pill ${isOn ? "mt-pill-on" : ""}`}
               title={label}
             >
               {label}
-            </button>
+            </Button>
           );
         })}
       </div>

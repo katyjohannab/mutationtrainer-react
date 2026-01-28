@@ -7,7 +7,7 @@ import { applyFilters } from "./utils/applyFilters";
 import Header from "./components/Header";
 import FlashcardArea from "./components/FlashcardArea";
 import FiltersPanel from "./components/FiltersPanel";
-import FilterDrawer from "./components/FilterDrawer";
+import FilterSheet from "./components/FilterSheet";
 
 import { loadLeitnerMap, updateLeitner } from "./utils/leitner";
 import { getCardKey, pickRandomIndex, pickSmartIndex } from "./utils/pickNext";
@@ -138,13 +138,12 @@ export default function App() {
         </div>
       </main>
 
-      <FilterDrawer open={filtersOpen} onOpenChange={setFiltersOpen}>
+      <FilterSheet open={filtersOpen} onOpenChange={setFiltersOpen}>
         <FiltersPanel
           activePresetId={activePresetId}
           onTogglePreset={handleTogglePreset}
-          className="border-0 shadow-none p-0"
         />
-      </FilterDrawer>
+      </FilterSheet>
     </div>
   );
 }

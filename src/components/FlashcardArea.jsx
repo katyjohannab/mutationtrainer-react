@@ -1,6 +1,7 @@
 import PracticeCard from "./PracticeCard";
 import { useI18n } from "../i18n/I18nContext";
 import { cn } from "../lib/cn";
+import { Button } from "./ui/button";
 
 export default function FlashcardArea({
   className,
@@ -22,21 +23,23 @@ export default function FlashcardArea({
             {t("mode")}:
           </span>
 
-          <button
+          <Button
             type="button"
+            variant="pill"
+            active={mode === "random"}
             onClick={() => onModeChange("random")}
-            className={`mt-pill ${mode === "random" ? "mt-pill-on" : ""}`}
           >
             {t("random")}
-          </button>
+          </Button>
 
-          <button
+          <Button
             type="button"
+            variant="pill"
+            active={mode === "smart"}
             onClick={() => onModeChange("smart")}
-            className={`mt-pill ${mode === "smart" ? "mt-pill-on" : ""}`}
           >
             {t("smart")}
-          </button>
+          </Button>
 
           <span className="ml-2 text-sm text-gray-600">
             {t("loaded")}:{" "}
