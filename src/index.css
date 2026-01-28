@@ -1,71 +1,66 @@
 @import "tailwindcss";
 
+/* Design tokens (keep these small and intentional) */
+@theme {
+  --color-page: #fbfbf7;
+  --color-surface: rgba(255, 255, 255, 0.94);
+  --color-border: rgba(15, 23, 42, 0.10);
 
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  --color-text: #0f172a;
+  --color-muted: #475569;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --color-emerald-ink: #064e3b;
+  --color-cymru-red: #b91c1c;
+  --color-cymru-red-ink: #991b1b;
+  --color-gold: #d97706;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+/* Base defaults (minimal, so Tailwind drives everything else) */
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+
+  body {
+    margin: 0;
+    background: var(--color-page);
+    color: var(--color-text);
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+      "Apple Color Emoji", "Segoe UI Emoji";
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
   a:hover {
-    color: #747bff;
+    text-decoration: underline;
   }
-  button {
-    background-color: #f9f9f9;
+}
+
+/* Optional: a few reusable component classes*/
+@layer components {
+  .mt-card {
+    @apply rounded-2xl border border-border bg-surface shadow-sm;
+  }
+
+  .mt-pill {
+    @apply inline-flex items-center gap-2 rounded-full border border-border bg-white/60 px-3 py-1 text-sm;
+  }
+
+  .mt-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-medium;
+    @apply bg-emerald-ink text-white hover:opacity-95;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-ink/30 focus-visible:ring-offset-2;
+    @apply disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .mt-btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-medium;
+    @apply bg-transparent text-text hover:bg-black/5;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-ink/30 focus-visible:ring-offset-2;
+    @apply disabled:opacity-50 disabled:pointer-events-none;
   }
 }
