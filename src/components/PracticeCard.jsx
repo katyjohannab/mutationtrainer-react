@@ -6,6 +6,7 @@ import { playPollyForCard } from "../services/ttsPolly";
 import PracticeCardFeedback from "./PracticeCardFeedback";
 import PracticeCardFront from "./PracticeCardFront";
 import PracticeCardChoices from "./PracticeCardChoices";
+import { cn } from "../lib/cn";
 
 function buildSentence(row) {
   const before = row?.before ?? row?.Before ?? "";
@@ -342,77 +343,95 @@ export default function PracticeCard({
 
   return (
     <div
-      style={{
-        border: "1px solid #ddd",
-        borderRadius: 12,
-        padding: 16,
-        marginTop: 12,
-        backgroundColor: "#ffffff",
-        color: "#111",
-        boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-      }}
-    >
-      {answerMode === "tap" ? (
-        <PracticeCardChoices
-          sent={sent}
-          answer={answer}
-          cardState={cardState}
-          choices={choices}
-          disabled={disabledInput}
-          showTranslate={showTranslate}
-          translate={translateSent}
-          hintText={hintText}
-          showHint={showHint}
-          onToggleHint={() => setShowHint((s) => !s)}
-          onPick={(option) => onCheck(option)}
-          onCheck={onCheck}
-          onReveal={onReveal}
-          onSkip={onSkip}
-          onNext={goNext}
-          t={t}
-          tooltipTranslate={tooltipTranslate}
-          tooltipWordCategory={wordCategory}
-        />
-      ) : (
-        <PracticeCardFront
-          sent={sent}
-          answer={answer}
-          cardState={cardState}
-          guess={guess}
-          setGuess={setGuess}
-          disabledInput={disabledInput}
-          showTranslate={showTranslate}
-          translate={translateSent}
-          placeholder={placeholder}
-          hintText={hintText}
-          showHint={showHint}
-          onToggleHint={() => setShowHint((s) => !s)}
-          onCheck={onCheck}
-          onReveal={onReveal}
-          onSkip={onSkip}
-          onNext={goNext}
-          t={t}
-          tooltipTranslate={tooltipTranslate}
-          tooltipWordCategory={wordCategory}
-        />
+      className={cn(
+        "mt-4",
+        "rounded-2xl border border-neutral-200 bg-white shadow-sm",
+        "transition-shadow duration-200 hover:shadow-md"
       )}
+    >
+      <div className="p-5 sm:p-6">
+        <div className="relative">
+          <div
+            className={cn(
+              "transition-all duration-200",
+              isFeedback
+                ? "opacity-0 -translate-y-1 pointer-events-none"
+                : "opacity-100 translate-y-0"
+            )}
+          >
+            {answerMode === "tap" ? (
+              <PracticeCardChoices
+                sent={sent}
+                answer={answer}
+                cardState={cardState}
+                choices={choices}
+                disabled={disabledInput}
+                showTranslate={showTranslate}
+                translate={translateSent}
+                hintText={hintText}
+                showHint={showHint}
+                onToggleHint={() => setShowHint((s) => !s)}
+                onPick={(option) => onCheck(option)}
+                onCheck={onCheck}
+                onReveal={onReveal}
+                onSkip={onSkip}
+                onNext={goNext}
+                t={t}
+                tooltipTranslate={tooltipTranslate}
+                tooltipWordCategory={wordCategory}
+              />
+            ) : (
+              <PracticeCardFront
+                sent={sent}
+                answer={answer}
+                cardState={cardState}
+                guess={guess}
+                setGuess={setGuess}
+                disabledInput={disabledInput}
+                showTranslate={showTranslate}
+                translate={translateSent}
+                placeholder={placeholder}
+                hintText={hintText}
+                showHint={showHint}
+                onToggleHint={() => setShowHint((s) => !s)}
+                onCheck={onCheck}
+                onReveal={onReveal}
+                onSkip={onSkip}
+                onNext={goNext}
+                t={t}
+                tooltipTranslate={tooltipTranslate}
+                tooltipWordCategory={wordCategory}
+              />
+            )}
+          </div>
 
-      {isFeedback ? (
-        <PracticeCardFeedback
-          sent={sent}
-          answer={answer}
-          onHear={onHear}
-          t={t}
-          hearLabel={hearLabel}
-          loadingLabel={loadingLabel}
-          ttsLoading={ttsLoading}
-          ttsError={ttsError}
-          last={last}
-          whyEn={whyEn}
-          whyCy={whyCy}
-          lang={lang}
-        />
-      ) : null}
+          <div
+            className={cn(
+              "absolute inset-0 transition-all duration-200",
+              isFeedback
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-1 pointer-events-none"
+            )}
+          >
+            {isFeedback ? (
+              <PracticeCardFeedback
+                sent={sent}
+                answer={answer}
+                onHear={onHear}
+                t={t}
+                hearLabel={hearLabel}
+                loadingLabel={loadingLabel}
+                ttsLoading={ttsLoading}
+                ttsError={ttsError}
+                last={last}
+                whyEn={whyEn}
+                whyCy={whyCy}
+                lang={lang}
+              />
+            ) : null}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

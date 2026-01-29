@@ -1,4 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
+import { Button } from "./ui/button";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "./ui/hover-card";
 
 export default function PracticeCardFront({
   sent,
@@ -24,7 +30,6 @@ export default function PracticeCardFront({
   const isFeedback = cardState === "feedback";
   const blankLabel = sent?.base || "_____";
 
-  const tooltipKey = `${tooltipTranslate ?? ""}|${tooltipWordCategory ?? ""}`;
   const tooltipLines = useMemo(() => {
     const lines = [];
     if (tooltipTranslate) {
@@ -36,16 +41,6 @@ export default function PracticeCardFront({
     return lines;
   }, [tooltipTranslate, tooltipWordCategory]);
 
-  const [tooltipOpen, setTooltipOpen] = useState(false);
-
-  useEffect(() => {
-    setTooltipOpen(false);
-  }, [tooltipKey]);
-
-  const toggleTooltip = () => setTooltipOpen((open) => !open);
-  const openTooltip = () => setTooltipOpen(true);
-  const closeTooltip = () => setTooltipOpen(false);
-
   const checkLabel = isFeedback ? (t("next") || "Next") : (t("check") || "Check");
   const hintLabel = t("hint") || "Hint";
   const revealLabel = t("reveal") || "Reveal";
@@ -53,158 +48,107 @@ export default function PracticeCardFront({
   const nextLabel = t("next") || "Next";
 
   return (
-    <>
-      <div
-        style={{
-          fontSize: 18,
-          lineHeight: 1.5,
-          display: "flex",
-          flexWrap: "wrap",
-          alignItems: "center",
-          gap: 6,
-          marginBottom: 6,
-        }}
-      >
+    <div className="space-y-4">
+      <div className="text-lg sm:text-xl leading-relaxed flex flex-wrap items-center gap-2">
         <span>{sent?.before}</span>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-          <span style={{ fontWeight: 700, padding: "0 6px" }}>
+        <span className="inline-flex items-center gap-2">
+          <span className="font-semibold text-neutral-900 px-1">
             {isFeedback ? answer : blankLabel}
           </span>
           {tooltipLines.length > 0 ? (
-            <div style={{ position: "relative", display: "inline-flex" }}>
-              <button
-                type="button"
-                onClick={toggleTooltip}
-                onFocus={openTooltip}
-                onBlur={closeTooltip}
-                aria-haspopup="true"
-                aria-expanded={tooltipOpen}
-                style={{
-                  width: 26,
-                  height: 26,
-                  borderRadius: "50%",
-                  border: "1px solid #ccc",
-                  background: "#fff",
-                  padding: 0,
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                ?
-              </button>
-              {tooltipOpen ? (
-                <div
-                  role="tooltip"
-                  style={{
-                    position: "absolute",
-                    top: "110%",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    background: "#fff",
-                    border: "1px solid #ccc",
-                    borderRadius: 8,
-                    boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
-                    padding: "8px 10px",
-                    marginTop: 6,
-                    zIndex: 5,
-                    minWidth: 160,
-                  }}
+            <HoverCard>
+              <HoverCardTrigger asChild>
+                <button
+                  type="button"
+                  aria-label="Translation and category"
+                  className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 bg-white text-xs font-semibold text-neutral-700 shadow-sm transition hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700/30"
                 >
-                  {tooltipLines.map(({ label, value }, idx) => (
-                    <div key={idx} style={{ fontSize: 12, marginBottom: idx < tooltipLines.length - 1 ? 4 : 0 }}>
-                      <span style={{ fontWeight: 600, marginRight: 4 }}>{label}:</span>
-                      <span>{value}</span>
-                    </div>
-                  ))}
-                </div>
-              ) : null}
-            </div>
+                  ?
+                </button>
+              </HoverCardTrigger>
+              <HoverCardContent className="rounded-xl border border-neutral-200 bg-white p-3 text-sm shadow-lg">
+                {tooltipLines.map(({ label, value }, idx) => (
+                  <div
+                    key={idx}
+                    className={idx < tooltipLines.length - 1 ? "mb-2" : ""}
+                  >
+                    <span className="font-semibold text-neutral-900">
+                      {label}:
+                    </span>{" "}
+                    <span className="text-neutral-700">{value}</span>
+                  </div>
+                ))}
+              </HoverCardContent>
+            </HoverCard>
           ) : null}
-        </div>
+        </span>
         <span>{sent?.after}</span>
       </div>
 
       {showTranslate ? (
-        <div style={{ marginTop: 6, color: "#555", fontSize: 13 }}>{translate}</div>
+        <div className="text-sm text-neutral-600">{translate}</div>
       ) : null}
 
-      <div
-        style={{
-          marginTop: 12,
-          display: "flex",
-          gap: 8,
-          flexWrap: "wrap",
-          alignItems: "center",
-        }}
-      >
+      <div className="flex flex-wrap items-center gap-2">
         <input
           value={guess}
           onChange={(e) => setGuess(e.target.value)}
           disabled={disabledInput}
           placeholder={placeholder}
-          style={{
-            padding: "10px 12px",
-            borderRadius: 10,
-            border: "1px solid #ccc",
-            minWidth: 240,
-            opacity: disabledInput ? 0.7 : 1,
-          }}
+          className="h-10 min-w-[220px] flex-1 rounded-xl border border-neutral-200 bg-white px-3 text-sm text-neutral-900 shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700/30 disabled:cursor-not-allowed disabled:opacity-60"
           onKeyDown={(e) => {
             if (e.key === "Enter") onCheck();
           }}
         />
 
-        <button type="button" onClick={onCheck} style={{ padding: "10px 12px", borderRadius: 10 }}>
+        <Button type="button" onClick={onCheck} className="h-10">
           {checkLabel}
-        </button>
+        </Button>
 
-        <button type="button" onClick={onToggleHint} style={{ padding: "10px 12px", borderRadius: 10 }}>
-          {hintLabel}
-        </button>
-
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          onClick={onToggleHint}
+          className="h-10"
+        >
+          {hintLabel}
+        </Button>
+
+        <Button
+          type="button"
+          variant="ghost"
           onClick={onReveal}
           disabled={isFeedback}
-          style={{ padding: "10px 12px", borderRadius: 10 }}
+          className="h-10"
         >
           {revealLabel}
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="button"
+          variant="ghost"
           onClick={onSkip}
           disabled={isFeedback}
-          style={{ padding: "10px 12px", borderRadius: 10 }}
+          className="h-10"
         >
           {skipLabel}
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="button"
           onClick={onNext}
           disabled={!isFeedback}
-          style={{ padding: "10px 12px", borderRadius: 10 }}
+          className="h-10"
         >
           {nextLabel}
-        </button>
+        </Button>
       </div>
 
       {showHint && hintText ? (
-        <div
-          style={{
-            marginTop: 10,
-            padding: 10,
-            borderRadius: 10,
-            background: "#f7f7f7",
-          }}
-        >
+        <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-3 text-sm text-neutral-800">
           {hintText}
         </div>
       ) : null}
-    </>
+    </div>
   );
 }
