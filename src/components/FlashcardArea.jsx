@@ -11,6 +11,8 @@ export default function FlashcardArea({
   filteredCount,
   currentRow,
   onResult,
+  answerMode,
+  deckRows,
 }) {
   const { t } = useI18n();
 
@@ -63,7 +65,12 @@ export default function FlashcardArea({
           </div>
         ) : (
           <div className="mt-3">
-            <PracticeCard row={currentRow} onResult={onResult} />
+            <PracticeCard
+              row={currentRow}
+              onResult={onResult}
+              answerMode={answerMode}
+              deckRows={deckRows}
+            />
           </div>
         )}
       </div>

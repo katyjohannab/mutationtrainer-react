@@ -8,17 +8,21 @@ import Header from "./components/Header";
 import FlashcardArea from "./components/FlashcardArea";
 import FiltersPanel from "./components/FiltersPanel";
 import FilterSheet from "./components/FilterSheet";
+import { Button } from "./components/ui/button";
 
 import { loadLeitnerMap, updateLeitner } from "./utils/leitner";
 import { getCardKey, pickRandomIndex, pickSmartIndex } from "./utils/pickNext";
+import { useI18n } from "./i18n/I18nContext";
 
 export default function App() {
+  const { t } = useI18n();
   const [rows, setRows] = useState([]);
   const [activePresetId, setActivePresetId] = useState(null);
 
   const [mode, setMode] = useState("random"); // "random" | "smart"
   const [leitnerMap, setLeitnerMap] = useState(() => loadLeitnerMap());
 
+  const [answerMode, setAnswerMode] = useState("type"); // "type" | "tap"
   const [currentIdx, setCurrentIdx] = useState(-1);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -119,15 +123,43 @@ export default function App() {
 
       <main className="mx-auto w-full max-w-6xl px-4 py-4">
         <div className="flex flex-col gap-6 md:flex-row">
-          <FlashcardArea
-            className="flex-1"
-            mode={mode}
-            onModeChange={setMode}
-            rowsCount={rows.length}
-            filteredCount={filtered.length}
-            currentRow={currentRow}
-            onResult={onResult}
-          />
+          <div className="flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm font-semibold text-gray-700">
+                {t("inputMode")}:
+              </span>
+
+              <Button
+                type="button"
+                variant="pill"
+                active={answerMode === "type"}
+                onClick={() => setAnswerMode("type")}
+              >
+                {t("typeMode")}
+              </Button>
+
+              <Button
+                type="button"
+                variant="pill"
+                active={answerMode === "tap"}
+                onClick={() => setAnswerMode("tap")}
+              >
+                {t("tapMode")}
+              </Button>
+            </div>
+
+            <FlashcardArea
+              className="mt-4"
+              mode={mode}
+              onModeChange={setMode}
+              rowsCount={rows.length}
+              filteredCount={filtered.length}
+              currentRow={currentRow}
+              onResult={onResult}
+              answerMode={answerMode}
+              deckRows={filtered}
+            />
+          </div>
 
           <aside className="hidden md:block md:w-1/3">
             <FiltersPanel
