@@ -62,13 +62,15 @@ export default function PracticeCardFeedback({
   }, [last, t]);
   const isCorrect = last === "correct";
   const nextLabel = t("next") || "Next";
+  const outcomeClass =
+    last && last !== "correct" ? "text-red-700" : "text-neutral-700";
 
   return (
     <div className="space-y-5">
       {statusLabel ? (
         <div
           className={cn(
-            "inline-flex rounded-full border px-4 py-2 text-sm font-semibold",
+            "inline-flex rounded-full border px-4 py-2 text-sm font-semibold shadow-sm",
             isCorrect
               ? "border-emerald-200 bg-emerald-50 text-emerald-900"
               : "border-red-200 bg-red-50 text-red-900"
@@ -80,18 +82,23 @@ export default function PracticeCardFeedback({
 
       <div className="text-lg sm:text-xl leading-relaxed">
         <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
-        <span className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 font-semibold text-emerald-950 mx-1">
+        <span className="mx-1 inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 font-semibold text-emerald-950 shadow-sm">
           {answer}
         </span>
         <span className="whitespace-pre-wrap break-words">{sent?.after}</span>
       </div>
 
       {outcomeText ? (
-        <div className="text-sm text-neutral-700">{outcomeText}</div>
+        <div className={cn("text-sm", outcomeClass)}>{outcomeText}</div>
       ) : null}
 
       <div className="flex flex-wrap items-center gap-2">
-        <Button type="button" onClick={onHear} disabled={ttsLoading} className="h-10">
+        <Button
+          type="button"
+          onClick={onHear}
+          disabled={ttsLoading}
+          className="h-10 border-emerald-600 bg-emerald-600 text-white hover:bg-emerald-700"
+        >
           {ttsLoading ? loadingLabel : hearLabel}
         </Button>
 
@@ -112,7 +119,7 @@ export default function PracticeCardFeedback({
           <ToggleGroupItem
             value="on"
             aria-label="Autoplay"
-            className="rounded-full border border-neutral-200 bg-white px-3 py-1 text-xs font-medium text-neutral-700 shadow-sm transition data-[state=on]:border-emerald-200 data-[state=on]:bg-emerald-50 data-[state=on]:text-emerald-900"
+            className="rounded-full border border-emerald-100 bg-white px-3 py-1 text-xs font-medium text-emerald-800 shadow-sm transition data-[state=on]:border-emerald-600 data-[state=on]:bg-emerald-600 data-[state=on]:text-white"
           >
             Autoplay
           </ToggleGroupItem>
@@ -124,14 +131,20 @@ export default function PracticeCardFeedback({
       </div>
 
       {explanation ? (
-        <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-4 text-sm text-neutral-800">
-          <div className="text-sm font-semibold text-neutral-900">{whyLabel}</div>
+        <div className="rounded-xl border border-emerald-100 bg-emerald-50/30 p-4 text-sm text-emerald-950">
+          <div className="text-sm font-semibold text-emerald-950">
+            {whyLabel}
+          </div>
           <div className="mt-2">{explanation}</div>
         </div>
       ) : null}
 
       <div className="flex justify-end pt-2">
-        <Button type="button" onClick={onNext} className="h-10">
+        <Button
+          type="button"
+          onClick={onNext}
+          className="h-10 border-emerald-600 bg-emerald-600 text-white hover:bg-emerald-700"
+        >
           {nextLabel}
           <ArrowRightIcon className="h-5 w-5" aria-hidden="true" />
         </Button>

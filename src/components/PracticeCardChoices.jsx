@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { Button } from "./ui/button";
 import {
   HoverCard,
@@ -45,6 +45,8 @@ export default function PracticeCardChoices({
   const isFeedback = cardState === "feedback";
   const baseword = sent?.base || "_____";
   const blankSlot = "_____";
+  const hoverCardContentClass =
+    "w-64 max-w-[85vw] rounded-2xl border border-emerald-100 bg-white/95 p-4 text-sm text-neutral-800 shadow-xl backdrop-blur";
 
   const tooltipLines = useMemo(() => {
     const lines = [];
@@ -89,12 +91,12 @@ export default function PracticeCardChoices({
   return (
     <div className="space-y-5">
       {instructionText ? (
-        <div className="text-sm text-neutral-600">{instructionText}</div>
+        <div className="text-sm text-emerald-900/80">{instructionText}</div>
       ) : null}
 
       <div className="flex justify-center">
         <div className="relative inline-flex">
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-6 py-3 text-4xl sm:text-5xl font-extrabold tracking-tight text-emerald-950 shadow-sm">
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50/70 px-6 py-3 text-4xl sm:text-5xl font-extrabold tracking-tight text-emerald-950 shadow-sm ring-1 ring-emerald-100/70">
             {baseword}
           </div>
 
@@ -104,23 +106,28 @@ export default function PracticeCardChoices({
                 <button
                   type="button"
                   aria-label="Translation and category"
-                  className="absolute -right-2 -top-2 inline-flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 bg-white text-xs font-semibold text-neutral-700 shadow-sm transition hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700/30"
+                  className="absolute -right-2 -top-2 inline-flex h-7 w-7 items-center justify-center rounded-full border border-red-200 bg-red-500 text-xs font-semibold text-white shadow-sm transition hover:bg-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40"
                 >
                   ?
                 </button>
               </HoverCardTrigger>
-              <HoverCardContent className="rounded-xl border border-neutral-200 bg-white p-3 text-sm shadow-lg">
-                {tooltipLines.map(({ label, value }, idx) => (
-                  <div
-                    key={idx}
-                    className={idx < tooltipLines.length - 1 ? "mb-2" : ""}
-                  >
-                    <span className="font-semibold text-neutral-900">
-                      {label}:
-                    </span>{" "}
-                    <span className="text-neutral-700">{value}</span>
-                  </div>
-                ))}
+              <HoverCardContent
+                side="top"
+                align="center"
+                sideOffset={12}
+                collisionPadding={12}
+                className={hoverCardContentClass}
+              >
+                <div className="space-y-2">
+                  {tooltipLines.map(({ label, value }, idx) => (
+                    <div key={idx}>
+                      <div className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
+                        {label}
+                      </div>
+                      <div className="text-sm text-neutral-800">{value}</div>
+                    </div>
+                  ))}
+                </div>
               </HoverCardContent>
             </HoverCard>
           ) : null}
@@ -133,7 +140,7 @@ export default function PracticeCardChoices({
 
       <div className="min-w-0 flex flex-wrap items-center gap-2 text-lg sm:text-xl leading-relaxed">
         <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
-        <span className="inline-flex items-center rounded-full border border-neutral-200 bg-neutral-50 px-4 py-2 text-base font-semibold text-neutral-700">
+        <span className="inline-flex items-center rounded-full border border-emerald-100 bg-emerald-50/40 px-4 py-2 text-base font-semibold text-emerald-900">
           {blankSlot}
         </span>
         <span className="whitespace-pre-wrap break-words">{sent?.after}</span>
@@ -157,9 +164,9 @@ export default function PracticeCardChoices({
               disabled={disabled}
               onClick={() => onPick?.(choice)}
               className={cn(
-                "w-full rounded-xl border bg-white px-4 py-3 text-left text-sm sm:text-base shadow-sm transition hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700/30",
+                "w-full rounded-xl border border-emerald-100 bg-white px-4 py-3 text-left text-sm sm:text-base shadow-sm transition hover:bg-emerald-50/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700/30",
                 disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
-                isSelected && "border-neutral-900 ring-2 ring-neutral-900/10",
+                isSelected && "border-emerald-800 ring-2 ring-emerald-900/10",
                 isCorrectChoice && "border-emerald-300 bg-emerald-50",
                 isWrongChoice && "border-red-300 bg-red-50"
               )}
@@ -171,16 +178,20 @@ export default function PracticeCardChoices({
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        <Button type="button" onClick={onCheck} className="h-10">
+        <Button
+          type="button"
+          onClick={onCheck}
+          className="h-10 border-emerald-600 bg-emerald-600 text-white hover:bg-emerald-700"
+        >
           <CheckIcon className="h-5 w-5" aria-hidden="true" />
           {checkLabel}
         </Button>
 
         <Button
           type="button"
-          variant="ghost"
+          variant="default"
           onClick={onToggleHint}
-          className="h-10"
+          className="h-10 border-emerald-100 bg-emerald-50 text-emerald-900 hover:bg-emerald-100"
         >
           <LightBulbIcon className="h-5 w-5" aria-hidden="true" />
           {hintLabel}
@@ -188,10 +199,10 @@ export default function PracticeCardChoices({
 
         <Button
           type="button"
-          variant="ghost"
+          variant="default"
           onClick={onReveal}
           disabled={isFeedback}
-          className="h-10"
+          className="h-10 border-red-200 bg-red-50 text-red-700 hover:bg-red-100"
         >
           <EyeIcon className="h-5 w-5" aria-hidden="true" />
           {revealLabel}
@@ -202,7 +213,7 @@ export default function PracticeCardChoices({
           variant="ghost"
           onClick={onSkip}
           disabled={isFeedback}
-          className="h-10"
+          className="h-10 text-neutral-600 hover:text-neutral-800"
         >
           <ArrowUturnRightIcon className="h-5 w-5" aria-hidden="true" />
           {skipLabel}
@@ -210,7 +221,7 @@ export default function PracticeCardChoices({
       </div>
 
       {showHint && hintText ? (
-        <div className="rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm text-neutral-800">
+        <div className="rounded-xl border border-emerald-100 bg-emerald-50/40 px-4 py-3 text-sm text-emerald-950">
           {hintText}
         </div>
       ) : null}
