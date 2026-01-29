@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 import { cn } from "../lib/cn";
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
 
 export default function PracticeCardFeedback({
   sent,
@@ -16,6 +17,7 @@ export default function PracticeCardFeedback({
   whyEn,
   whyCy,
   lang,
+  onNext,
 }) {
   const [autoplay, setAutoplay] = useState(false);
   const autoplayKeyRef = useRef("");
@@ -59,13 +61,14 @@ export default function PracticeCardFeedback({
     return "";
   }, [last, t]);
   const isCorrect = last === "correct";
+  const nextLabel = t("next") || "Next";
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {statusLabel ? (
         <div
           className={cn(
-            "rounded-xl border px-4 py-3 text-sm font-medium",
+            "inline-flex rounded-full border px-4 py-2 text-sm font-semibold",
             isCorrect
               ? "border-emerald-200 bg-emerald-50 text-emerald-900"
               : "border-red-200 bg-red-50 text-red-900"
@@ -75,10 +78,12 @@ export default function PracticeCardFeedback({
         </div>
       ) : null}
 
-      <div className="text-lg leading-relaxed">
-        <span>{sent?.before}</span>
-        <span className="font-semibold text-neutral-900 px-1">{answer}</span>
-        <span>{sent?.after}</span>
+      <div className="text-lg sm:text-xl leading-relaxed">
+        <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
+        <span className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 font-semibold text-emerald-950 mx-1">
+          {answer}
+        </span>
+        <span className="whitespace-pre-wrap break-words">{sent?.after}</span>
       </div>
 
       {outcomeText ? (
@@ -124,6 +129,13 @@ export default function PracticeCardFeedback({
           <div className="mt-2">{explanation}</div>
         </div>
       ) : null}
+
+      <div className="flex justify-end pt-2">
+        <Button type="button" onClick={onNext} className="h-10">
+          {nextLabel}
+          <ArrowRightIcon className="h-5 w-5" aria-hidden="true" />
+        </Button>
+      </div>
     </div>
   );
 }

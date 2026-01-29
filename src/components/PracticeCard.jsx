@@ -216,8 +216,6 @@ function makeChoices(currentRow, deckRows, sent) {
     takeFromList(variants);
   }
 
-  // ensure we have at least 2 distractors; if not, reuse allowed algorithmic variants that
-  // simply prefix 'h' (common in mutation) to produce variations of base.
   if (distractors.length < 2 && baseWord) {
     const fallback = [];
     const prefixVariants = ["h", "rh", "gh"];
@@ -333,6 +331,10 @@ export default function PracticeCard({
   const hearLabel = (t("hear") || "Hear").trim();
   const loadingLabel = (t("loading") || "Loading...").trim();
   const placeholder = t("placeholderType") || "Type the mutated form...";
+  const instructionText = `${t("inputMode") || "Answer mode"}: ${
+    answerMode === "tap" ? t("tapMode") || "Tap" : t("typeMode") || "Type"
+  }`;
+
   const choiceKey = `${row?.cardId ?? row?.CardId ?? ""}|${answer}|${
     Array.isArray(deckRows) ? deckRows.length : 0
   }`;
@@ -341,94 +343,96 @@ export default function PracticeCard({
     return makeChoices(row, deckRows, sent);
   }, [choiceKey, row, deckRows, answerMode, sent]);
 
+  const cardClassName = cn(
+    "w-full max-w-full rounded-2xl border border-neutral-200 bg-white shadow-sm",
+    "transition-shadow duration-200 hover:shadow-md"
+  );
+
   return (
-    <div
-      className={cn(
-        "mt-4",
-        "rounded-2xl border border-neutral-200 bg-white shadow-sm",
-        "transition-shadow duration-200 hover:shadow-md"
-      )}
-    >
-      <div className="p-5 sm:p-6">
-        <div className="relative">
-          <div
-            className={cn(
-              "transition-all duration-200",
-              isFeedback
-                ? "opacity-0 -translate-y-1 pointer-events-none"
-                : "opacity-100 translate-y-0"
-            )}
-          >
-            {answerMode === "tap" ? (
-              <PracticeCardChoices
-                sent={sent}
-                answer={answer}
-                cardState={cardState}
-                choices={choices}
-                disabled={disabledInput}
-                showTranslate={showTranslate}
-                translate={translateSent}
-                hintText={hintText}
-                showHint={showHint}
-                onToggleHint={() => setShowHint((s) => !s)}
-                onPick={(option) => onCheck(option)}
-                onCheck={onCheck}
-                onReveal={onReveal}
-                onSkip={onSkip}
-                onNext={goNext}
-                t={t}
-                tooltipTranslate={tooltipTranslate}
-                tooltipWordCategory={wordCategory}
-              />
-            ) : (
-              <PracticeCardFront
-                sent={sent}
-                answer={answer}
-                cardState={cardState}
-                guess={guess}
-                setGuess={setGuess}
-                disabledInput={disabledInput}
-                showTranslate={showTranslate}
-                translate={translateSent}
-                placeholder={placeholder}
-                hintText={hintText}
-                showHint={showHint}
-                onToggleHint={() => setShowHint((s) => !s)}
-                onCheck={onCheck}
-                onReveal={onReveal}
-                onSkip={onSkip}
-                onNext={goNext}
-                t={t}
-                tooltipTranslate={tooltipTranslate}
-                tooltipWordCategory={wordCategory}
-              />
-            )}
+    <div className="relative w-full max-w-full">
+      <div className="relative w-full [perspective:1200px]">
+        <div
+          className={cn(
+            "relative w-full transition-transform duration-500 [transform-style:preserve-3d]",
+            isFeedback
+              ? "[transform:rotateY(180deg)]"
+              : "[transform:rotateY(0deg)]"
+          )}
+        >
+          <div className="w-full [backface-visibility:hidden]">
+            <div className={cardClassName}>
+              <div className="p-5 sm:p-6">
+                {answerMode === "tap" ? (
+                  <PracticeCardChoices
+                    sent={sent}
+                    answer={answer}
+                    cardState={cardState}
+                    choices={choices}
+                    disabled={disabledInput}
+                    showTranslate={showTranslate}
+                    translate={translateSent}
+                    hintText={hintText}
+                    showHint={showHint}
+                    onToggleHint={() => setShowHint((s) => !s)}
+                    onPick={(option) => onCheck(option)}
+                    onCheck={onCheck}
+                    onReveal={onReveal}
+                    onSkip={onSkip}
+                    onNext={goNext}
+                    t={t}
+                    tooltipTranslate={tooltipTranslate}
+                    tooltipWordCategory={wordCategory}
+                    instructionText={instructionText}
+                    guess={guess}
+                  />
+                ) : (
+                  <PracticeCardFront
+                    sent={sent}
+                    answer={answer}
+                    cardState={cardState}
+                    guess={guess}
+                    setGuess={setGuess}
+                    disabledInput={disabledInput}
+                    showTranslate={showTranslate}
+                    translate={translateSent}
+                    placeholder={placeholder}
+                    hintText={hintText}
+                    showHint={showHint}
+                    onToggleHint={() => setShowHint((s) => !s)}
+                    onCheck={onCheck}
+                    onReveal={onReveal}
+                    onSkip={onSkip}
+                    onNext={goNext}
+                    t={t}
+                    tooltipTranslate={tooltipTranslate}
+                    tooltipWordCategory={wordCategory}
+                    instructionText={instructionText}
+                  />
+                )}
+              </div>
+            </div>
           </div>
 
-          <div
-            className={cn(
-              "absolute inset-0 transition-all duration-200",
-              isFeedback
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-1 pointer-events-none"
-            )}
-          >
-            {isFeedback ? (
-              <PracticeCardFeedback
-                sent={sent}
-                answer={answer}
-                onHear={onHear}
-                t={t}
-                hearLabel={hearLabel}
-                loadingLabel={loadingLabel}
-                ttsLoading={ttsLoading}
-                ttsError={ttsError}
-                last={last}
-                whyEn={whyEn}
-                whyCy={whyCy}
-                lang={lang}
-              />
-            ) : null}
+          <div className="absolute inset-0 w-full [backface-visibility:hidden] [transform:rotateY(180deg)]">
+            <div className={cardClassName}>
+              <div className="p-5 sm:p-6">
+                <PracticeCardFeedback
+                  sent={sent}
+                  answer={answer}
+                  onHear={onHear}
+                  t={t}
+                  hearLabel={hearLabel}
+                  loadingLabel={loadingLabel}
+                  ttsLoading={ttsLoading}
+                  ttsError={ttsError}
+                  last={last}
+                  whyEn={whyEn}
+                  whyCy={whyCy}
+                  lang={lang}
+                  onNext={goNext}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
