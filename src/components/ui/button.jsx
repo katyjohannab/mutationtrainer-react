@@ -3,18 +3,18 @@ import { cn } from "../../lib/cn";
 
 const variantClasses = {
   default:
-    "bg-white/90 text-gray-900 border border-gray-200 hover:bg-gray-50 shadow-sm active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-emerald-700/40 focus-visible:ring-offset-2",
+    "bg-card/90 text-foreground border border-border hover:bg-muted shadow-sm active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2",
   ghost:
-    "bg-transparent text-gray-700 border border-transparent hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-emerald-700/40 focus-visible:ring-offset-2",
+    "bg-transparent text-muted-foreground border border-transparent hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2",
   icon:
-    "bg-white/90 text-gray-700 border border-gray-200 hover:bg-gray-50 shadow-sm active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-emerald-700/40 focus-visible:ring-offset-2",
+    "bg-card/90 text-muted-foreground border border-border hover:bg-muted shadow-sm active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2",
   pill:
-    "bg-white text-gray-900 border border-gray-200 hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-emerald-700/40 focus-visible:ring-offset-2",
+    "bg-card text-foreground border border-border hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2",
 };
 
 const activeVariants = {
-  default: "bg-emerald-50 text-emerald-900 border-emerald-200 shadow",
-  pill: "bg-emerald-50 text-emerald-900 border-emerald-800/40",
+  default: "bg-primary/10 text-primary border-primary/30 shadow",
+  pill: "bg-primary/10 text-primary border-primary/30",
 };
 
 const sizeClasses = {

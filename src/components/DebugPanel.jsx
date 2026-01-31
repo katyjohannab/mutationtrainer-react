@@ -47,14 +47,23 @@ export default function DebugPanel() {
       style={{
         marginTop: 16,
         padding: 12,
-        border: "1px solid #eee",
+        border: "1px solid hsl(var(--border))",
         borderRadius: 12,
+        background: "hsl(var(--card))",
+        color: "hsl(var(--foreground))",
       }}
     >
       <h2 style={{ marginTop: 0 }}>Debug</h2>
 
       {state?.loadError ? (
-        <div style={{ padding: 12, border: "1px solid #f99", borderRadius: 8 }}>
+        <div
+          style={{
+            padding: 12,
+            border: "1px solid hsl(var(--destructive) / 0.4)",
+            borderRadius: 8,
+            background: "hsl(var(--destructive) / 0.1)",
+          }}
+        >
           <b>Load error:</b> {state.loadError}
         </div>
       ) : null}
@@ -65,11 +74,11 @@ export default function DebugPanel() {
 
       <p style={{ margin: "0 0 12px" }}>
         Field health:{" "}
-        <b style={{ color: hasCategory ? "inherit" : "#b00" }}>
+        <b style={{ color: hasCategory ? "inherit" : "hsl(var(--destructive))" }}>
           category {hasCategory ? "✓" : "✗"}
         </b>{" "}
         |{" "}
-        <b style={{ color: hasTrigger ? "inherit" : "#b00" }}>
+        <b style={{ color: hasTrigger ? "inherit" : "hsl(var(--destructive))" }}>
           trigger {hasTrigger ? "✓" : "✗"}
         </b>
       </p>

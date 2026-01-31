@@ -98,7 +98,7 @@ export default function PracticeCardFeedback({
           className={cn(
             "rounded-full border px-4 py-2 text-sm font-semibold shadow-sm",
             isCorrect
-              ? "border-emerald-200 bg-emerald-50 text-emerald-900"
+              ? "border-primary/30 bg-primary/10 text-primary"
               : "border-destructive/30 bg-destructive/10 text-destructive"
           )}
         >

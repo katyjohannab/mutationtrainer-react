@@ -8,14 +8,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        cymruRed: {
-          800: "#991b1b",
-          600: "#dc2626",
-        },
-        emeraldInk: {
-          900: "#064e3b",
-          700: "#0f766e",
-        },
+        cymruRed: "hsl(var(--cymru-red))",
+        cymruGreen: "hsl(var(--cymru-green))",
+        cymruGreenLight: "hsl(var(--cymru-green-light))",
+        cymruGold: "hsl(var(--cymru-gold))",
+        cymruBg: "hsl(var(--cymru-bg))",
+        cymruText: "hsl(var(--cymru-text))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: "hsl(var(--card))",

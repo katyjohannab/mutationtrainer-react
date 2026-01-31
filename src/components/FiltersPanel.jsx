@@ -3,7 +3,7 @@ import { useI18n } from "../i18n/I18nContext";
 import { cn } from "../lib/cn";
 import { PRESET_DEFS, PRESET_ORDER } from "../data/presets";
 
-import { Badge } from "./ui/badge";
+import { Badge, badgeVariants } from "./ui/badge";
 
 const MUTATION_FILTERS = [
   { id: "aspirate", labelKey: "mutationFilterAspirate" },
@@ -18,11 +18,10 @@ function FilterBadge({ active, onClick, children, className }) {
   return (
     <Badge
       onClick={onClick}
-      variant={active ? "default" : "secondary"}
+      variant={active ? "default" : "soft"}
       className={cn(
-        "cursor-pointer select-none rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors",
-        active && "bg-emerald-700 text-white hover:bg-emerald-800",
-        !active && "bg-slate-100 text-slate-700 hover:bg-slate-200",
+        "cursor-pointer select-none rounded-full px-3 py-1 text-xs font-semibold transition-colors",
+        active && "ring-1 ring-primary/30",
         className
       )}
     >
@@ -75,11 +74,11 @@ export default function FiltersPanel({
       {/* 1. Quick Packs */}
       <section>
         <div className="mb-4">
-          <h2 className="text-lg font-bold text-slate-900">{t("quickPacksTitle")}</h2>
-          <p className="text-sm text-slate-500">
+          <h2 className="text-lg font-bold text-foreground">{t("quickPacksTitle")}</h2>
+          <p className="text-sm text-muted-foreground">
             {t("quickPacksSubtitle")}
           </p>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             {t("quickPacksHint")}
           </p>
         </div>
@@ -100,21 +99,21 @@ export default function FiltersPanel({
                 className={cn(
                   "relative cursor-pointer rounded-xl border p-4 transition-all hover:shadow-md text-left select-none group",
                   active
-                    ? "bg-emerald-50/50 border-[--cymru-green] ring-1 ring-[--cymru-green]"
-                    : "bg-white border-slate-200 hover:border-emerald-200"
+                    ? "bg-primary/10 border-primary/30 ring-1 ring-primary/30"
+                    : "bg-card border-border hover:border-primary/30"
                 )}
               >
                 {active && (
-                  <div className="absolute -top-2 -right-2 bg-white rounded-full p-0.5 shadow-sm border border-slate-100">
-                    <div className="bg-[--cymru-green] rounded-full p-0.5 text-white">
+                  <div className="absolute -top-2 -right-2 bg-card rounded-full p-0.5 shadow-sm border border-border">
+                    <div className="bg-primary rounded-full p-0.5 text-primary-foreground">
                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
                     </div>
                   </div>
                 )}
-                <div className="font-semibold text-slate-900 text-sm mb-1 pr-4 group-hover:text-[--cymru-green] transition-colors">
+                <div className="font-semibold text-foreground text-sm mb-1 pr-4 group-hover:text-primary transition-colors">
                   {label}
                 </div>
-                <div className="text-xs text-slate-500 leading-snug">
+                <div className="text-xs text-muted-foreground leading-snug">
                   {desc}
                 </div>
               </div>
@@ -126,15 +125,15 @@ export default function FiltersPanel({
       {/* 2. Core Filters */}
       <section>
         <div className="mb-4">
-          <h2 className="text-base font-bold text-slate-900">{t("coreFiltersTitle")}</h2>
-          <p className="text-sm text-slate-500">
+          <h2 className="text-base font-bold text-foreground">{t("coreFiltersTitle")}</h2>
+          <p className="text-sm text-muted-foreground">
             {t("coreFiltersSubtitle")}
           </p>
         </div>
 
         {/* Mutation Type */}
         <div className="mb-6">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
             {t("mutationTypeHeading")}
           </h3>
           <div className="flex flex-wrap gap-2">
@@ -158,7 +157,7 @@ export default function FiltersPanel({
 
         {/* Categories */}
         <div>
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
             {t("categoriesHeading")}
           </h3>
           <div className="flex flex-wrap gap-2">
@@ -183,7 +182,11 @@ export default function FiltersPanel({
               <button
                 type="button"
                 onClick={() => setExpandedCats(!expandedCats)}
-                className="px-3 py-1 rounded-md text-xs font-semibold border border-dashed border-slate-300 text-slate-500 hover:text-slate-800 hover:border-slate-400 flex items-center gap-1 transition-colors bg-transparent"
+                className={cn(
+                  badgeVariants({ variant: "outline" }),
+                  "cursor-pointer select-none rounded-full px-3 py-1 text-xs font-semibold border-dashed border-accent/40 text-foreground hover:bg-accent/10",
+                  "gap-1"
+                )}
               >
                 {t(expandedCats ? "filtersFewer" : "filtersMore")}
                 <svg

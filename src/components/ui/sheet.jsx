@@ -26,7 +26,7 @@ const SheetContent = React.forwardRef(
       left: "fixed left-0 top-0 h-full w-full max-w-sm",
     };
     const baseClasses =
-      "fixed z-50 flex flex-col gap-4 bg-white/95 p-6 shadow-2xl transition duration-300 data-[state=open]:translate-x-0 data-[state=closed]:translate-x-full";
+      "fixed z-50 flex flex-col gap-4 bg-card/95 p-6 shadow-2xl transition duration-300 data-[state=open]:translate-x-0 data-[state=closed]:translate-x-full";
 
     return (
       <SheetPortal>
@@ -54,7 +54,7 @@ SheetHeader.displayName = "SheetHeader";
 const SheetTitle = React.forwardRef(({ className, ...props }, ref) => (
   <SheetPrimitive.Title
     ref={ref}
-    className={cn("text-lg font-semibold text-gray-900", className)}
+    className={cn("text-lg font-semibold text-foreground", className)}
     {...props}
   />
 ));
@@ -63,7 +63,7 @@ SheetTitle.displayName = "SheetTitle";
 const SheetDescription = React.forwardRef(({ className, ...props }, ref) => (
   <SheetPrimitive.Description
     ref={ref}
-    className={cn("text-sm text-gray-600", className)}
+    className={cn("text-sm text-muted-foreground", className)}
     {...props}
   />
 ));

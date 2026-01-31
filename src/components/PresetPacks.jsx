@@ -1,6 +1,7 @@
 import React from "react";
 import { PRESET_DEFS, PRESET_ORDER } from "../data/presets";
 import { useTrainer } from "../state/TrainerContext";
+import { badgeVariants } from "./ui/badge";
 
 export default function PresetPacks() {
   const { state, dispatch } = useTrainer();
@@ -20,14 +21,7 @@ export default function PresetPacks() {
               onClick={() =>
                 dispatch({ type: isOn ? "CLEAR_PRESET" : "APPLY_PRESET", presetId: id })
               }
-              style={{
-                padding: "8px 12px",
-                borderRadius: 999,
-                border: "1px solid #ccc",
-                cursor: "pointer",
-                background: isOn ? "#111" : "#fff",
-                color: isOn ? "#fff" : "#111",
-              }}
+              className={`${badgeVariants({ variant: isOn ? "default" : "soft" })} cursor-pointer rounded-full px-3 py-2 text-sm transition-colors ${isOn ? "ring-1 ring-primary/30" : ""}`}
               title={preset.description}
             >
               {preset.title}

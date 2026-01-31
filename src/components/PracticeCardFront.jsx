@@ -39,7 +39,7 @@ export default function PracticeCardFront({
   const isFeedback = cardState === "feedback";
   const baseword = sent?.base || "_____";
   const hoverCardContentClass =
-    "w-64 max-w-[85vw] rounded-2xl border border-emerald-100 bg-white/95 p-4 text-sm text-neutral-800 shadow-xl backdrop-blur";
+    "w-64 max-w-[85vw] rounded-2xl border border-border bg-card/95 p-4 text-sm text-foreground shadow-xl backdrop-blur";
 
   const tooltipLines = useMemo(() => {
     const lines = [];
@@ -93,10 +93,10 @@ export default function PracticeCardFront({
                 <div className="space-y-2">
                   {tooltipLines.map(({ label, value }, idx) => (
                     <div key={idx}>
-                      <div className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
+                      <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         {label}
                       </div>
-                      <div className="text-sm text-neutral-800">{value}</div>
+                      <div className="text-sm text-foreground">{value}</div>
                     </div>
                   ))}
                 </div>

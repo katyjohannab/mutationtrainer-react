@@ -24,7 +24,7 @@ export default function Header({
   const isCy = lang === "cy";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-emerald-100 bg-white/95 shadow-sm backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/95 shadow-sm backdrop-blur">
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         
         {/* Logo lockup: dragon + wordmark */}
@@ -36,7 +36,7 @@ export default function Header({
             aria-hidden="true"
           />
           <h1
-            className="text-2xl sm:text-3xl lg:text-4xl uppercase tracking-[-0.02em] leading-tight text-emerald-900"
+            className="text-2xl sm:text-3xl lg:text-4xl uppercase tracking-[-0.02em] leading-tight text-primary"
             style={{
               fontFamily:
                 "'BBH Bogle', 'bbh-bogle-regular', 'Bogle', 'Poppins', 'Inter', sans-serif",
@@ -48,13 +48,13 @@ export default function Header({
 
         {/* Control cluster: unified minimal surface */}
         <TooltipProvider>
-          <div className="flex items-center border border-emerald-100 rounded-lg bg-emerald-50/30 px-3 py-2 gap-3">
+          <div className="flex items-center border border-border rounded-lg bg-primary/10 px-3 py-2 gap-3">
             
             {/* Language toggle: EN [switch] CY */}
             <div className="flex items-center gap-2">
               <span className={cn(
                 "text-xs font-medium transition-colors",
-                !isCy ? "text-emerald-800" : "text-muted-foreground"
+                !isCy ? "text-primary" : "text-muted-foreground"
               )}>
                 EN
               </span>
@@ -66,14 +66,14 @@ export default function Header({
               />
               <span className={cn(
                 "text-xs font-medium transition-colors",
-                isCy ? "text-emerald-800" : "text-muted-foreground"
+                isCy ? "text-primary" : "text-muted-foreground"
               )}>
                 CY
               </span>
             </div>
 
             {/* Separator */}
-            <div className="h-4 w-px bg-emerald-200" />
+            <div className="h-4 w-px bg-border" />
 
             {/* Icon buttons: help, stats */}
             <Tooltip>
@@ -83,7 +83,7 @@ export default function Header({
                   size="icon"
                   onClick={onOpenHelp}
                   aria-label={t("headerHelp") || "Help"}
-                  className="h-9 w-9 text-emerald-700 hover:bg-emerald-100"
+                  className="h-9 w-9 text-primary hover:bg-primary/10"
                 >
                   <QuestionMarkCircleIcon className="h-5 w-5" aria-hidden="true" />
                 </Button>
@@ -100,7 +100,7 @@ export default function Header({
                   size="icon"
                   onClick={onOpenStats}
                   aria-label={t("headerStats") || "Stats"}
-                  className="h-9 w-9 text-emerald-700 hover:bg-emerald-100"
+                  className="h-9 w-9 text-primary hover:bg-primary/10"
                 >
                   <ChartBarIcon className="h-5 w-5" aria-hidden="true" />
                 </Button>
@@ -116,7 +116,7 @@ export default function Header({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="sm:hidden h-9 w-9 text-emerald-700 hover:bg-emerald-100"
+                  className="sm:hidden h-9 w-9 text-primary hover:bg-primary/10"
                   onClick={onOpenFilters}
                   aria-label={t("headerFilters") || "Filters"}
                 >

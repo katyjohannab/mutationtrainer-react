@@ -3,6 +3,15 @@ import { useTrainer } from "../state/TrainerContext";
 
 export default function ModeToggle() {
   const { state, setMode } = useTrainer();
+  const baseButtonStyle = {
+    padding: "6px 10px",
+    borderRadius: 999,
+    border: "1px solid hsl(var(--border))",
+    cursor: "pointer",
+    background: "hsl(var(--card))",
+    color: "hsl(var(--foreground))",
+    transition: "background 150ms ease, color 150ms ease",
+  };
 
   return (
     <div style={{ marginTop: 12, display: "flex", gap: 8, alignItems: "center" }}>
@@ -11,12 +20,15 @@ export default function ModeToggle() {
       <button
         onClick={() => setMode("random")}
         style={{
-          padding: "6px 10px",
-          borderRadius: 999,
-          border: "1px solid #ccc",
-          cursor: "pointer",
-          background: state.mode === "random" ? "#111" : "#fff",
-          color: state.mode === "random" ? "#fff" : "#111",
+          ...baseButtonStyle,
+          background:
+            state.mode === "random"
+              ? "hsl(var(--primary))"
+              : "hsl(var(--card))",
+          color:
+            state.mode === "random"
+              ? "hsl(var(--primary-foreground))"
+              : "hsl(var(--foreground))",
         }}
       >
         Random
@@ -25,12 +37,15 @@ export default function ModeToggle() {
       <button
         onClick={() => setMode("smart")}
         style={{
-          padding: "6px 10px",
-          borderRadius: 999,
-          border: "1px solid #ccc",
-          cursor: "pointer",
-          background: state.mode === "smart" ? "#111" : "#fff",
-          color: state.mode === "smart" ? "#fff" : "#111",
+          ...baseButtonStyle,
+          background:
+            state.mode === "smart"
+              ? "hsl(var(--primary))"
+              : "hsl(var(--card))",
+          color:
+            state.mode === "smart"
+              ? "hsl(var(--primary-foreground))"
+              : "hsl(var(--foreground))",
         }}
       >
         Smart (Leitner)

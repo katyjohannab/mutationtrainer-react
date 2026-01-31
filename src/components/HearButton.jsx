@@ -29,10 +29,11 @@ export default function HearButton({ text }) {
         style={{
           padding: "10px 12px",
           borderRadius: 10,
-          border: "1px solid #ccc",
+          border: "1px solid hsl(var(--border))",
           cursor: busy ? "wait" : "pointer",
           opacity: !text || busy ? 0.7 : 1,
-          background: "#fff",
+          background: "hsl(var(--card))",
+          color: "hsl(var(--foreground))",
         }}
         aria-label={t("hear")}
         title={t("hear")}
@@ -40,7 +41,7 @@ export default function HearButton({ text }) {
         🔊 {busy ? t("loading") : t("hear")}
       </button>
 
-      {err ? <div style={{ fontSize: 12, color: "#b00020" }}>{err}</div> : null}
+      {err ? <div style={{ fontSize: 12, color: "hsl(var(--destructive))" }}>{err}</div> : null}
     </div>
   );
 }

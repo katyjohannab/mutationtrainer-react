@@ -94,12 +94,12 @@ export default function FlashcardArea({
 
       {/* Practice */}
       <div className="mt-6">
-        <h2 className="text-base font-semibold text-gray-900">
+        <h2 className="text-base font-semibold text-foreground">
           {t("practice")}
         </h2>
 
         {!currentRow ? (
-          <div className="mt-3 rounded-2xl border border-gray-200 bg-white p-4 text-sm text-gray-700 shadow-sm">
+          <div className="mt-3 rounded-2xl border border-border bg-card p-4 text-sm text-muted-foreground shadow-sm">
             {t("noCards")}
           </div>
         ) : (

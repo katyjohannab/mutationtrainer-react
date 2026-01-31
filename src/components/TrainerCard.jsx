@@ -11,12 +11,35 @@ export default function TrainerCard() {
     setAnswer,
   } = useTrainer();
 
+  const surfaceStyle = {
+    marginTop: 16,
+    padding: 12,
+    border: "1px solid hsl(var(--border))",
+    borderRadius: 12,
+    background: "hsl(var(--card))",
+    color: "hsl(var(--foreground))",
+  };
+
+  const pillStyle = {
+    fontSize: 12,
+    padding: "3px 8px",
+    border: "1px solid hsl(var(--border))",
+    borderRadius: 999,
+    background: "hsl(var(--neutral) / 0.2)",
+  };
+
+  const actionButtonStyle = {
+    padding: "8px 12px",
+    borderRadius: 10,
+    border: "1px solid hsl(var(--border))",
+    background: "hsl(var(--card))",
+    color: "hsl(var(--foreground))",
+    cursor: "pointer",
+    transition: "background 150ms ease, color 150ms ease",
+  };
+
   if (!currentCard) {
-    return (
-      <div style={{ marginTop: 16, padding: 12, border: "1px solid #eee", borderRadius: 12 }}>
-        No cards in the current selection.
-      </div>
-    );
+    return <div style={surfaceStyle}>No cards in the current selection.</div>;
   }
 
   const before = currentCard.before ?? currentCard.Before ?? "";
@@ -32,9 +55,9 @@ export default function TrainerCard() {
   const source = currentCard.__source ?? "";
 
   return (
-    <section style={{ marginTop: 16, padding: 12, border: "1px solid #eee", borderRadius: 12 }}>
+    <section style={surfaceStyle}>
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 10 }}>
-        <span style={{ fontSize: 12, padding: "3px 8px", border: "1px solid #ddd", borderRadius: 999 }}>
+        <span style={pillStyle}>
           {source}
         </span>
         {family ? <span style={{ fontSize: 12, opacity: 0.8 }}>Family: <b>{family}</b></span> : null}
@@ -53,7 +76,7 @@ export default function TrainerCard() {
             margin: "0 8px",
             padding: "6px 10px",
             borderRadius: 10,
-            border: "1px solid #ccc",
+            border: "1px solid hsl(var(--border))",
             minWidth: 160,
           }}
         />
@@ -61,24 +84,15 @@ export default function TrainerCard() {
       </div>
 
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        <button
-          onClick={checkAnswer}
-          style={{ padding: "8px 12px", borderRadius: 10, border: "1px solid #ccc", background: "#fff", cursor: "pointer" }}
-        >
+        <button onClick={checkAnswer} style={actionButtonStyle}>
           Check
         </button>
 
-        <button
-          onClick={reveal}
-          style={{ padding: "8px 12px", borderRadius: 10, border: "1px solid #ccc", background: "#fff", cursor: "pointer" }}
-        >
+        <button onClick={reveal} style={actionButtonStyle}>
           Reveal
         </button>
 
-        <button
-          onClick={nextCard}
-          style={{ padding: "8px 12px", borderRadius: 10, border: "1px solid #ccc", background: "#fff", cursor: "pointer" }}
-        >
+        <button onClick={nextCard} style={actionButtonStyle}>
           Next
         </button>
       </div>
@@ -86,18 +100,40 @@ export default function TrainerCard() {
       <div style={{ marginTop: 12 }}>
         {state.checked ? (
           state.isCorrect ? (
-            <div style={{ padding: 10, borderRadius: 10, border: "1px solid #cfc" }}>
+            <div
+              style={{
+                padding: 10,
+                borderRadius: 10,
+                border: "1px solid hsl(var(--primary) / 0.4)",
+                background: "hsl(var(--primary) / 0.1)",
+              }}
+            >
               ✅ Correct
             </div>
           ) : (
-            <div style={{ padding: 10, borderRadius: 10, border: "1px solid #fcc" }}>
+            <div
+              style={{
+                padding: 10,
+                borderRadius: 10,
+                border: "1px solid hsl(var(--destructive) / 0.4)",
+                background: "hsl(var(--destructive) / 0.08)",
+              }}
+            >
               ❌ Not quite. Correct answer: <b>{expected}</b>
             </div>
           )
         ) : null}
 
         {state.revealed ? (
-          <div style={{ marginTop: 10, padding: 10, borderRadius: 10, border: "1px solid #eee" }}>
+          <div
+            style={{
+              marginTop: 10,
+              padding: 10,
+              borderRadius: 10,
+              border: "1px solid hsl(var(--border))",
+              background: "hsl(var(--card))",
+            }}
+          >
             <div>
               <b>Answer:</b> {expected}
             </div>

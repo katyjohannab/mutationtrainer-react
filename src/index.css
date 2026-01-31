@@ -7,31 +7,53 @@
 
 :root {
   /* Brand */
-  --cymru-green: 162 86% 16%;
-  --cymru-red: 355 65% 34%;
-  --cymru-gold: 35 65% 45%;
+  --cymru-green: 167 53% 19%;
+  --cymru-green-light: 121 28% 51%;
+  --cymru-red: 356 64% 42%;
+  --cymru-bg: 30 29% 95%;
+  --cymru-text: 343 100% 3%;
+  --cymru-gold: 29 64% 55%;
+  --cymru-neutral: 78 15% 78%;
 
   /* shadcn tokens */
   --radius: 0.9rem;
-  --background: 39 15% 98%;
-  --foreground: 222 47% 11%;
+  --background: var(--cymru-bg);
+  --foreground: var(--cymru-text);
   --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
+  --card-foreground: var(--cymru-text);
   --popover: 0 0% 100%;
-  --popover-foreground: 222 47% 11%;
+  --popover-foreground: var(--cymru-text);
   --primary: var(--cymru-green);
   --primary-foreground: 0 0% 100%;
-  --secondary: 150 35% 95%;
-  --secondary-foreground: 162 40% 20%;
-  --muted: 150 25% 94%;
-  --muted-foreground: 215 16% 47%;
-  --accent: 35 65% 45%;
-  --accent-foreground: 20 10% 15%;
-  --destructive: 355 65% 34%;
+  --secondary: var(--cymru-green-light);
+  --secondary-foreground: var(--cymru-text);
+  --neutral: var(--cymru-neutral);
+  --neutral-foreground: var(--cymru-text);
+  --muted: 78 18% 90%;
+  --muted-foreground: 167 18% 28%;
+  --accent: var(--cymru-gold);
+  --accent-foreground: 343 100% 3%;
+  --destructive: var(--cymru-red);
   --destructive-foreground: 0 0% 100%;
-  --border: 215 16% 90%;
-  --input: 210 16% 88%;
-  --ring: 162 86% 26%;
+  --border: 78 18% 82%;
+  --input: 78 16% 78%;
+  --ring: var(--cymru-gold);
+
+  /* Gradients */
+  --gradient-page: linear-gradient(130deg, hsl(var(--background)) 0%, hsl(var(--cymru-neutral) / 0.6) 100%);
+  --gradient-card: linear-gradient(150deg, hsl(var(--card)) 0%, hsl(var(--cymru-neutral) / 0.35) 100%);
+
+  /* Typography */
+  --font-body: "Inter", "SF Pro Display", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-display: "Inter", "SF Pro Display", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --text-body-size: 1rem;
+  --text-body-line: 1.6;
+  --text-label-size: 0.875rem;
+  --text-label-line: 1.4;
+  --text-label-tracking: 0.04em;
+  --text-display-size: clamp(1.75rem, 1.3rem + 1.2vw, 2.6rem);
+  --text-display-line: 1.2;
+  --text-display-tracking: -0.01em;
 }
 
 .dark {
@@ -45,15 +67,19 @@
   --primary-foreground: 162 36% 10%;
   --secondary: 162 22% 16%;
   --secondary-foreground: 0 0% 98%;
-  --muted: 162 20% 20%;
-  --muted-foreground: 215 20% 75%;
-  --accent: 35 55% 18%;
-  --accent-foreground: 38 100% 92%;
+  --neutral: 170 10% 28%;
+  --neutral-foreground: 0 0% 98%;
+  --muted: 170 12% 22%;
+  --muted-foreground: 150 10% 70%;
+  --accent: var(--cymru-gold);
+  --accent-foreground: 343 100% 3%;
   --destructive: 355 65% 34%;
   --destructive-foreground: 0 0% 98%;
-  --border: 162 18% 24%;
-  --input: 162 18% 24%;
-  --ring: 162 86% 26%;
+  --border: 170 12% 26%;
+  --input: 170 12% 26%;
+  --ring: var(--cymru-gold);
+  --gradient-page: linear-gradient(150deg, hsl(162 22% 15%) 0%, hsl(170 10% 22%) 100%);
+  --gradient-card: linear-gradient(145deg, hsl(162 22% 18%) 0%, hsl(170 10% 26%) 100%);
 }
 
 @layer base {
@@ -68,8 +94,18 @@
 
   body {
     margin: 0;
-    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
-      "Apple Color Emoji", "Segoe UI Emoji";
+    font-family: var(
+        --font-body,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        Segoe UI,
+        Roboto,
+        Helvetica,
+        Arial,
+        "Apple Color Emoji",
+        "Segoe UI Emoji"
+      );
     @apply bg-background text-foreground;
   }
 
@@ -85,9 +121,12 @@
 
 @layer components {
   .mt-pill {
-    @apply inline-flex items-center justify-center px-3 py-1 rounded-full text-sm font-medium transition-colors bg-slate-100 text-slate-700 hover:bg-slate-200 border border-transparent;
+    font-size: var(--text-label-size);
+    line-height: var(--text-label-line);
+    letter-spacing: var(--text-label-tracking);
+    @apply inline-flex items-center justify-center px-3 py-1 rounded-full font-medium transition-colors border border-transparent bg-[hsl(var(--neutral)/0.3)] text-[hsl(var(--neutral-foreground))] hover:bg-[hsl(var(--neutral)/0.45)] dark:bg-[hsl(var(--neutral)/0.2)] dark:hover:bg-[hsl(var(--neutral)/0.3)];
   }
   .mt-pill-on {
-     @apply bg-[--cymru-green] text-white hover:bg-emerald-800;
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
   }
 }
