@@ -10,6 +10,7 @@ import {
   EyeIcon,
   XMarkIcon,
   ArrowUturnRightIcon,
+  SpeakerWaveIcon,
 } from "@heroicons/react/24/outline";
 
 export default function PracticeCardFeedback({
@@ -82,12 +83,12 @@ export default function PracticeCardFeedback({
   }, [last]);
   const StatusIcon = statusIcon;
   const panelClass = cn(
-    "rounded-2xl border p-4",
+    "rounded-2xl border bg-card p-4 shadow-sm",
     last === "correct"
-      ? "border-primary/30 bg-primary/10"
+      ? "border-primary/30"
       : last
-        ? "border-destructive/30 bg-destructive/10"
-        : "border-border bg-card"
+        ? "border-destructive/30"
+        : "border-border"
   );
 
   return (
@@ -96,7 +97,7 @@ export default function PracticeCardFeedback({
         <Badge
           variant="outline"
           className={cn(
-            "rounded-full border px-4 py-2 text-sm font-semibold shadow-sm",
+            "rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-wide shadow-sm",
             isCorrect
               ? "border-primary/30 bg-primary/10 text-primary"
               : "border-destructive/30 bg-destructive/10 text-destructive"
@@ -110,8 +111,8 @@ export default function PracticeCardFeedback({
       ) : null}
 
       <Card className={panelClass}>
-        <CardContent className="space-y-3 p-0">
-          <div className="text-lg sm:text-xl leading-relaxed text-foreground">
+        <CardContent className="space-y-4 p-0">
+          <div className="text-base sm:text-lg leading-relaxed text-foreground">
             <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
             <Badge
               variant="secondary"
@@ -128,18 +129,14 @@ export default function PracticeCardFeedback({
 
           <div className="flex flex-wrap items-center gap-2">
             <Badge
-              variant="outline"
+              variant="destructive"
+              className="cursor-pointer gap-1.5 rounded-full px-3 py-1.5"
+              onClick={onHear}
               role="button"
               tabIndex={0}
-              onClick={onHear}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" || event.key === " ") {
-                  event.preventDefault();
-                  onHear();
-                }
-              }}
-              className="uppercase text-[11px] px-2 py-1 rounded-md tracking-wide border-destructive/30 bg-destructive/10 text-destructive shadow-sm cursor-pointer"
+              onKeyDown={(e) => e.key === "Enter" && onHear?.()}
             >
+              <SpeakerWaveIcon className="h-3.5 w-3.5" aria-hidden="true" />
               {ttsLoading ? loadingLabel : hearLabel}
             </Badge>
 
@@ -157,11 +154,7 @@ export default function PracticeCardFeedback({
               }}
               className="ml-1"
             >
-              <ToggleGroupItem
-                value="on"
-                aria-label="Autoplay"
-                className="rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-foreground/80 shadow-sm transition data-[state=on]:border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-              >
+              <ToggleGroupItem value="on" aria-label="Autoplay">
                 Autoplay
               </ToggleGroupItem>
             </ToggleGroup>
@@ -173,7 +166,7 @@ export default function PracticeCardFeedback({
 
           {explanation ? (
             <div className="rounded-xl border border-border bg-card p-4 text-sm text-muted-foreground">
-              <div className="text-sm font-semibold text-foreground">
+              <div className="text-xs font-semibold uppercase tracking-wide text-foreground">
                 {whyLabel}
               </div>
               <div className="mt-2">{explanation}</div>
@@ -181,13 +174,9 @@ export default function PracticeCardFeedback({
           ) : null}
 
           <div className="flex justify-end">
-            <Button
-              type="button"
-              onClick={onNext}
-              className="h-10 border-primary bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
-            >
+            <Button type="button" onClick={onNext}>
               {nextLabel}
-              <ArrowRightIcon className="h-5 w-5" aria-hidden="true" />
+              <ArrowRightIcon aria-hidden="true" />
             </Button>
           </div>
         </CardContent>

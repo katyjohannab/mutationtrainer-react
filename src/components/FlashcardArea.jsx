@@ -2,13 +2,15 @@ import PracticeCard from "./PracticeCard";
 import { useI18n } from "../i18n/I18nContext";
 import { cn } from "../lib/cn";
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
+import { Separator } from "./ui/separator";
 
 export default function FlashcardArea({
   className,
   mode,
   onModeChange,
-  rowsCount,
-  filteredCount,
+  progressCurrent,
+  progressTotal,
+  deckLabel,
   currentRow,
   onResult,
   answerMode,
@@ -19,98 +21,89 @@ export default function FlashcardArea({
 
   return (
     <section className={cn("flex-1", className)}>
-      {/* Mode + Answer type + counts */}
-      <div className="flex flex-col gap-4 sm:gap-3">
-        <div className="flex flex-wrap items-center gap-4">
-          
-          {/* Mode selector: shadcn ToggleGroup */}
+      <div className="space-y-4 rounded-[var(--radius)] border border-border bg-background/80 p-5 sm:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              {t("mode")}
+            {deckLabel ? <span className="font-semibold text-foreground">{deckLabel}</span> : null}
+            <span className="text-muted-foreground">
+              {progressCurrent || 0}/{progressTotal || 0}
             </span>
-            <ToggleGroup
-              type="single"
-              value={mode}
-              onValueChange={(value) => {
-                if (value) onModeChange(value);
-              }}
-            >
-              <ToggleGroupItem
-                value="random"
-                className="rounded-md border border-border bg-card px-3 py-1 text-xs font-medium text-foreground/80 shadow-sm transition data-[state=on]:border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-                aria-label={t("random")}
-              >
-                {t("random")}
-              </ToggleGroupItem>
-              <ToggleGroupItem
-                value="smart"
-                className="rounded-md border border-border bg-card px-3 py-1 text-xs font-medium text-foreground/80 shadow-sm transition data-[state=on]:border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-                aria-label={t("smart")}
-              >
-                {t("smart")}
-              </ToggleGroupItem>
-            </ToggleGroup>
           </div>
 
-          {/* Answer method selector: shadcn ToggleGroup */}
-          {onAnswerModeChange && (
+          <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                {t("ateb") || "Answer"}
+              <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                {t("mode")}
               </span>
               <ToggleGroup
                 type="single"
-                value={answerMode}
-                onValueChange={(value) => {
-                  if (value) onAnswerModeChange(value);
-                }}
+                value={mode}
+                onValueChange={(value) => value && onModeChange(value)}
+                className="flex flex-wrap items-center gap-1 rounded-lg border border-border bg-card p-1 sm:flex-nowrap"
               >
                 <ToggleGroupItem
-                  value="type"
-                  className="rounded-md border border-border bg-card px-3 py-1 text-xs font-medium text-foreground/80 shadow-sm transition data-[state=on]:border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-                  aria-label={t("typeMode") || "Type"}
+                  value="random"
+                  className="rounded-md px-2.5 py-1 text-xs sm:text-sm font-semibold text-foreground transition-colors border border-transparent hover:bg-muted/50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
                 >
-                  {t("typeMode") || "Type"}
+                  {t("random")}
                 </ToggleGroupItem>
                 <ToggleGroupItem
-                  value="tap"
-                  className="rounded-md border border-border bg-card px-3 py-1 text-xs font-medium text-foreground/80 shadow-sm transition data-[state=on]:border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-                  aria-label={t("tapMode") || "Tap"}
+                  value="smart"
+                  className="rounded-md px-2.5 py-1 text-xs sm:text-sm font-semibold text-foreground transition-colors border border-transparent hover:bg-muted/50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
                 >
-                  {t("tapMode") || "Tap"}
+                  {t("smart")}
                 </ToggleGroupItem>
               </ToggleGroup>
             </div>
-          )}
 
-          {/* Stats row */}
-          <div className="ml-auto text-xs text-muted-foreground">
-            <span className="font-medium">{rowsCount}</span>
-            <span className="mx-1">/</span>
-            <span className="font-medium">{filteredCount}</span>
+            {onAnswerModeChange && (
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                  {t("ateb") || "Answer"}
+                </span>
+                <ToggleGroup
+                  type="single"
+                  value={answerMode}
+                  onValueChange={(value) => value && onAnswerModeChange(value)}
+                  className="flex flex-wrap items-center gap-1 rounded-lg border border-border bg-card p-1 sm:flex-nowrap"
+                >
+                  <ToggleGroupItem
+                    value="type"
+                    className="rounded-md px-2.5 py-1 text-xs sm:text-sm font-semibold text-foreground transition-colors border border-transparent hover:bg-muted/50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
+                  >
+                    {t("typeMode") || "Type"}
+                  </ToggleGroupItem>
+                  <ToggleGroupItem
+                    value="tap"
+                    className="rounded-md px-2.5 py-1 text-xs sm:text-sm font-semibold text-foreground transition-colors border border-transparent hover:bg-muted/50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
+                  >
+                    {t("tapMode") || "Tap"}
+                  </ToggleGroupItem>
+                </ToggleGroup>
+              </div>
+            )}
           </div>
         </div>
-      </div>
 
-      {/* Practice */}
-      <div className="mt-6">
-        <h2 className="text-base font-semibold text-foreground">
-          {t("practice")}
-        </h2>
+        <Separator />
 
         {!currentRow ? (
-          <div className="mt-3 rounded-2xl border border-border bg-card p-4 text-sm text-muted-foreground shadow-sm">
+          <div className="surface-card p-6 text-sm text-muted-foreground text-center">
             {t("noCards")}
           </div>
         ) : (
-          <div className="mt-3">
-            <PracticeCard
-              row={currentRow}
-              onResult={onResult}
-              answerMode={answerMode}
-              deckRows={deckRows}
-            />
-          </div>
+          <PracticeCard
+            row={currentRow}
+            onResult={onResult}
+            answerMode={answerMode}
+            deckRows={deckRows}
+            mode={mode}
+            onModeChange={onModeChange}
+            onAnswerModeChange={onAnswerModeChange}
+            progressCurrent={progressCurrent}
+            progressTotal={progressTotal}
+            deckLabel={deckLabel}
+          />
         )}
       </div>
     </section>

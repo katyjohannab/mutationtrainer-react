@@ -8,7 +8,6 @@ import Header from "./components/Header";
 import FlashcardArea from "./components/FlashcardArea";
 import FiltersPanel from "./components/FiltersPanel";
 import FilterSheet from "./components/FilterSheet";
-import { Button } from "./components/ui/button";
 
 import { loadLeitnerMap, updateLeitner } from "./utils/leitner";
 import { getCardKey, pickRandomIndex, pickSmartIndex } from "./utils/pickNext";
@@ -82,6 +81,14 @@ export default function App() {
   const filtered = useMemo(() => {
     return applyFilters(rows, { preset, filters });
   }, [rows, preset, filters]);
+
+  const presetLabel = preset
+    ? preset.titleKey
+      ? t(preset.titleKey)
+      : preset.title || activePresetId
+    : t("practice");
+  const progressCurrent = currentIdx >= 0 ? currentIdx + 1 : 0;
+  const progressTotal = filtered.length;
 
   const currentRow = currentIdx >= 0 ? filtered[currentIdx] : null;
 
@@ -170,42 +177,20 @@ export default function App() {
         onOpenFilters={() => setFiltersOpen(true)}
       />
 
-      <main className="mx-auto w-full max-w-5xl px-4 py-4 sm:px-6">
+      <main className="mx-auto w-full max-w-6xl px-4 py-4 sm:px-6">
         <div className="flex flex-col gap-6 md:flex-row">
           <div className="flex-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm font-semibold text-gray-700">
-                {t("inputMode")}:
-              </span>
-
-              <Button
-                type="button"
-                variant="pill"
-                active={answerMode === "type"}
-                onClick={() => setAnswerMode("type")}
-              >
-                {t("typeMode")}
-              </Button>
-
-              <Button
-                type="button"
-                variant="pill"
-                active={answerMode === "tap"}
-                onClick={() => setAnswerMode("tap")}
-              >
-                {t("tapMode")}
-              </Button>
-            </div>
-
             <FlashcardArea
               className="mt-4"
               mode={mode}
               onModeChange={setMode}
-              rowsCount={rows.length}
-              filteredCount={filtered.length}
+              progressCurrent={progressCurrent}
+              progressTotal={progressTotal}
+              deckLabel={presetLabel}
               currentRow={currentRow}
               onResult={onResult}
               answerMode={answerMode}
+              onAnswerModeChange={setAnswerMode}
               deckRows={filtered}
             />
           </div>

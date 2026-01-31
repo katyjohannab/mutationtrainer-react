@@ -24,8 +24,8 @@ export default function Header({
   const isCy = lang === "cy";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/95 shadow-sm backdrop-blur">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+    <header className="sticky top-0 z-40 border-b border-border bg-[hsl(var(--cymru-header))] shadow-sm backdrop-blur">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         
         {/* Logo lockup: dragon + wordmark */}
         <div className="flex items-center gap-2 shrink-0">

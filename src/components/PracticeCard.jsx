@@ -367,8 +367,7 @@ export default function PracticeCard({
   }, [choiceKey, row, deckRows, sent]);
 
   const cardClassName = cn(
-    "w-full max-w-full rounded-3xl border border-border bg-card",
-    "shadow-[0_8px_24px_rgba(15,23,42,0.08)] transition-shadow duration-200 hover:shadow-[0_12px_30px_rgba(15,23,42,0.12)]"
+    "surface-card-elev w-full max-w-full rounded-[var(--radius)] shadow-md"
   );
 
   return (

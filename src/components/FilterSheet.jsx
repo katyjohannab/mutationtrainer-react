@@ -8,12 +8,12 @@ export default function FilterSheet({ open, onOpenChange, children }) {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent position="right" className="max-w-sm">
+      <SheetContent position="right" className="flex h-full max-w-sm flex-col overflow-hidden">
         <SheetHeader>
           <SheetTitle>{t("headerFilters")}</SheetTitle>
           <SheetClose asChild>
             <Button
-              variant="icon"
+              variant="ghost"
               size="icon"
               aria-label={t("headerFilters")}
             >

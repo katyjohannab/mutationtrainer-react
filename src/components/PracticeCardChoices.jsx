@@ -2,6 +2,7 @@ import { useEffect, useMemo } from "react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Separator } from "./ui/separator";
+import { cn } from "../lib/cn";
 import {
   HoverCard,
   HoverCardContent,
@@ -13,7 +14,6 @@ import {
   EyeIcon,
   ArrowUturnRightIcon,
 } from "@heroicons/react/24/outline";
-import { cn } from "../lib/cn";
 
 function normalizeChoice(value) {
   return String(value ?? "")
@@ -86,6 +86,8 @@ export default function PracticeCardChoices({
   const hintLabel = t("hint") || "Hint";
   const revealLabel = t("reveal") || "Reveal";
   const skipLabel = t("skip") || "Skip";
+  const actionButtonClass = "w-full sm:w-auto min-w-[104px]";
+  const actionButtonSize = "lg";
 
   const normalizedAnswer = normalizeChoice(answer);
   const normalizedGuess = normalizeChoice(guess);
@@ -100,9 +102,11 @@ export default function PracticeCardChoices({
         <div className="relative inline-flex">
           <Badge
             variant="secondary"
-            className="rounded-full border border-border bg-muted px-8 py-3 text-4xl sm:text-5xl font-extrabold tracking-tight text-foreground shadow-sm leading-none"
+            className="rounded-full border border-secondary/40 bg-secondary/15 px-12 py-5 sm:px-14 sm:py-6 shadow-sm"
           >
-            {baseword}
+            <h1 className="text-center text-6xl sm:text-7xl font-extrabold tracking-tight text-primary leading-none">
+              {baseword}
+            </h1>
           </Badge>
 
           {tooltipLines.length > 0 ? (
@@ -111,7 +115,7 @@ export default function PracticeCardChoices({
                 <button
                   type="button"
                   aria-label="Translation and category"
-                  className="absolute -right-2 -top-2 inline-flex h-7 w-7 items-center justify-center rounded-full border border-border bg-card text-xs font-semibold text-muted-foreground shadow-sm transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="absolute -right-1 -top-1 inline-flex h-6 w-6 items-center justify-center rounded-full border border-destructive bg-card text-xs font-extrabold text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive hover:bg-destructive/10 hover:shadow-sm transition-colors"
                 >
                   ?
                 </button>
@@ -187,34 +191,38 @@ export default function PracticeCardChoices({
         })}
       </div>
 
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center sm:gap-3">
         <Button
           type="button"
+          variant="default"
           onClick={onCheck}
-          className="h-10 border-primary bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
+          size={actionButtonSize}
+          className={actionButtonClass}
         >
-          <CheckIcon className="h-5 w-5" aria-hidden="true" />
+          <CheckIcon className="h-4 w-4" aria-hidden="true" />
           {checkLabel}
         </Button>
 
         <Button
           type="button"
-          variant="default"
+          variant="outline-secondary"
           onClick={onToggleHint}
-          className="h-10 border-border bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80"
+          size={actionButtonSize}
+          className={actionButtonClass}
         >
-          <LightBulbIcon className="h-5 w-5" aria-hidden="true" />
+          <LightBulbIcon className="h-4 w-4" aria-hidden="true" />
           {hintLabel}
         </Button>
 
         <Button
           type="button"
-          variant="ghost"
+          variant="outline-destructive"
           onClick={onReveal}
           disabled={isFeedback}
-          className="h-10 text-destructive shadow-sm hover:bg-destructive/10"
+          size={actionButtonSize}
+          className={actionButtonClass}
         >
-          <EyeIcon className="h-5 w-5" aria-hidden="true" />
+          <EyeIcon className="h-4 w-4" aria-hidden="true" />
           {revealLabel}
         </Button>
 
@@ -223,9 +231,10 @@ export default function PracticeCardChoices({
           variant="ghost"
           onClick={onSkip}
           disabled={isFeedback}
-          className="h-10 text-muted-foreground hover:text-foreground"
+          size={actionButtonSize}
+          className={actionButtonClass}
         >
-          <ArrowUturnRightIcon className="h-5 w-5" aria-hidden="true" />
+          <ArrowUturnRightIcon className="h-4 w-4" aria-hidden="true" />
           {skipLabel}
         </Button>
       </div>

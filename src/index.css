@@ -14,9 +14,16 @@
   --cymru-text: 343 100% 3%;
   --cymru-gold: 29 64% 55%;
   --cymru-neutral: 78 15% 78%;
+  --cymru-header: 30 24% 97%;
+
+  /* Pale wash variants (for hover backgrounds, subtle fills) */
+  --cymru-green-wash: 167 40% 94%;
+  --cymru-green-light-wash: 121 30% 92%;
+  --cymru-red-wash: 356 50% 94%;
+  --cymru-gold-wash: 29 50% 93%;
 
   /* shadcn tokens */
-  --radius: 0.9rem;
+  --radius: 0.75rem;
   --background: var(--cymru-bg);
   --foreground: var(--cymru-text);
   --card: 0 0% 100%;
@@ -29,19 +36,20 @@
   --secondary-foreground: var(--cymru-text);
   --neutral: var(--cymru-neutral);
   --neutral-foreground: var(--cymru-text);
-  --muted: 78 18% 90%;
-  --muted-foreground: 167 18% 28%;
+  --muted: 30 18% 92%;
+  --muted-foreground: 28 10% 35%;
   --accent: var(--cymru-gold);
-  --accent-foreground: 343 100% 3%;
+  --accent-foreground: var(--cymru-text);
   --destructive: var(--cymru-red);
   --destructive-foreground: 0 0% 100%;
-  --border: 78 18% 82%;
-  --input: 78 16% 78%;
+  --border: 30 12% 84%;
+  --input: 30 12% 84%;
   --ring: var(--cymru-gold);
 
   /* Gradients */
   --gradient-page: linear-gradient(130deg, hsl(var(--background)) 0%, hsl(var(--cymru-neutral) / 0.6) 100%);
   --gradient-card: linear-gradient(150deg, hsl(var(--card)) 0%, hsl(var(--cymru-neutral) / 0.35) 100%);
+  --gradient-header-bar: linear-gradient(90deg, hsl(var(--cymru-red)) 0%, hsl(var(--cymru-green)) 55%, hsl(var(--cymru-green-light)) 100%);
 
   /* Typography */
   --font-body: "Inter", "SF Pro Display", "Segoe UI", system-ui, -apple-system, sans-serif;
@@ -72,14 +80,22 @@
   --muted: 170 12% 22%;
   --muted-foreground: 150 10% 70%;
   --accent: var(--cymru-gold);
-  --accent-foreground: 343 100% 3%;
+  --accent-foreground: var(--cymru-text);
   --destructive: 355 65% 34%;
   --destructive-foreground: 0 0% 98%;
   --border: 170 12% 26%;
   --input: 170 12% 26%;
   --ring: var(--cymru-gold);
+  --cymru-header: 162 22% 16%;
   --gradient-page: linear-gradient(150deg, hsl(162 22% 15%) 0%, hsl(170 10% 22%) 100%);
   --gradient-card: linear-gradient(145deg, hsl(162 22% 18%) 0%, hsl(170 10% 26%) 100%);
+  --gradient-header-bar: linear-gradient(90deg, hsl(var(--cymru-red)) 0%, hsl(var(--cymru-green)) 55%, hsl(var(--cymru-green-light)) 100%);
+
+  /* Dark mode wash variants */
+  --cymru-green-wash: 167 40% 20%;
+  --cymru-green-light-wash: 121 25% 22%;
+  --cymru-red-wash: 356 40% 22%;
+  --cymru-gold-wash: 29 40% 22%;
 }
 
 @layer base {
@@ -120,6 +136,16 @@
 }
 
 @layer components {
+  .surface-card {
+    @apply bg-card rounded-[var(--radius)] border border-border shadow-none;
+  }
+  .surface-card-elev {
+    @apply bg-card rounded-[var(--radius)] border border-border shadow-sm;
+  }
+  .surface-rail {
+    @apply rounded-[calc(var(--radius)-2px)] bg-muted/40;
+  }
+
   .mt-pill {
     font-size: var(--text-label-size);
     line-height: var(--text-label-line);

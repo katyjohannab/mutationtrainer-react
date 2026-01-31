@@ -1,7 +1,9 @@
 import { useMemo } from "react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
+import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";
+import { cn } from "../lib/cn";
 import {
   HoverCard,
   HoverCardContent,
@@ -67,9 +69,11 @@ export default function PracticeCardFront({
         <div className="relative inline-flex">
           <Badge
             variant="secondary"
-            className="rounded-full border border-border bg-muted px-8 py-3 text-4xl sm:text-5xl font-extrabold tracking-tight text-foreground shadow-sm leading-none"
+            className="rounded-full border border-secondary/40 bg-secondary/15 px-12 py-5 sm:px-14 sm:py-6 shadow-sm"
           >
-            {baseword}
+            <h1 className="text-center text-6xl sm:text-7xl font-extrabold tracking-tight text-primary leading-none">
+              {baseword}
+            </h1>
           </Badge>
 
           {tooltipLines.length > 0 ? (
@@ -78,7 +82,7 @@ export default function PracticeCardFront({
                 <button
                   type="button"
                   aria-label="Translation and category"
-                  className="absolute -right-2 -top-2 inline-flex h-7 w-7 items-center justify-center rounded-full border border-border bg-card text-xs font-semibold text-muted-foreground shadow-sm transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="absolute -right-1 -top-1 inline-flex h-6 w-6 items-center justify-center rounded-full border border-destructive bg-card text-xs font-extrabold text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive hover:bg-destructive/10 hover:shadow-sm transition-colors"
                 >
                   ?
                 </button>
@@ -110,14 +114,14 @@ export default function PracticeCardFront({
         <div className="text-sm text-muted-foreground">{translate}</div>
       ) : null}
 
-      <div className="min-w-0 flex flex-wrap items-center gap-2 text-lg sm:text-xl leading-relaxed text-foreground/80">
+      <div className="text-base sm:text-lg leading-relaxed text-foreground">
         <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
-        <input
+        <Input
           value={guess}
           onChange={(e) => setGuess(e.target.value)}
           disabled={disabledInput}
           placeholder={placeholder}
-          className="h-11 min-w-[8ch] w-[10ch] sm:w-[12ch] max-w-full rounded-full border border-input bg-muted px-4 text-base text-foreground shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
+          className="mx-2 inline-flex h-10 sm:h-11 min-w-[10ch] w-[12ch] sm:w-[15ch] lg:w-[16ch] max-w-full align-baseline rounded-lg border border-ring/40 bg-card px-3 text-base sm:text-lg text-foreground shadow-sm placeholder:text-xs sm:placeholder:text-sm placeholder:font-medium placeholder:text-muted-foreground/60 focus-visible:ring-2 focus-visible:ring-ring/50"
           onKeyDown={(e) => {
             if (e.key === "Enter") onCheck();
           }}
@@ -128,33 +132,23 @@ export default function PracticeCardFront({
       <Separator />
 
       <div className="flex flex-wrap items-center gap-2">
-        <Button
-          type="button"
-          onClick={onCheck}
-          className="h-10 border-primary bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
-        >
-          <CheckIcon className="h-5 w-5" aria-hidden="true" />
+        <Button type="button" variant="default" onClick={onCheck}>
+          <CheckIcon className="h-4 w-4" aria-hidden="true" />
           {checkLabel}
         </Button>
 
-        <Button
-          type="button"
-          variant="default"
-          onClick={onToggleHint}
-          className="h-10 border-border bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80"
-        >
-          <LightBulbIcon className="h-5 w-5" aria-hidden="true" />
+        <Button type="button" variant="outline-secondary" onClick={onToggleHint}>
+          <LightBulbIcon className="h-4 w-4" aria-hidden="true" />
           {hintLabel}
         </Button>
 
         <Button
           type="button"
-          variant="ghost"
+          variant="outline-destructive"
           onClick={onReveal}
           disabled={isFeedback}
-          className="h-10 border-border text-destructive shadow-sm hover:bg-destructive/10"
         >
-          <EyeIcon className="h-5 w-5" aria-hidden="true" />
+          <EyeIcon className="h-4 w-4" aria-hidden="true" />
           {revealLabel}
         </Button>
 
@@ -163,9 +157,8 @@ export default function PracticeCardFront({
           variant="ghost"
           onClick={onSkip}
           disabled={isFeedback}
-          className="h-10 text-muted-foreground hover:text-foreground"
         >
-          <ArrowUturnRightIcon className="h-5 w-5" aria-hidden="true" />
+          <ArrowUturnRightIcon className="h-4 w-4" aria-hidden="true" />
           {skipLabel}
         </Button>
       </div>
