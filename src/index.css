@@ -14,7 +14,7 @@
   --cymru-text: 343 100% 3%;
   --cymru-gold: 29 64% 55%;
   --cymru-neutral: 78 15% 78%;
-  --cymru-header: 30 24% 97%;
+  --cymru-white: 0 0% 100%;
 
   /* Pale wash variants (for hover backgrounds, subtle fills) */
   --cymru-green-wash: 167 40% 94%;
@@ -24,14 +24,14 @@
 
   /* shadcn tokens */
   --radius: 0.75rem;
-  --background: var(--cymru-bg);
+  --background: var(--cymru-white);
   --foreground: var(--cymru-text);
-  --card: 0 0% 100%;
+  --card: var(--cymru-white);
   --card-foreground: var(--cymru-text);
-  --popover: 0 0% 100%;
+  --popover: var(--cymru-white);
   --popover-foreground: var(--cymru-text);
   --primary: var(--cymru-green);
-  --primary-foreground: 0 0% 100%;
+  --primary-foreground: var(--cymru-white);
   --secondary: var(--cymru-green-light);
   --secondary-foreground: var(--cymru-text);
   --neutral: var(--cymru-neutral);
@@ -41,7 +41,7 @@
   --accent: var(--cymru-gold);
   --accent-foreground: var(--cymru-text);
   --destructive: var(--cymru-red);
-  --destructive-foreground: 0 0% 100%;
+  --destructive-foreground: var(--cymru-white);
   --border: 30 12% 84%;
   --input: 30 12% 84%;
   --ring: var(--cymru-gold);

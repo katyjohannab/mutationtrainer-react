@@ -371,7 +371,7 @@ export default function PracticeCard({
   }, [choiceKey, row, deckRows, sent]);
 
   const cardClassName = cn(
-    "surface-card-elev w-full max-w-full rounded-[var(--radius)] shadow-md"
+    "w-full max-w-full rounded-[var(--radius)] shadow-md bg-card"
   );
 
   return (

@@ -30,6 +30,17 @@ function FilterBadge({ active, onClick, children, className }) {
   );
 }
 
+function ResetBadge({ onClick, children }) {
+  return (
+    <Badge
+      onClick={onClick}
+      className="cursor-pointer select-none rounded-full px-3 py-1 text-xs font-semibold transition-colors bg-[hsl(var(--cymru-red))] text-white hover:bg-[hsl(var(--cymru-red)/0.85)]"
+    >
+      {children}
+    </Badge>
+  );
+}
+
 export default function FiltersPanel({
   className,
   activePresetId,
@@ -152,6 +163,11 @@ export default function FiltersPanel({
                 {labelFor(item)}
               </FilterBadge>
             ))}
+            {!isFamilyAll && (
+              <ResetBadge onClick={() => onClearFilterType?.("families")}>
+                {t("filtersReset")}
+              </ResetBadge>
+            )}
           </div>
         </div>
 
@@ -204,6 +220,11 @@ export default function FiltersPanel({
                   <path d="m6 9 6 6 6-6" />
                 </svg>
               </button>
+            )}
+            {!isCategoryAll && (
+              <ResetBadge onClick={() => onClearFilterType?.("categories")}>
+                {t("filtersReset")}
+              </ResetBadge>
             )}
           </div>
         </div>
