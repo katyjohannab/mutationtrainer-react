@@ -1,8 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
+import { Badge } from "./ui/badge";
+import { Card, CardContent } from "./ui/card";
 import { cn } from "../lib/cn";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowRightIcon,
+  CheckIcon,
+  EyeIcon,
+  XMarkIcon,
+  ArrowUturnRightIcon,
+} from "@heroicons/react/24/outline";
 
 export default function PracticeCardFeedback({
   sent,
@@ -63,92 +71,127 @@ export default function PracticeCardFeedback({
   const isCorrect = last === "correct";
   const nextLabel = t("next") || "Next";
   const outcomeClass =
-    last && last !== "correct" ? "text-red-700" : "text-neutral-700";
+    last && last !== "correct" ? "text-destructive" : "text-muted-foreground";
+  const statusIcon = useMemo(() => {
+    if (!last) return null;
+    if (last === "correct") return CheckIcon;
+    if (last === "wrong") return XMarkIcon;
+    if (last === "revealed") return EyeIcon;
+    if (last === "skipped") return ArrowUturnRightIcon;
+    return null;
+  }, [last]);
+  const StatusIcon = statusIcon;
+  const panelClass = cn(
+    "rounded-2xl border p-4",
+    last === "correct"
+      ? "border-primary/30 bg-primary/10"
+      : last
+        ? "border-destructive/30 bg-destructive/10"
+        : "border-border bg-card"
+  );
 
   return (
     <div className="space-y-5">
       {statusLabel ? (
-        <div
+        <Badge
+          variant="outline"
           className={cn(
-            "inline-flex rounded-full border px-4 py-2 text-sm font-semibold shadow-sm",
+            "rounded-full border px-4 py-2 text-sm font-semibold shadow-sm",
             isCorrect
               ? "border-emerald-200 bg-emerald-50 text-emerald-900"
-              : "border-red-200 bg-red-50 text-red-900"
+              : "border-destructive/30 bg-destructive/10 text-destructive"
           )}
         >
+          {StatusIcon ? (
+            <StatusIcon className="h-4 w-4" aria-hidden="true" />
+          ) : null}
           {statusLabel}
-        </div>
+        </Badge>
       ) : null}
 
-      <div className="text-lg sm:text-xl leading-relaxed">
-        <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
-        <span className="mx-1 inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 font-semibold text-emerald-950 shadow-sm">
-          {answer}
-        </span>
-        <span className="whitespace-pre-wrap break-words">{sent?.after}</span>
-      </div>
-
-      {outcomeText ? (
-        <div className={cn("text-sm", outcomeClass)}>{outcomeText}</div>
-      ) : null}
-
-      <div className="flex flex-wrap items-center gap-2">
-        <Button
-          type="button"
-          onClick={onHear}
-          disabled={ttsLoading}
-          className="h-10 border-emerald-600 bg-emerald-600 text-white hover:bg-emerald-700"
-        >
-          {ttsLoading ? loadingLabel : hearLabel}
-        </Button>
-
-        <ToggleGroup
-          type="single"
-          value={autoplay ? "on" : ""}
-          onValueChange={(value) => {
-            const next = value === "on";
-            setAutoplay(next);
-            try {
-              localStorage.setItem("wm_autoplay", next ? "1" : "0");
-            } catch {
-              // ignore
-            }
-          }}
-          className="ml-1"
-        >
-          <ToggleGroupItem
-            value="on"
-            aria-label="Autoplay"
-            className="rounded-full border border-emerald-100 bg-white px-3 py-1 text-xs font-medium text-emerald-800 shadow-sm transition data-[state=on]:border-emerald-600 data-[state=on]:bg-emerald-600 data-[state=on]:text-white"
-          >
-            Autoplay
-          </ToggleGroupItem>
-        </ToggleGroup>
-
-        {ttsError ? (
-          <div className="text-sm text-red-600">{ttsError}</div>
-        ) : null}
-      </div>
-
-      {explanation ? (
-        <div className="rounded-xl border border-emerald-100 bg-emerald-50/30 p-4 text-sm text-emerald-950">
-          <div className="text-sm font-semibold text-emerald-950">
-            {whyLabel}
+      <Card className={panelClass}>
+        <CardContent className="space-y-3 p-0">
+          <div className="text-lg sm:text-xl leading-relaxed text-foreground">
+            <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
+            <Badge
+              variant="secondary"
+              className="mx-1 rounded-full border border-border bg-muted text-base font-semibold text-foreground"
+            >
+              {answer}
+            </Badge>
+            <span className="whitespace-pre-wrap break-words">{sent?.after}</span>
           </div>
-          <div className="mt-2">{explanation}</div>
-        </div>
-      ) : null}
 
-      <div className="flex justify-end pt-2">
-        <Button
-          type="button"
-          onClick={onNext}
-          className="h-10 border-emerald-600 bg-emerald-600 text-white hover:bg-emerald-700"
-        >
-          {nextLabel}
-          <ArrowRightIcon className="h-5 w-5" aria-hidden="true" />
-        </Button>
-      </div>
+          {outcomeText ? (
+            <div className={cn("text-sm", outcomeClass)}>{outcomeText}</div>
+          ) : null}
+
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge
+              variant="outline"
+              role="button"
+              tabIndex={0}
+              onClick={onHear}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  onHear();
+                }
+              }}
+              className="uppercase text-[11px] px-2 py-1 rounded-md tracking-wide border-destructive/30 bg-destructive/10 text-destructive shadow-sm cursor-pointer"
+            >
+              {ttsLoading ? loadingLabel : hearLabel}
+            </Badge>
+
+            <ToggleGroup
+              type="single"
+              value={autoplay ? "on" : ""}
+              onValueChange={(value) => {
+                const next = value === "on";
+                setAutoplay(next);
+                try {
+                  localStorage.setItem("wm_autoplay", next ? "1" : "0");
+                } catch {
+                  // ignore
+                }
+              }}
+              className="ml-1"
+            >
+              <ToggleGroupItem
+                value="on"
+                aria-label="Autoplay"
+                className="rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-foreground/80 shadow-sm transition data-[state=on]:border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+              >
+                Autoplay
+              </ToggleGroupItem>
+            </ToggleGroup>
+
+            {ttsError ? (
+              <div className="text-sm text-destructive">{ttsError}</div>
+            ) : null}
+          </div>
+
+          {explanation ? (
+            <div className="rounded-xl border border-border bg-card p-4 text-sm text-muted-foreground">
+              <div className="text-sm font-semibold text-foreground">
+                {whyLabel}
+              </div>
+              <div className="mt-2">{explanation}</div>
+            </div>
+          ) : null}
+
+          <div className="flex justify-end">
+            <Button
+              type="button"
+              onClick={onNext}
+              className="h-10 border-primary bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
+            >
+              {nextLabel}
+              <ArrowRightIcon className="h-5 w-5" aria-hidden="true" />
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

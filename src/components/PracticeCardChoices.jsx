@@ -1,5 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import { Separator } from "./ui/separator";
 import {
   HoverCard,
   HoverCardContent,
@@ -46,7 +48,7 @@ export default function PracticeCardChoices({
   const baseword = sent?.base || "_____";
   const blankSlot = "_____";
   const hoverCardContentClass =
-    "w-64 max-w-[85vw] rounded-2xl border border-emerald-100 bg-white/95 p-4 text-sm text-neutral-800 shadow-xl backdrop-blur";
+    "w-64 max-w-[85vw] rounded-2xl border border-border bg-card/95 p-4 text-sm text-foreground shadow-xl backdrop-blur";
 
   const tooltipLines = useMemo(() => {
     const lines = [];
@@ -89,16 +91,19 @@ export default function PracticeCardChoices({
   const normalizedGuess = normalizeChoice(guess);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       {instructionText ? (
-        <div className="text-sm text-emerald-900/80">{instructionText}</div>
+        <div className="text-sm text-muted-foreground">{instructionText}</div>
       ) : null}
 
       <div className="flex justify-center">
         <div className="relative inline-flex">
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50/70 px-6 py-3 text-4xl sm:text-5xl font-extrabold tracking-tight text-emerald-950 shadow-sm ring-1 ring-emerald-100/70">
+          <Badge
+            variant="secondary"
+            className="rounded-full border border-border bg-muted px-8 py-3 text-4xl sm:text-5xl font-extrabold tracking-tight text-foreground shadow-sm leading-none"
+          >
             {baseword}
-          </div>
+          </Badge>
 
           {tooltipLines.length > 0 ? (
             <HoverCard>
@@ -106,7 +111,7 @@ export default function PracticeCardChoices({
                 <button
                   type="button"
                   aria-label="Translation and category"
-                  className="absolute -right-2 -top-2 inline-flex h-7 w-7 items-center justify-center rounded-full border border-red-200 bg-red-500 text-xs font-semibold text-white shadow-sm transition hover:bg-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40"
+                  className="absolute -right-2 -top-2 inline-flex h-7 w-7 items-center justify-center rounded-full border border-border bg-card text-xs font-semibold text-muted-foreground shadow-sm transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   ?
                 </button>
@@ -121,10 +126,10 @@ export default function PracticeCardChoices({
                 <div className="space-y-2">
                   {tooltipLines.map(({ label, value }, idx) => (
                     <div key={idx}>
-                      <div className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
+                      <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         {label}
                       </div>
-                      <div className="text-sm text-neutral-800">{value}</div>
+                      <div className="text-sm text-foreground">{value}</div>
                     </div>
                   ))}
                 </div>
@@ -135,16 +140,21 @@ export default function PracticeCardChoices({
       </div>
 
       {showTranslate ? (
-        <div className="text-sm text-neutral-600">{translate}</div>
+        <div className="text-sm text-muted-foreground">{translate}</div>
       ) : null}
 
-      <div className="min-w-0 flex flex-wrap items-center gap-2 text-lg sm:text-xl leading-relaxed">
+      <div className="min-w-0 flex flex-wrap items-center gap-2 text-lg sm:text-xl leading-relaxed text-foreground/80">
         <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
-        <span className="inline-flex items-center rounded-full border border-emerald-100 bg-emerald-50/40 px-4 py-2 text-base font-semibold text-emerald-900">
+        <Badge
+          variant="secondary"
+          className="rounded-full border border-border bg-muted text-base font-semibold text-foreground"
+        >
           {blankSlot}
-        </span>
+        </Badge>
         <span className="whitespace-pre-wrap break-words">{sent?.after}</span>
       </div>
+
+      <Separator />
 
       <div className="mt-4 grid gap-2 sm:gap-3">
         {choices.map((choice, idx) => {
@@ -164,11 +174,11 @@ export default function PracticeCardChoices({
               disabled={disabled}
               onClick={() => onPick?.(choice)}
               className={cn(
-                "w-full rounded-xl border border-emerald-100 bg-white px-4 py-3 text-left text-sm sm:text-base shadow-sm transition hover:bg-emerald-50/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700/30",
+                "w-full rounded-2xl border border-border bg-card px-4 py-3 text-left text-sm sm:text-base shadow-sm transition hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
                 disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
-                isSelected && "border-emerald-800 ring-2 ring-emerald-900/10",
-                isCorrectChoice && "border-emerald-300 bg-emerald-50",
-                isWrongChoice && "border-red-300 bg-red-50"
+                isSelected && "border-primary ring-2 ring-primary/15",
+                isCorrectChoice && "border-primary/40 bg-primary/10",
+                isWrongChoice && "border-destructive/40 bg-destructive/10"
               )}
             >
               {idx + 1}. {choice}
@@ -181,7 +191,7 @@ export default function PracticeCardChoices({
         <Button
           type="button"
           onClick={onCheck}
-          className="h-10 border-emerald-600 bg-emerald-600 text-white hover:bg-emerald-700"
+          className="h-10 border-primary bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
         >
           <CheckIcon className="h-5 w-5" aria-hidden="true" />
           {checkLabel}
@@ -191,7 +201,7 @@ export default function PracticeCardChoices({
           type="button"
           variant="default"
           onClick={onToggleHint}
-          className="h-10 border-emerald-100 bg-emerald-50 text-emerald-900 hover:bg-emerald-100"
+          className="h-10 border-border bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80"
         >
           <LightBulbIcon className="h-5 w-5" aria-hidden="true" />
           {hintLabel}
@@ -199,10 +209,10 @@ export default function PracticeCardChoices({
 
         <Button
           type="button"
-          variant="default"
+          variant="ghost"
           onClick={onReveal}
           disabled={isFeedback}
-          className="h-10 border-red-200 bg-red-50 text-red-700 hover:bg-red-100"
+          className="h-10 text-destructive shadow-sm hover:bg-destructive/10"
         >
           <EyeIcon className="h-5 w-5" aria-hidden="true" />
           {revealLabel}
@@ -213,7 +223,7 @@ export default function PracticeCardChoices({
           variant="ghost"
           onClick={onSkip}
           disabled={isFeedback}
-          className="h-10 text-neutral-600 hover:text-neutral-800"
+          className="h-10 text-muted-foreground hover:text-foreground"
         >
           <ArrowUturnRightIcon className="h-5 w-5" aria-hidden="true" />
           {skipLabel}
@@ -221,7 +231,7 @@ export default function PracticeCardChoices({
       </div>
 
       {showHint && hintText ? (
-        <div className="rounded-xl border border-emerald-100 bg-emerald-50/40 px-4 py-3 text-sm text-emerald-950">
+        <div className="rounded-2xl border border-border bg-muted px-4 py-3 text-sm text-foreground">
           {hintText}
         </div>
       ) : null}

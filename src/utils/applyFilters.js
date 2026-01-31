@@ -1,23 +1,4 @@
-// src/services/loadCsv.js
-import Papa from "papaparse";
-
-// Map your CSV headers -> canonical keys used in the React app
-const KEY_MAP = {
-  CardId: "cardId",
-  RuleFamily: "family",
-  RuleCategory: "category",
-  Trigger: "trigger",
-  Base: "base",
-  Translate: "translate",
-  WordCategory: "wordCategory",
-  Before: "before",
-  After: "after",
-  Answer: "answer",
-  Outcome: "outcome",
-  TranslateSent: "translateSent",
-  Why: "why",
-  "Why-Cym": "whyCym",
-};
+// src/utils/applyFilters.js
 
 // Normalise for comparisons: lowercase and remove non-alphanumerics
 function canon(s) {
@@ -63,26 +44,47 @@ function matchesCategory(cellValue, presetCategory) {
 
 export function applyFilters(rows, state) {
   let out = [...rows];
-  const preset = state.preset;
+  // Guard against null state/preset/filters
+  const preset = state?.preset;
+  const filters = state?.filters;
 
-  // 1) Preset sourceScope (restrict to certain CSV files)
-  if (preset?.sourceScope?.length) {
-    const allowed = new Set(preset.sourceScope.map(canon));
-    out = out.filter((r) => allowed.has(canon(r.__source)));
+  // 1) Preset filtering
+  if (preset) {
+    // A) Source Scope
+    if (preset.sourceScope?.length) {
+      const allowed = new Set(preset.sourceScope.map(canon));
+      out = out.filter((r) => allowed.has(canon(r.__source)));
+    }
+
+    // B) Category
+    if (preset.category) {
+      out = out.filter((r) => matchesCategory(r.category, preset.category));
+    }
+
+    // C) Triggers
+    if (preset.triggers?.length) {
+      const allowedTriggers = new Set(preset.triggers.map(canon));
+      out = out.filter((r) => matchesToken(r.trigger, allowedTriggers));
+    }
   }
 
-  // 2) Preset category
-  if (preset?.category) {
-    out = out.filter((r) => matchesCategory(r.category, preset.category));
+  // 2) Manual Families (User toggles)
+  if (filters?.families && filters.families.size > 0) {
+    const famSet = filters.families;
+    out = out.filter((r) => {
+      const fam = r.family || r.rulefamily || r.RuleFamily || "";
+      return famSet.has(canon(fam));
+    });
   }
 
-  // 3) Preset triggers
-  if (preset?.triggers?.length) {
-    const allowedTriggers = new Set(preset.triggers.map(canon));
-    out = out.filter((r) => matchesToken(r.trigger, allowedTriggers));
+  // 3) Manual Categories (User toggles)
+  if (filters?.categories && filters.categories.size > 0) {
+    const catSet = filters.categories;
+    out = out.filter((r) => {
+      const cat = r.category || r.rulecategory || r.RuleCategory || "";
+      return catSet.has(canon(cat));
+    });
   }
-
-  // (User filters can be added back in later)
 
   return out;
 }

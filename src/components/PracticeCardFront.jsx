@@ -1,5 +1,7 @@
 import { useMemo } from "react";
 import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import { Separator } from "./ui/separator";
 import {
   HoverCard,
   HoverCardContent,
@@ -56,16 +58,19 @@ export default function PracticeCardFront({
   const skipLabel = t("skip") || "Skip";
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       {instructionText ? (
-        <div className="text-sm text-emerald-900/80">{instructionText}</div>
+        <div className="text-sm text-muted-foreground">{instructionText}</div>
       ) : null}
 
       <div className="flex justify-center">
         <div className="relative inline-flex">
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50/70 px-6 py-3 text-4xl sm:text-5xl font-extrabold tracking-tight text-emerald-950 shadow-sm ring-1 ring-emerald-100/70">
+          <Badge
+            variant="secondary"
+            className="rounded-full border border-border bg-muted px-8 py-3 text-4xl sm:text-5xl font-extrabold tracking-tight text-foreground shadow-sm leading-none"
+          >
             {baseword}
-          </div>
+          </Badge>
 
           {tooltipLines.length > 0 ? (
             <HoverCard>
@@ -73,7 +78,7 @@ export default function PracticeCardFront({
                 <button
                   type="button"
                   aria-label="Translation and category"
-                  className="absolute -right-2 -top-2 inline-flex h-7 w-7 items-center justify-center rounded-full border border-red-200 bg-red-500 text-xs font-semibold text-white shadow-sm transition hover:bg-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40"
+                  className="absolute -right-2 -top-2 inline-flex h-7 w-7 items-center justify-center rounded-full border border-border bg-card text-xs font-semibold text-muted-foreground shadow-sm transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   ?
                 </button>
@@ -102,17 +107,17 @@ export default function PracticeCardFront({
       </div>
 
       {showTranslate ? (
-        <div className="text-sm text-neutral-600">{translate}</div>
+        <div className="text-sm text-muted-foreground">{translate}</div>
       ) : null}
 
-      <div className="min-w-0 flex flex-wrap items-center gap-2 text-lg sm:text-xl leading-relaxed">
+      <div className="min-w-0 flex flex-wrap items-center gap-2 text-lg sm:text-xl leading-relaxed text-foreground/80">
         <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
         <input
           value={guess}
           onChange={(e) => setGuess(e.target.value)}
           disabled={disabledInput}
           placeholder={placeholder}
-          className="h-11 min-w-[8ch] w-[10ch] sm:w-[12ch] max-w-full rounded-full border border-emerald-200 bg-white px-4 text-base text-neutral-900 shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700/30 disabled:cursor-not-allowed disabled:opacity-60"
+          className="h-11 min-w-[8ch] w-[10ch] sm:w-[12ch] max-w-full rounded-full border border-input bg-muted px-4 text-base text-foreground shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
           onKeyDown={(e) => {
             if (e.key === "Enter") onCheck();
           }}
@@ -120,11 +125,13 @@ export default function PracticeCardFront({
         <span className="whitespace-pre-wrap break-words">{sent?.after}</span>
       </div>
 
+      <Separator />
+
       <div className="flex flex-wrap items-center gap-2">
         <Button
           type="button"
           onClick={onCheck}
-          className="h-10 border-emerald-600 bg-emerald-600 text-white hover:bg-emerald-700"
+          className="h-10 border-primary bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
         >
           <CheckIcon className="h-5 w-5" aria-hidden="true" />
           {checkLabel}
@@ -134,7 +141,7 @@ export default function PracticeCardFront({
           type="button"
           variant="default"
           onClick={onToggleHint}
-          className="h-10 border-emerald-100 bg-emerald-50 text-emerald-900 hover:bg-emerald-100"
+          className="h-10 border-border bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80"
         >
           <LightBulbIcon className="h-5 w-5" aria-hidden="true" />
           {hintLabel}
@@ -142,10 +149,10 @@ export default function PracticeCardFront({
 
         <Button
           type="button"
-          variant="default"
+          variant="ghost"
           onClick={onReveal}
           disabled={isFeedback}
-          className="h-10 border-red-200 bg-red-50 text-red-700 hover:bg-red-100"
+          className="h-10 border-border text-destructive shadow-sm hover:bg-destructive/10"
         >
           <EyeIcon className="h-5 w-5" aria-hidden="true" />
           {revealLabel}
@@ -156,7 +163,7 @@ export default function PracticeCardFront({
           variant="ghost"
           onClick={onSkip}
           disabled={isFeedback}
-          className="h-10 text-neutral-600 hover:text-neutral-800"
+          className="h-10 text-muted-foreground hover:text-foreground"
         >
           <ArrowUturnRightIcon className="h-5 w-5" aria-hidden="true" />
           {skipLabel}
@@ -164,7 +171,7 @@ export default function PracticeCardFront({
       </div>
 
       {showHint && hintText ? (
-        <div className="rounded-xl border border-emerald-100 bg-emerald-50/40 px-4 py-3 text-sm text-emerald-950">
+        <div className="rounded-2xl border border-border bg-muted px-4 py-3 text-sm text-foreground">
           {hintText}
         </div>
       ) : null}

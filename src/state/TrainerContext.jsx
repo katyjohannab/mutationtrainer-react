@@ -31,6 +31,14 @@ function safeLower(s) {
   return (s ?? "").toString().trim().toLowerCase();
 }
 
+function canon(s) {
+  return (s ?? "")
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "");
+}
+
 function getCardId(card) {
   // you normalised CardId -> cardId in loadCsv, but keep fallback
   return card?.cardId ?? card?.CardId ?? "";
@@ -108,6 +116,14 @@ const initialState = {
   loadError: null,
 
   activePresetId: null,
+  filters: {
+    families: new Set(),
+    categories: new Set(),
+  },
+  available: {
+    families: [],
+    categories: [],
+  },
   mode: "random", // "random" | "smart"
 
   index: 0,
@@ -129,8 +145,46 @@ const initialState = {
 
 function reducer(state, action) {
   switch (action.type) {
-    case "LOAD_ROWS_SUCCESS":
-      return { ...state, rows: action.rows, loadError: null };
+    case "LOAD_ROWS_SUCCESS": {
+      const famMap = new Map();
+      const catMap = new Map();
+      
+      console.log("LOAD_ROWS_SUCCESS: Processing", action.rows.length, "rows");
+      
+      for (const r of action.rows) {
+        // Get family - try all possible property names
+        const famRaw = r.family || r.rulefamily || r.RuleFamily || r.Family || "";
+        const catRaw = r.category || r.rulecategory || r.RuleCategory || r.Category || "";
+
+        if (famRaw && famRaw.trim()) {
+          const k = canon(famRaw);
+          if (k && !famMap.has(k)) {
+            famMap.set(k, famRaw.trim());
+          }
+        }
+
+        if (catRaw && catRaw.trim()) {
+          const k = canon(catRaw);
+          if (k && !catMap.has(k)) {
+            catMap.set(k, catRaw.trim());
+          }
+        }
+      }
+
+      console.log("Extracted families:", Array.from(famMap.values()));
+      console.log("Extracted categories:", Array.from(catMap.values()));
+
+      const available = {
+        families: Array.from(famMap.entries())
+          .map(([id, label]) => ({ id, label }))
+          .sort((a, b) => a.label.localeCompare(b.label)),
+        categories: Array.from(catMap.entries())
+          .map(([id, label]) => ({ id, label }))
+          .sort((a, b) => a.label.localeCompare(b.label)),
+      };
+
+      return { ...state, rows: action.rows, loadError: null, available };
+    }
 
     case "LOAD_ROWS_ERROR":
       return { ...state, loadError: action.error };
@@ -140,6 +194,39 @@ function reducer(state, action) {
 
     case "CLEAR_PRESET":
       return { ...state, activePresetId: null };
+
+    case "TOGGLE_FILTER": {
+      const { kind, id } = action;
+      const targetSet = state.filters[kind];
+      if (!targetSet) return state;
+
+      const nextSet = new Set(targetSet);
+      if (nextSet.has(id)) {
+        nextSet.delete(id);
+      } else {
+        nextSet.add(id);
+      }
+
+      return {
+        ...state,
+        filters: {
+          ...state.filters,
+          [kind]: nextSet,
+        },
+      };
+    }
+
+    case "CLEAR_FILTER_TYPE": {
+      const { kind } = action;
+      if (!state.filters[kind]) return state; // safety
+      return {
+        ...state,
+        filters: {
+          ...state.filters,
+          [kind]: new Set(), // empty set implies 'All'
+        },
+      };
+    }
 
     case "SET_MODE":
       return { ...state, mode: action.mode };
@@ -321,12 +408,13 @@ export function TrainerProvider({ children }) {
 
   const filtered = useMemo(() => {
     try {
-      return applyFilters(state.rows, { preset });
+      // Only pass what applyFilters actually needs - not the full state object
+      return applyFilters(state.rows, { preset, filters: state.filters });
     } catch (e) {
       console.error("applyFilters crashed:", e);
       return [];
     }
-  }, [state.rows, preset]);
+  }, [state.rows, preset, state.filters]);
 
   // When deck changes (preset changes, or rows load), reset session + choose a valid index based on mode
   useEffect(() => {
@@ -377,6 +465,9 @@ export function TrainerProvider({ children }) {
       setPresetId: (idOrNull) => {
         if (!idOrNull) dispatch({ type: "CLEAR_PRESET" });
         else dispatch({ type: "APPLY_PRESET", presetId: idOrNull });
+      },
+      toggleFilter: (kind, id) => {
+        dispatch({ type: "TOGGLE_FILTER", kind, id });
       },
     }),
     [state, preset, filtered, currentCard]

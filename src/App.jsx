@@ -25,6 +25,10 @@ export default function App() {
   const [answerMode, setAnswerMode] = useState("type"); // "type" | "tap"
   const [currentIdx, setCurrentIdx] = useState(-1);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [filters, setFilters] = useState({
+    families: new Set(),
+    categories: new Set(),
+  });
 
   // avoid annoying repeats in random mode
   const recentRef = useRef([]);
@@ -35,6 +39,13 @@ export default function App() {
     leitnerRef.current = leitnerMap;
   }, [leitnerMap]);
 
+  const canon = (s) =>
+    (s ?? "")
+      .toString()
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "");
+
   useEffect(() => {
     loadManyCsvFiles(ALL_CSV_FILES)
       .then(setRows)
@@ -43,9 +54,34 @@ export default function App() {
 
   const preset = activePresetId ? PRESET_DEFS[activePresetId] : null;
 
+  const available = useMemo(() => {
+    const famMap = new Map();
+    const catMap = new Map();
+
+    for (const r of rows) {
+      const famRaw = r.family || r.rulefamily || r.RuleFamily || r.Family || "";
+      const catRaw = r.category || r.rulecategory || r.RuleCategory || r.Category || "";
+
+      const famKey = canon(famRaw);
+      if (famKey && !famMap.has(famKey)) famMap.set(famKey, famRaw.trim());
+
+      const catKey = canon(catRaw);
+      if (catKey && !catMap.has(catKey)) catMap.set(catKey, catRaw.trim());
+    }
+
+    return {
+      families: Array.from(famMap.entries())
+        .map(([id, label]) => ({ id, label }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
+      categories: Array.from(catMap.entries())
+        .map(([id, label]) => ({ id, label }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
+    };
+  }, [rows]);
+
   const filtered = useMemo(() => {
-    return applyFilters(rows, { preset });
-  }, [rows, preset]);
+    return applyFilters(rows, { preset, filters });
+  }, [rows, preset, filters]);
 
   const currentRow = currentIdx >= 0 ? filtered[currentIdx] : null;
 
@@ -113,6 +149,19 @@ export default function App() {
     setActivePresetId((prev) => (prev === id ? null : id));
   }
 
+  const toggleFilter = (kind, id) => {
+    setFilters((prev) => {
+      const nextSet = new Set(prev[kind] ?? []);
+      if (nextSet.has(id)) nextSet.delete(id);
+      else nextSet.add(id);
+      return { ...prev, [kind]: nextSet };
+    });
+  };
+
+  const clearFilterType = (kind) => {
+    setFilters((prev) => ({ ...prev, [kind]: new Set() }));
+  };
+
   return (
     <div className="min-h-full">
       <Header
@@ -121,7 +170,7 @@ export default function App() {
         onOpenFilters={() => setFiltersOpen(true)}
       />
 
-      <main className="mx-auto w-full max-w-6xl px-4 py-4">
+      <main className="mx-auto w-full max-w-5xl px-4 py-4 sm:px-6">
         <div className="flex flex-col gap-6 md:flex-row">
           <div className="flex-1">
             <div className="flex flex-wrap items-center gap-2">
@@ -165,6 +214,10 @@ export default function App() {
             <FiltersPanel
               activePresetId={activePresetId}
               onTogglePreset={handleTogglePreset}
+              available={available}
+              filters={filters}
+              onToggleFilter={toggleFilter}
+              onClearFilterType={clearFilterType}
             />
           </aside>
         </div>
@@ -174,6 +227,10 @@ export default function App() {
         <FiltersPanel
           activePresetId={activePresetId}
           onTogglePreset={handleTogglePreset}
+          available={available}
+          filters={filters}
+          onToggleFilter={toggleFilter}
+          onClearFilterType={clearFilterType}
         />
       </FilterSheet>
     </div>

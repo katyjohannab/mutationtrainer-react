@@ -1,7 +1,7 @@
 import PracticeCard from "./PracticeCard";
 import { useI18n } from "../i18n/I18nContext";
 import { cn } from "../lib/cn";
-import { Button } from "./ui/button";
+import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 
 export default function FlashcardArea({
   className,
@@ -13,43 +13,82 @@ export default function FlashcardArea({
   onResult,
   answerMode,
   deckRows,
+  onAnswerModeChange,
 }) {
   const { t } = useI18n();
 
   return (
     <section className={cn("flex-1", className)}>
-      {/* Mode + counts */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm font-semibold text-gray-700">
-            {t("mode")}:
-          </span>
+      {/* Mode + Answer type + counts */}
+      <div className="flex flex-col gap-4 sm:gap-3">
+        <div className="flex flex-wrap items-center gap-4">
+          
+          {/* Mode selector: shadcn ToggleGroup */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              {t("mode")}
+            </span>
+            <ToggleGroup
+              type="single"
+              value={mode}
+              onValueChange={(value) => {
+                if (value) onModeChange(value);
+              }}
+            >
+              <ToggleGroupItem
+                value="random"
+                className="rounded-md border border-border bg-card px-3 py-1 text-xs font-medium text-foreground/80 shadow-sm transition data-[state=on]:border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                aria-label={t("random")}
+              >
+                {t("random")}
+              </ToggleGroupItem>
+              <ToggleGroupItem
+                value="smart"
+                className="rounded-md border border-border bg-card px-3 py-1 text-xs font-medium text-foreground/80 shadow-sm transition data-[state=on]:border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                aria-label={t("smart")}
+              >
+                {t("smart")}
+              </ToggleGroupItem>
+            </ToggleGroup>
+          </div>
 
-          <Button
-            type="button"
-            variant="pill"
-            active={mode === "random"}
-            onClick={() => onModeChange("random")}
-          >
-            {t("random")}
-          </Button>
+          {/* Answer method selector: shadcn ToggleGroup */}
+          {onAnswerModeChange && (
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                {t("ateb") || "Answer"}
+              </span>
+              <ToggleGroup
+                type="single"
+                value={answerMode}
+                onValueChange={(value) => {
+                  if (value) onAnswerModeChange(value);
+                }}
+              >
+                <ToggleGroupItem
+                  value="type"
+                  className="rounded-md border border-border bg-card px-3 py-1 text-xs font-medium text-foreground/80 shadow-sm transition data-[state=on]:border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                  aria-label={t("typeMode") || "Type"}
+                >
+                  {t("typeMode") || "Type"}
+                </ToggleGroupItem>
+                <ToggleGroupItem
+                  value="tap"
+                  className="rounded-md border border-border bg-card px-3 py-1 text-xs font-medium text-foreground/80 shadow-sm transition data-[state=on]:border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                  aria-label={t("tapMode") || "Tap"}
+                >
+                  {t("tapMode") || "Tap"}
+                </ToggleGroupItem>
+              </ToggleGroup>
+            </div>
+          )}
 
-          <Button
-            type="button"
-            variant="pill"
-            active={mode === "smart"}
-            onClick={() => onModeChange("smart")}
-          >
-            {t("smart")}
-          </Button>
-
-          <span className="ml-2 text-sm text-gray-600">
-            {t("loaded")}:{" "}
-            <span className="font-semibold text-gray-900">{rowsCount}</span>
-            <span className="mx-2 text-gray-300">|</span>
-            {t("deck")}:{" "}
-            <span className="font-semibold text-gray-900">{filteredCount}</span>
-          </span>
+          {/* Stats row */}
+          <div className="ml-auto text-xs text-muted-foreground">
+            <span className="font-medium">{rowsCount}</span>
+            <span className="mx-1">/</span>
+            <span className="font-medium">{filteredCount}</span>
+          </div>
         </div>
       </div>
 

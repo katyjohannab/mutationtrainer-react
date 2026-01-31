@@ -7,6 +7,7 @@ import PracticeCardFeedback from "./PracticeCardFeedback";
 import PracticeCardFront from "./PracticeCardFront";
 import PracticeCardChoices from "./PracticeCardChoices";
 import { cn } from "../lib/cn";
+import { Card } from "./ui/card";
 
 function buildSentence(row) {
   const before = row?.before ?? row?.Before ?? "";
@@ -249,8 +250,15 @@ export default function PracticeCard({
   const [ttsLoading, setTtsLoading] = useState(false);
   const [ttsError, setTtsError] = useState("");
 
+  // Derived state must be defined before effects using it
+  const isFeedback = cardState === CARD_STATES.FEEDBACK;
+  const answer = row?.answer ?? row?.Answer ?? "";
   const sent = useMemo(() => buildSentence(row), [row]);
+  
+  // Get card ID for stable dependency
+  const cardId = row?.cardId ?? row?.CardId ?? "";
 
+  // Reset when card ID changes (not object reference)
   useEffect(() => {
     setGuess("");
     setShowHint(false);
@@ -258,24 +266,7 @@ export default function PracticeCard({
     setLast(null);
     setTtsError("");
     setTtsLoading(false);
-  }, [row]);
-
-  if (!row) return null;
-
-  const answer = row?.answer ?? row?.Answer ?? "";
-  const whyEn = row?.why ?? row?.Why ?? "";
-  const whyCy = row?.whyCym ?? row?.["Why-Cym"] ?? row?.WhyCym ?? "";
-  const translateSent = row?.translateSent ?? row?.TranslateSent ?? "";
-  const showTranslate = lang === "en" && Boolean(translateSent);
-
-  const tooltipTranslate = row?.translate ?? row?.Translate ?? "";
-  const wordCategory = row?.wordCategory ?? row?.WordCategory ?? "";
-
-  const firstLetter = (String(answer).trim()[0] || "").toUpperCase();
-  const hintText = firstLetter ? `${t("hint") || "Hint"}: ${firstLetter}...` : "";
-
-  const isFeedback = cardState === CARD_STATES.FEEDBACK;
-  const disabledInput = isFeedback;
+  }, [cardId]);
 
   const goNext = () => {
     onResult?.({ result: "next" });
@@ -328,6 +319,38 @@ export default function PracticeCard({
     }
   };
 
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      ) {
+        return;
+      }
+
+      if (!isFeedback && (e.key === " " || e.key === "Enter")) {
+        e.preventDefault();
+        onCheck();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isFeedback, guess, row]); // onCheck changes every render, rely on closure or include it.
+
+  if (!row) return null;
+
+  const whyEn = row?.why ?? row?.Why ?? "";
+  const whyCy = row?.whyCym ?? row?.["Why-Cym"] ?? row?.WhyCym ?? "";
+  const translateSent = row?.translateSent ?? row?.TranslateSent ?? "";
+  const showTranslate = lang === "en" && Boolean(translateSent);
+  const tooltipTranslate = row?.translate ?? row?.Translate ?? "";
+  const wordCategory = row?.wordCategory ?? row?.WordCategory ?? "";
+  const firstLetter = (String(answer).trim()[0] || "").toUpperCase();
+  const hintText = firstLetter ? `${t("hint") || "Hint"}: ${firstLetter}...` : "";
+  const disabledInput = isFeedback;
+
   const hearLabel = (t("hear") || "Hear").trim();
   const loadingLabel = (t("loading") || "Loading...").trim();
   const placeholder = t("placeholderType") || "Type the mutated form...";
@@ -339,103 +362,94 @@ export default function PracticeCard({
     Array.isArray(deckRows) ? deckRows.length : 0
   }`;
   const choices = useMemo(() => {
-    if (!row || answerMode !== "tap") return [];
+    if (!sent) return [];
     return makeChoices(row, deckRows, sent);
-  }, [choiceKey, row, deckRows, answerMode, sent]);
+  }, [choiceKey, row, deckRows, sent]);
 
   const cardClassName = cn(
-    "w-full max-w-full rounded-2xl border border-neutral-200 bg-white shadow-sm",
-    "transition-shadow duration-200 hover:shadow-md"
+    "w-full max-w-full rounded-3xl border border-slate-200/70 bg-white",
+    "shadow-[0_8px_24px_rgba(15,23,42,0.08)] transition-shadow duration-200 hover:shadow-[0_12px_30px_rgba(15,23,42,0.12)]"
   );
 
   return (
     <div className="relative w-full max-w-full">
-      <div className="relative w-full [perspective:1200px]">
-        <div
-          className={cn(
-            "relative w-full transition-transform duration-500 [transform-style:preserve-3d]",
-            isFeedback
-              ? "[transform:rotateY(180deg)]"
-              : "[transform:rotateY(0deg)]"
-          )}
-        >
-          <div className="w-full [backface-visibility:hidden]">
-            <div className={cardClassName}>
-              <div className="p-5 sm:p-6">
-                {answerMode === "tap" ? (
-                  <PracticeCardChoices
-                    sent={sent}
-                    answer={answer}
-                    cardState={cardState}
-                    choices={choices}
-                    disabled={disabledInput}
-                    showTranslate={showTranslate}
-                    translate={translateSent}
-                    hintText={hintText}
-                    showHint={showHint}
-                    onToggleHint={() => setShowHint((s) => !s)}
-                    onPick={(option) => onCheck(option)}
-                    onCheck={onCheck}
-                    onReveal={onReveal}
-                    onSkip={onSkip}
-                    onNext={goNext}
-                    t={t}
-                    tooltipTranslate={tooltipTranslate}
-                    tooltipWordCategory={wordCategory}
-                    instructionText={instructionText}
-                    guess={guess}
-                  />
-                ) : (
-                  <PracticeCardFront
-                    sent={sent}
-                    answer={answer}
-                    cardState={cardState}
-                    guess={guess}
-                    setGuess={setGuess}
-                    disabledInput={disabledInput}
-                    showTranslate={showTranslate}
-                    translate={translateSent}
-                    placeholder={placeholder}
-                    hintText={hintText}
-                    showHint={showHint}
-                    onToggleHint={() => setShowHint((s) => !s)}
-                    onCheck={onCheck}
-                    onReveal={onReveal}
-                    onSkip={onSkip}
-                    onNext={goNext}
-                    t={t}
-                    tooltipTranslate={tooltipTranslate}
-                    tooltipWordCategory={wordCategory}
-                    instructionText={instructionText}
-                  />
-                )}
-              </div>
-            </div>
+      {!isFeedback && (
+        <Card className={cardClassName}>
+          <div className="p-6 sm:p-8">
+            {answerMode === "tap" ? (
+              <PracticeCardChoices
+                sent={sent}
+                answer={answer}
+                cardState={cardState}
+                choices={choices}
+                disabled={disabledInput}
+                showTranslate={showTranslate}
+                translate={translateSent}
+                hintText={hintText}
+                showHint={showHint}
+                onToggleHint={() => setShowHint((s) => !s)}
+                onPick={(option) => onCheck(option)}
+                onCheck={onCheck}
+                onReveal={onReveal}
+                onSkip={onSkip}
+                onNext={goNext}
+                t={t}
+                tooltipTranslate={tooltipTranslate}
+                tooltipWordCategory={wordCategory}
+                instructionText={instructionText}
+                guess={guess}
+              />
+            ) : (
+              <PracticeCardFront
+                sent={sent}
+                answer={answer}
+                cardState={cardState}
+                guess={guess}
+                setGuess={setGuess}
+                disabledInput={disabledInput}
+                showTranslate={showTranslate}
+                translate={translateSent}
+                placeholder={placeholder}
+                hintText={hintText}
+                showHint={showHint}
+                onToggleHint={() => setShowHint((s) => !s)}
+                onCheck={onCheck}
+                onReveal={onReveal}
+                onSkip={onSkip}
+                onNext={goNext}
+                t={t}
+                tooltipTranslate={tooltipTranslate}
+                tooltipWordCategory={wordCategory}
+                instructionText={instructionText}
+              />
+            )}
           </div>
+        </Card>
+      )}
 
-          <div className="absolute inset-0 w-full [backface-visibility:hidden] [transform:rotateY(180deg)]">
-            <div className={cardClassName}>
-              <div className="p-5 sm:p-6">
-                <PracticeCardFeedback
-                  sent={sent}
-                  answer={answer}
-                  onHear={onHear}
-                  t={t}
-                  hearLabel={hearLabel}
-                  loadingLabel={loadingLabel}
-                  ttsLoading={ttsLoading}
-                  ttsError={ttsError}
-                  last={last}
-                  whyEn={whyEn}
-                  whyCy={whyCy}
-                  lang={lang}
-                  onNext={goNext}
-                />
-              </div>
+      {isFeedback && (
+        <div className="practice-card-reveal">
+          <Card className={cardClassName}>
+            <div className="p-6 sm:p-8">
+              <PracticeCardFeedback
+                sent={sent}
+                answer={answer}
+                onHear={onHear}
+                t={t}
+                hearLabel={hearLabel}
+                loadingLabel={loadingLabel}
+                ttsLoading={ttsLoading}
+                ttsError={ttsError}
+                last={last}
+                whyEn={whyEn}
+                whyCy={whyCy}
+                lang={lang}
+                onNext={goNext}
+              />
             </div>
-          </div>
+          </Card>
         </div>
-      </div>
+      )}
     </div>
   );
 }

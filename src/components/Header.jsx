@@ -7,6 +7,12 @@ import {
 } from "@heroicons/react/24/outline";
 import { Button } from "./ui/button";
 import { Switch } from "./ui/switch";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "./ui/tooltip";
 import { cn } from "../lib/cn";
 
 export default function Header({
@@ -18,80 +24,111 @@ export default function Header({
   const isCy = lang === "cy";
 
   return (
-    <header className="sticky top-0 z-40 flex items-center justify-between border-b border-emerald-100 bg-white/95 px-4 py-2 shadow-sm backdrop-blur">
-      <div className="flex items-center gap-3 min-w-0">
-        <img
-          src="/dragon.png"
-          alt=""
-          className="h-9 w-9 drop-shadow-sm shrink-0"
-          aria-hidden="true"
-        />
-        <h1
-          className="text-xl sm:text-2xl font-bold tracking-tight text-emerald-900"
-          style={{
-            fontFamily:
-              "'bbh-bogle-regular', 'Bogle', 'Poppins', 'Inter', sans-serif",
-          }}
-        >
-          Hyfforddwr <span className="text-red-600">Treiglad</span>
-        </h1>
-      </div>
-
-      <div className="flex items-center gap-2">
-        <div className="hidden sm:flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50/40 px-3 py-1.5 shadow-sm">
-          <span
-            className={cn(
-              "text-xs font-semibold",
-              !isCy ? "text-emerald-700" : "text-neutral-500"
-            )}
-          >
-            EN
-          </span>
-          <Switch
-            checked={isCy}
-            onCheckedChange={(checked) => setLang(checked ? "cy" : "en")}
-            aria-label={t("headerSwitchLang")}
-            className="h-6 w-11 data-[state=checked]:bg-emerald-600 data-[state=unchecked]:bg-neutral-200"
+    <header className="sticky top-0 z-40 border-b border-emerald-100 bg-white/95 shadow-sm backdrop-blur">
+      <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+        
+        {/* Logo lockup: dragon + wordmark */}
+        <div className="flex items-center gap-2 shrink-0">
+          <img
+            src="/dragon.png"
+            alt=""
+            className="h-8 w-8 sm:h-10 sm:w-10 drop-shadow-sm"
+            aria-hidden="true"
           />
-          <span
-            className={cn(
-              "text-xs font-semibold",
-              isCy ? "text-emerald-700" : "text-neutral-500"
-            )}
+          <h1
+            className="text-2xl sm:text-3xl lg:text-4xl uppercase tracking-[-0.02em] leading-tight text-emerald-900"
+            style={{
+              fontFamily:
+                "'BBH Bogle', 'bbh-bogle-regular', 'Bogle', 'Poppins', 'Inter', sans-serif",
+            }}
           >
-            CY
-          </span>
+            Hyfforddwr <span className="text-destructive">Treiglad</span>
+          </h1>
         </div>
 
-        <Button
-          variant="icon"
-          size="icon"
-          onClick={onOpenHelp}
-          aria-label={t("headerHelp")}
-          className="border border-emerald-100 bg-white text-emerald-700 hover:bg-emerald-50"
-        >
-          <QuestionMarkCircleIcon className="h-5 w-5" aria-hidden="true" />
-        </Button>
+        {/* Control cluster: unified minimal surface */}
+        <TooltipProvider>
+          <div className="flex items-center border border-emerald-100 rounded-lg bg-emerald-50/30 px-3 py-2 gap-3">
+            
+            {/* Language toggle: EN [switch] CY */}
+            <div className="flex items-center gap-2">
+              <span className={cn(
+                "text-xs font-medium transition-colors",
+                !isCy ? "text-emerald-800" : "text-muted-foreground"
+              )}>
+                EN
+              </span>
+              <Switch
+                checked={isCy}
+                onCheckedChange={(checked) => setLang(checked ? "cy" : "en")}
+                aria-label={t("headerSwitchLang") || "Toggle language"}
+                className="h-5"
+              />
+              <span className={cn(
+                "text-xs font-medium transition-colors",
+                isCy ? "text-emerald-800" : "text-muted-foreground"
+              )}>
+                CY
+              </span>
+            </div>
 
-        <Button
-          variant="icon"
-          size="icon"
-          onClick={onOpenStats}
-          aria-label={t("headerStats")}
-          className="border border-emerald-100 bg-white text-emerald-700 hover:bg-emerald-50"
-        >
-          <ChartBarIcon className="h-5 w-5" aria-hidden="true" />
-        </Button>
+            {/* Separator */}
+            <div className="h-4 w-px bg-emerald-200" />
 
-        <Button
-          variant="default"
-          size="default"
-          className="md:hidden bg-emerald-600 text-white border-emerald-600 hover:bg-emerald-700"
-          onClick={onOpenFilters}
-        >
-          <FunnelIcon className="h-5 w-5" aria-hidden="true" />
-          <span>{t("headerFilters")}</span>
-        </Button>
+            {/* Icon buttons: help, stats */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={onOpenHelp}
+                  aria-label={t("headerHelp") || "Help"}
+                  className="h-9 w-9 text-emerald-700 hover:bg-emerald-100"
+                >
+                  <QuestionMarkCircleIcon className="h-5 w-5" aria-hidden="true" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                {t("headerHelp") || "Help"}
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={onOpenStats}
+                  aria-label={t("headerStats") || "Stats"}
+                  className="h-9 w-9 text-emerald-700 hover:bg-emerald-100"
+                >
+                  <ChartBarIcon className="h-5 w-5" aria-hidden="true" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                {t("headerStats") || "Stats"}
+              </TooltipContent>
+            </Tooltip>
+
+            {/* Mobile filters button */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="sm:hidden h-9 w-9 text-emerald-700 hover:bg-emerald-100"
+                  onClick={onOpenFilters}
+                  aria-label={t("headerFilters") || "Filters"}
+                >
+                  <FunnelIcon className="h-5 w-5" aria-hidden="true" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                {t("headerFilters") || "Filters"}
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        </TooltipProvider>
       </div>
     </header>
   );
