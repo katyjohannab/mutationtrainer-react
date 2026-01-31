@@ -83,104 +83,109 @@ export default function PracticeCardFeedback({
   }, [last]);
   const StatusIcon = statusIcon;
   const panelClass = cn(
-    "rounded-2xl border bg-card p-4 shadow-sm",
-    last === "correct"
-      ? "border-primary/30"
-      : last
-        ? "border-destructive/30"
-        : "border-border"
+    "rounded-2xl border p-5 shadow-sm",
+    isCorrect
+      ? "border-secondary/40 bg-[image:var(--gradient-correct)]"
+      : "border-destructive/30 bg-card"
   );
 
   return (
     <div className="space-y-5">
-      {statusLabel ? (
-        <Badge
-          variant="outline"
-          className={cn(
-            "rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-wide shadow-sm",
-            isCorrect
-              ? "border-primary/30 bg-primary/10 text-primary"
-              : "border-destructive/30 bg-destructive/10 text-destructive"
-          )}
-        >
-          {StatusIcon ? (
-            <StatusIcon className="h-4 w-4" aria-hidden="true" />
-          ) : null}
-          {statusLabel}
-        </Badge>
-      ) : null}
-
       <Card className={panelClass}>
-        <CardContent className="space-y-4 p-0">
-          <div className="text-base sm:text-lg leading-relaxed text-foreground">
-            <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
-            <Badge
-              variant="secondary"
-              className="mx-1 rounded-full border border-border bg-muted text-base font-semibold text-foreground"
-            >
-              {answer}
-            </Badge>
-            <span className="whitespace-pre-wrap break-words">{sent?.after}</span>
-          </div>
-
-          {outcomeText ? (
-            <div className={cn("text-sm", outcomeClass)}>{outcomeText}</div>
-          ) : null}
-
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge
-              variant="destructive"
-              className="cursor-pointer gap-1.5 rounded-full px-3 py-1.5"
-              onClick={onHear}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => e.key === "Enter" && onHear?.()}
-            >
-              <SpeakerWaveIcon className="h-3.5 w-3.5" aria-hidden="true" />
-              {ttsLoading ? loadingLabel : hearLabel}
-            </Badge>
-
-            <ToggleGroup
-              type="single"
-              value={autoplay ? "on" : ""}
-              onValueChange={(value) => {
-                const next = value === "on";
-                setAutoplay(next);
-                try {
-                  localStorage.setItem("wm_autoplay", next ? "1" : "0");
-                } catch {
-                  // ignore
-                }
-              }}
-              className="ml-1"
-            >
-              <ToggleGroupItem value="on" aria-label="Autoplay">
-                Autoplay
-              </ToggleGroupItem>
-            </ToggleGroup>
-
-            {ttsError ? (
-              <div className="text-sm text-destructive">{ttsError}</div>
-            ) : null}
-          </div>
-
-          {explanation ? (
-            <div className="rounded-xl border border-border bg-card p-4 text-sm text-muted-foreground">
-              <div className="text-xs font-semibold uppercase tracking-wide text-foreground">
-                {whyLabel}
-              </div>
-              <div className="mt-2">{explanation}</div>
+        <CardContent className="space-y-5 p-0">
+          {statusLabel && isCorrect ? (
+            <div className="flex items-center gap-3">
+              {StatusIcon ? (
+                <StatusIcon className="h-10 w-10 text-white flex-shrink-0 stroke-[2.5]" aria-hidden="true" />
+              ) : null}
+              <h1 className="text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-white">
+                {statusLabel}
+              </h1>
             </div>
           ) : null}
 
+          {/* White content window */}
+          <div className="rounded-xl bg-card p-5 space-y-4">
+            <div className="text-base sm:text-lg leading-relaxed text-foreground">
+              <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
+              <Badge
+                variant="secondary"
+                className="mx-1 rounded-full border border-border bg-muted text-base font-semibold text-foreground"
+              >
+                {answer}
+              </Badge>
+              <span className="whitespace-pre-wrap break-words">{sent?.after}</span>
+            </div>
+
+            {outcomeText ? (
+              <div className={cn("text-sm", outcomeClass)}>{outcomeText}</div>
+            ) : null}
+
+            <div className="flex flex-wrap items-center gap-3">
+              <Badge
+                variant="destructive"
+                className="cursor-pointer gap-1.5 rounded-full px-3 py-1.5"
+                onClick={onHear}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && onHear?.()}
+              >
+                <SpeakerWaveIcon className="h-3.5 w-3.5" aria-hidden="true" />
+                {ttsLoading ? loadingLabel : hearLabel}
+              </Badge>
+
+              <label className="flex items-center gap-2 cursor-pointer text-sm text-muted-foreground">
+                <input
+                  type="checkbox"
+                  checked={autoplay}
+                  onChange={(e) => {
+                    const next = e.target.checked;
+                    setAutoplay(next);
+                    try {
+                      localStorage.setItem("wm_autoplay", next ? "1" : "0");
+                    } catch {
+                      // ignore
+                    }
+                  }}
+                  className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                />
+                Autoplay
+              </label>
+
+              {ttsError ? (
+                <div className="text-sm text-destructive">{ttsError}</div>
+              ) : null}
+            </div>
+
+            {explanation ? (
+              <div className="rounded-lg bg-[hsl(var(--cymru-neutral)/0.35)] p-4 text-sm text-foreground">
+                <div className="text-xs font-semibold uppercase tracking-wide text-foreground/70">
+                  {whyLabel}
+                </div>
+                <div className="mt-2 text-foreground/90">{explanation}</div>
+              </div>
+            ) : null}
+          </div>
+
           <div className="flex justify-end">
-            <Button type="button" onClick={onNext}>
+            <Button type="button" onClick={onNext} size="lg">
               {nextLabel}
               <ArrowRightIcon aria-hidden="true" />
             </Button>
           </div>
         </CardContent>
       </Card>
+
+      {statusLabel && !isCorrect ? (
+        <div className="flex items-center gap-2.5">
+          {StatusIcon ? (
+            <StatusIcon className="h-6 w-6 text-destructive flex-shrink-0" aria-hidden="true" />
+          ) : null}
+          <span className="text-base font-bold uppercase tracking-wide text-destructive">
+            {statusLabel}
+          </span>
+        </div>
+      ) : null}
     </div>
   );
 }

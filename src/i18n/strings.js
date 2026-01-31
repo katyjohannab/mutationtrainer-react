@@ -4,7 +4,7 @@ export const STRINGS = {
     appTitle: "Hyfforddwr Treiglad",
     mode: "Modd",
     random: "Ar hap",
-    smart: "Clyfar (Leitner)",
+    smart: "Clyfar",
     presetPacks: "Pecynnau paratoi",
     practice: "Ymarfer",
     loaded: "Wedi llwytho",
@@ -24,16 +24,16 @@ export const STRINGS = {
 
     noCards: "Dim cardiau ar gael. Gwiriwch eich hidlwyr/pecyn.",
 
-    correct: "✅ Iawn",
-    notQuite: "❌ Ddim yn hollol",
+    correct: "Iawn",
+    notQuite: "Ddim yn hollol",
     expected: "Disgwylwyd",
 
     showDebug: "Dangos dadfygio",
     why: "Pam",
 
     placeholderType: "Teipiwch y ffurf wedi treiglo…",
-    revealed: "👁️ Datgelwyd",
-    skipped: "⏭️ Hepgorwyd",
+    revealed: "Datgelwyd",
+    skipped: "Hepgorwyd",
 
     headerHelp: "Cymorth",
     headerStats: "Ystadegau",
@@ -74,7 +74,7 @@ export const STRINGS = {
     appTitle: "Mutation Trainer",
     mode: "Mode",
     random: "Random",
-    smart: "Smart (Leitner)",
+    smart: "Smart",
     presetPacks: "Preset packs",
     practice: "Practice",
     loaded: "Loaded",
@@ -102,8 +102,8 @@ export const STRINGS = {
     why: "Why",
 
     placeholderType: "Type the mutated form…",
-    revealed: "👁️ Revealed",
-    skipped: "⏭️ Skipped",
+    revealed: "Revealed",
+    skipped: "Skipped",
 
     headerHelp: "Help",
     headerStats: "Stats",
