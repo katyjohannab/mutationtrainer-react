@@ -329,9 +329,13 @@ export default function PracticeCard({
         return;
       }
 
-      if (!isFeedback && (e.key === " " || e.key === "Enter")) {
+      if (e.key === " " || e.key === "Enter") {
         e.preventDefault();
-        onCheck();
+        if (isFeedback) {
+          goNext();
+        } else {
+          onCheck();
+        }
       }
     };
 

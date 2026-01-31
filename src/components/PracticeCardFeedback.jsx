@@ -51,14 +51,7 @@ export default function PracticeCardFeedback({
     return lang === "cy" ? (whyCy || whyEn) : (whyEn || whyCy);
   }, [lang, whyEn, whyCy]);
 
-  const outcomeText = useMemo(() => {
-    if (!last) return "";
-    if (last === "correct") return "";
-    if (last === "wrong") return `${t("expected") || "Expected"}: ${answer}`;
-    if (last === "revealed") return `${t("expected") || "Expected"}: ${answer}`;
-    if (last === "skipped") return `${t("expected") || "Expected"}: ${answer}`;
-    return "";
-  }, [answer, last, t]);
+
 
   const whyLabel = t("why") || "Why";
   const statusLabel = useMemo(() => {
@@ -71,8 +64,6 @@ export default function PracticeCardFeedback({
   }, [last, t]);
   const isCorrect = last === "correct";
   const nextLabel = t("next") || "Next";
-  const outcomeClass =
-    last && last !== "correct" ? "text-destructive" : "text-muted-foreground";
   const statusIcon = useMemo(() => {
     if (!last) return null;
     if (last === "correct") return CheckIcon;
@@ -86,14 +77,14 @@ export default function PracticeCardFeedback({
     "rounded-2xl border p-5 shadow-sm",
     isCorrect
       ? "border-secondary/40 bg-[image:var(--gradient-correct)]"
-      : "border-destructive/30 bg-card"
+      : "border-destructive/30 bg-[image:var(--gradient-incorrect)]"
   );
 
   return (
     <div className="space-y-5">
       <Card className={panelClass}>
         <CardContent className="space-y-5 p-0">
-          {statusLabel && isCorrect ? (
+          {statusLabel ? (
             <div className="flex items-center gap-3">
               {StatusIcon ? (
                 <StatusIcon className="h-10 w-10 text-white flex-shrink-0 stroke-[2.5]" aria-hidden="true" />
@@ -106,20 +97,13 @@ export default function PracticeCardFeedback({
 
           {/* White content window */}
           <div className="rounded-xl bg-card p-5 space-y-4">
-            <div className="text-base sm:text-lg leading-relaxed text-foreground">
+            <p className="text-xl sm:text-2xl leading-relaxed text-foreground font-medium">
               <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
-              <Badge
-                variant="secondary"
-                className="mx-1 rounded-full border border-border bg-muted text-base font-semibold text-foreground"
-              >
+              <span className="mx-1 rounded-md border border-[hsl(var(--cymru-gold))] bg-[hsl(var(--cymru-gold-wash))] px-2 py-0.5 font-semibold text-foreground">
                 {answer}
-              </Badge>
+              </span>
               <span className="whitespace-pre-wrap break-words">{sent?.after}</span>
-            </div>
-
-            {outcomeText ? (
-              <div className={cn("text-sm", outcomeClass)}>{outcomeText}</div>
-            ) : null}
+            </p>
 
             <div className="flex flex-wrap items-center gap-3">
               <Badge
@@ -175,17 +159,6 @@ export default function PracticeCardFeedback({
           </div>
         </CardContent>
       </Card>
-
-      {statusLabel && !isCorrect ? (
-        <div className="flex items-center gap-2.5">
-          {StatusIcon ? (
-            <StatusIcon className="h-6 w-6 text-destructive flex-shrink-0" aria-hidden="true" />
-          ) : null}
-          <span className="text-base font-bold uppercase tracking-wide text-destructive">
-            {statusLabel}
-          </span>
-        </div>
-      ) : null}
     </div>
   );
 }
