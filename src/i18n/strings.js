@@ -43,6 +43,21 @@ export const STRINGS = {
     headerClearFocus: "Clirio ffocws",
     headerSwitchLang: "Newid iaith",
 
+    quickPacksTitle: "Pecynnau cyflym",
+    quickPacksSubtitle: "Dechreuwch gyda phecyn neu addaswch isod.",
+    quickPacksHint: "Setiau dan arweiniad i neidio i bwnc.",
+    coreFiltersTitle: "Hidlwyr craidd",
+    coreFiltersSubtitle: "Addaswch ar draws pob cerdyn.",
+    mutationTypeHeading: "Math o dreiglad",
+    categoriesHeading: "Categorïau",
+    filtersAll: "Pob un",
+    filtersMore: "Mwy o hidlwyr",
+    filtersFewer: "Llai o hidlwyr",
+    mutationFilterSoft: "Treiglad meddal",
+    mutationFilterNasal: "Treiglad trwynol",
+    mutationFilterAspirate: "Treiglad llaes",
+    mutationFilterNone: "Dim treiglad",
+
 
     // Preset pack titles + descriptions
     "preset.starterPreps.title": "Pecynnau dechrau",
@@ -97,6 +112,21 @@ export const STRINGS = {
     headerNoFocus: "No focus",
     headerClearFocus: "Clear focus",
     headerSwitchLang: "Switch language",  
+
+    quickPacksTitle: "Quick packs",
+    quickPacksSubtitle: "Start with a pack or fine-tune below.",
+    quickPacksHint: "Curated guided sets to jump into a topic.",
+    coreFiltersTitle: "Core filters",
+    coreFiltersSubtitle: "Fine-tune across all cards.",
+    mutationTypeHeading: "Mutation type",
+    categoriesHeading: "Categories",
+    filtersAll: "All",
+    filtersMore: "More filters",
+    filtersFewer: "Fewer filters",
+    mutationFilterSoft: "Soft",
+    mutationFilterNasal: "Nasal",
+    mutationFilterAspirate: "Aspirate",
+    mutationFilterNone: "None",
 
     // Preset pack titles + descriptions
     "preset.starterPreps.title": "Starter preps",

@@ -42,6 +42,17 @@ function matchesCategory(cellValue, presetCategory) {
   return c === preset;
 }
 
+function mutationKeyFromOutcome(value) {
+  const raw = (value ?? "").toString().trim().toLowerCase();
+  if (!raw) return "none";
+  const letters = raw.replace(/[^a-z]/g, "");
+  if (letters.startsWith("sm")) return "soft";
+  if (letters.startsWith("nm")) return "nasal";
+  if (letters.startsWith("am")) return "aspirate";
+  if (letters === "none") return "none";
+  return "none";
+}
+
 export function applyFilters(rows, state) {
   let out = [...rows];
   // Guard against null state/preset/filters
@@ -70,10 +81,10 @@ export function applyFilters(rows, state) {
 
   // 2) Manual Families (User toggles)
   if (filters?.families && filters.families.size > 0) {
-    const famSet = filters.families;
+    const allowedMutations = filters.families;
     out = out.filter((r) => {
-      const fam = r.family || r.rulefamily || r.RuleFamily || "";
-      return famSet.has(canon(fam));
+      const key = mutationKeyFromOutcome(r.outcome || r.Outcome);
+      return allowedMutations.has(key);
     });
   }
 

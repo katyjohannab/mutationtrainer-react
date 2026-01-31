@@ -23,6 +23,15 @@ const LEITNER_INTERVALS_MS = [
   7 * 24 * 60 * 60 * 1000, // box 5: 7 days
 ];
 
+const MUTATION_FILTERS = [
+  { id: "aspirate", labelKey: "mutationFilterAspirate" },
+  { id: "nasal", labelKey: "mutationFilterNasal" },
+  { id: "soft", labelKey: "mutationFilterSoft" },
+  { id: "none", labelKey: "mutationFilterNone" },
+];
+
+const MUTATION_FILTER_IDS = new Set(MUTATION_FILTERS.map((item) => item.id));
+
 function now() {
   return Date.now();
 }
@@ -121,7 +130,7 @@ const initialState = {
     categories: new Set(),
   },
   available: {
-    families: [],
+    families: MUTATION_FILTERS,
     categories: [],
   },
   mode: "random", // "random" | "smart"
@@ -146,23 +155,10 @@ const initialState = {
 function reducer(state, action) {
   switch (action.type) {
     case "LOAD_ROWS_SUCCESS": {
-      const famMap = new Map();
       const catMap = new Map();
-      
-      console.log("LOAD_ROWS_SUCCESS: Processing", action.rows.length, "rows");
-      
+
       for (const r of action.rows) {
-        // Get family - try all possible property names
-        const famRaw = r.family || r.rulefamily || r.RuleFamily || r.Family || "";
         const catRaw = r.category || r.rulecategory || r.RuleCategory || r.Category || "";
-
-        if (famRaw && famRaw.trim()) {
-          const k = canon(famRaw);
-          if (k && !famMap.has(k)) {
-            famMap.set(k, famRaw.trim());
-          }
-        }
-
         if (catRaw && catRaw.trim()) {
           const k = canon(catRaw);
           if (k && !catMap.has(k)) {
@@ -171,19 +167,32 @@ function reducer(state, action) {
         }
       }
 
-      console.log("Extracted families:", Array.from(famMap.values()));
-      console.log("Extracted categories:", Array.from(catMap.values()));
+      const categories = Array.from(catMap.entries())
+        .map(([id, label]) => ({ id, label }))
+        .sort((a, b) => a.label.localeCompare(b.label));
 
       const available = {
-        families: Array.from(famMap.entries())
-          .map(([id, label]) => ({ id, label }))
-          .sort((a, b) => a.label.localeCompare(b.label)),
-        categories: Array.from(catMap.entries())
-          .map(([id, label]) => ({ id, label }))
-          .sort((a, b) => a.label.localeCompare(b.label)),
+        families: MUTATION_FILTERS,
+        categories,
       };
 
-      return { ...state, rows: action.rows, loadError: null, available };
+      const validCategoryIds = new Set(categories.map((cat) => cat.id));
+      const nextFilters = {
+        families: new Set(
+          Array.from(state.filters.families || []).filter((id) => MUTATION_FILTER_IDS.has(id))
+        ),
+        categories: new Set(
+          Array.from(state.filters.categories || []).filter((id) => validCategoryIds.has(id))
+        ),
+      };
+
+      return {
+        ...state,
+        rows: action.rows,
+        loadError: null,
+        available,
+        filters: nextFilters,
+      };
     }
 
     case "LOAD_ROWS_ERROR":

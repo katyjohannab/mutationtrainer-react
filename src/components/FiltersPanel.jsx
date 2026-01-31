@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useI18n } from "../i18n/I18nContext";
 import { cn } from "../lib/cn";
 import { PRESET_DEFS, PRESET_ORDER } from "../data/presets";
 
 import { Badge } from "./ui/badge";
+
+const MUTATION_FILTERS = [
+  { id: "aspirate", labelKey: "mutationFilterAspirate" },
+  { id: "nasal", labelKey: "mutationFilterNasal" },
+  { id: "soft", labelKey: "mutationFilterSoft" },
+  { id: "none", labelKey: "mutationFilterNone" },
+];
+
+const MUTATION_FILTER_IDS = new Set(MUTATION_FILTERS.map((item) => item.id));
 
 function FilterBadge({ active, onClick, children, className }) {
   return (
@@ -38,6 +47,13 @@ export default function FiltersPanel({
   const safeAvailable = available || { families: [], categories: [] };
   const safeFilters = filters || { families: new Set(), categories: new Set() };
 
+  useEffect(() => {
+    const current = Array.from(safeFilters.families ?? []);
+    if (current.some((id) => !MUTATION_FILTER_IDS.has(id))) {
+      onClearFilterType?.("families");
+    }
+  }, [safeFilters.families, onClearFilterType]);
+
   const isFamilyAll = safeFilters.families.size === 0;
   const isCategoryAll = safeFilters.categories.size === 0;
 
@@ -48,17 +64,23 @@ export default function FiltersPanel({
     ? safeAvailable.categories
     : safeAvailable.categories.slice(0, INITIAL_CAT_COUNT);
 
+  const labelFor = (item) => {
+    if (!item) return "";
+    if (item.labelKey) return t(item.labelKey);
+    return item.label ?? "";
+  };
+
   return (
     <div className={cn("space-y-8 py-2 px-1", className)}>
       {/* 1. Quick Packs */}
       <section>
         <div className="mb-4">
-          <h2 className="text-lg font-bold text-slate-900">Quick packs</h2>
+          <h2 className="text-lg font-bold text-slate-900">{t("quickPacksTitle")}</h2>
           <p className="text-sm text-slate-500">
-            Start with a pack or fine-tune below.
+            {t("quickPacksSubtitle")}
           </p>
           <p className="text-xs text-slate-400 mt-1">
-            Curated guided sets to jump into a topic.
+            {t("quickPacksHint")}
           </p>
         </div>
 
@@ -104,31 +126,31 @@ export default function FiltersPanel({
       {/* 2. Core Filters */}
       <section>
         <div className="mb-4">
-          <h2 className="text-base font-bold text-slate-900">Core filters</h2>
+          <h2 className="text-base font-bold text-slate-900">{t("coreFiltersTitle")}</h2>
           <p className="text-sm text-slate-500">
-            Fine-tune across all cards.
+            {t("coreFiltersSubtitle")}
           </p>
         </div>
 
         {/* Mutation Type */}
         <div className="mb-6">
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
-            Mutation Type
+            {t("mutationTypeHeading")}
           </h3>
           <div className="flex flex-wrap gap-2">
             <FilterBadge
               active={isFamilyAll}
               onClick={() => onClearFilterType?.("families")}
             >
-              All
+              {t("filtersAll")}
             </FilterBadge>
-            {safeAvailable.families.map(({ id, label }) => (
+            {MUTATION_FILTERS.map((item) => (
               <FilterBadge
-                key={id}
-                active={safeFilters.families.has(id)}
-                onClick={() => onToggleFilter?.("families", id)}
+                key={item.id}
+                active={safeFilters.families.has(item.id)}
+                onClick={() => onToggleFilter?.("families", item.id)}
               >
-                {label}
+                {labelFor(item)}
               </FilterBadge>
             ))}
           </div>
@@ -137,22 +159,22 @@ export default function FiltersPanel({
         {/* Categories */}
         <div>
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
-            Categories
+            {t("categoriesHeading")}
           </h3>
           <div className="flex flex-wrap gap-2">
             <FilterBadge
               active={isCategoryAll}
               onClick={() => onClearFilterType?.("categories")}
             >
-              All
+              {t("filtersAll")}
             </FilterBadge>
-            {visibleCategories.map(({ id, label }) => (
+            {visibleCategories.map((item) => (
               <FilterBadge
-                key={id}
-                active={safeFilters.categories.has(id)}
-                onClick={() => onToggleFilter?.("categories", id)}
+                key={item.id}
+                active={safeFilters.categories.has(item.id)}
+                onClick={() => onToggleFilter?.("categories", item.id)}
               >
-                {label}
+                {labelFor(item)}
               </FilterBadge>
             ))}
 
@@ -163,7 +185,7 @@ export default function FiltersPanel({
                 onClick={() => setExpandedCats(!expandedCats)}
                 className="px-3 py-1 rounded-md text-xs font-semibold border border-dashed border-slate-300 text-slate-500 hover:text-slate-800 hover:border-slate-400 flex items-center gap-1 transition-colors bg-transparent"
               >
-                {expandedCats ? "Fewer filters" : "More filters"}
+                {t(expandedCats ? "filtersFewer" : "filtersMore")}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="14"
