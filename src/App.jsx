@@ -23,6 +23,7 @@ export default function App() {
 
   const [answerMode, setAnswerMode] = useState("type"); // "type" | "tap"
   const [currentIdx, setCurrentIdx] = useState(-1);
+  const [sessionCardCount, setSessionCardCount] = useState(1); // Track cards viewed in session
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [filters, setFilters] = useState({
     families: new Set(),
@@ -87,8 +88,21 @@ export default function App() {
       ? t(preset.titleKey)
       : preset.title || activePresetId
     : t("practice");
-  const progressCurrent = currentIdx >= 0 ? currentIdx + 1 : 0;
-  const progressTotal = filtered.length;
+
+  // Calculate progress text based on mode
+  let progressText = "";
+  if (mode === "smart") {
+    // Count how many cards have been reviewed (have leitner data)
+    const reviewed = filtered.filter((row, idx) => {
+      const key = getCardKey(row, idx);
+      return leitnerMap[key] !== undefined;
+    }).length;
+    const poolSize = filtered.length;
+    progressText = `${t("reviewedLabel")} ${reviewed} · ${t("poolLabel")} ${poolSize}`;
+  } else {
+    // Random mode: show session position (how many cards viewed)
+    progressText = `${t("cardLabel")} ${sessionCardCount} / ${filtered.length || 0}`;
+  }
 
   const currentRow = currentIdx >= 0 ? filtered[currentIdx] : null;
 
@@ -108,6 +122,7 @@ export default function App() {
         : pickRandomIndex(filtered, new Set(recentRef.current));
 
     setCurrentIdx(idx);
+    setSessionCardCount((prev) => prev + 1); // Increment card counter
   }
 
   // Pick an initial card ONLY when the deck or mode changes.
@@ -115,19 +130,19 @@ export default function App() {
   useEffect(() => {
     if (!filtered.length) {
       setCurrentIdx(-1);
+      setSessionCardCount(0);
       recentRef.current = [];
       return;
     }
 
-    // If currentIdx is invalid for the new deck, re-pick.
-    if (currentIdx >= filtered.length || currentIdx < 0) {
-      const idx =
-        mode === "smart"
-          ? pickSmartIndex(filtered, leitnerRef.current)
-          : pickRandomIndex(filtered, new Set());
-      setCurrentIdx(idx);
-      recentRef.current = [];
-    }
+    // Always start from the beginning when deck changes (filters/preset applied)
+    const idx =
+      mode === "smart"
+        ? pickSmartIndex(filtered, leitnerRef.current)
+        : pickRandomIndex(filtered, new Set());
+    setCurrentIdx(idx);
+    setSessionCardCount(1); // Reset to 1 when deck changes
+    recentRef.current = [];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtered, mode]); // <-- NO leitnerMap
 
@@ -184,8 +199,7 @@ export default function App() {
               className="mt-4"
               mode={mode}
               onModeChange={setMode}
-              progressCurrent={progressCurrent}
-              progressTotal={progressTotal}
+              progressText={progressText}
               deckLabel={presetLabel}
               currentRow={currentRow}
               onResult={onResult}

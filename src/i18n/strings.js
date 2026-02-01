@@ -35,6 +35,10 @@ export const STRINGS = {
     revealed: "Datgelwyd",
     skipped: "Hepgorwyd",
 
+    cardLabel: "Cerdyn",
+    reviewedLabel: "Adolygwyd",
+    poolLabel: "Pwll",
+
     headerHelp: "Cymorth",
     headerStats: "Ystadegau",
     headerFilters: "Hidlwyr",
@@ -105,6 +109,10 @@ export const STRINGS = {
     placeholderType: "Type the mutated form…",
     revealed: "Revealed",
     skipped: "Skipped",
+
+    cardLabel: "Card",
+    reviewedLabel: "Reviewed",
+    poolLabel: "Pool",
 
     headerHelp: "Help",
     headerStats: "Stats",

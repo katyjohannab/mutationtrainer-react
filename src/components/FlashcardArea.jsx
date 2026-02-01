@@ -8,8 +8,7 @@ export default function FlashcardArea({
   className,
   mode,
   onModeChange,
-  progressCurrent,
-  progressTotal,
+  progressText,
   deckLabel,
   currentRow,
   onResult,
@@ -24,9 +23,8 @@ export default function FlashcardArea({
       <div className="space-y-4 rounded-[var(--radius)] border border-border bg-[hsl(var(--cymru-bg))] p-5 sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
-            {deckLabel ? <span className="font-semibold text-foreground">{deckLabel}</span> : null}
-            <span className="text-muted-foreground">
-              {progressCurrent || 0}/{progressTotal || 0}
+            <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+              {progressText}
             </span>
           </div>
 
@@ -100,8 +98,7 @@ export default function FlashcardArea({
             mode={mode}
             onModeChange={onModeChange}
             onAnswerModeChange={onAnswerModeChange}
-            progressCurrent={progressCurrent}
-            progressTotal={progressTotal}
+            progressText={progressText}
             deckLabel={deckLabel}
           />
         )}
