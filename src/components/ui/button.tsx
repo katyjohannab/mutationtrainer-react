@@ -16,11 +16,11 @@ const buttonVariants = cva(
         outline:
           "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
         "outline-secondary":
-          "border border-secondary bg-background shadow-sm hover:bg-[hsl(var(--cymru-green-light-wash))] hover:text-secondary",
+          "border border-secondary bg-background text-secondary shadow-sm hover:bg-[hsl(var(--cymru-green-light-wash))] hover:text-secondary",
         "outline-accent":
           "border border-accent bg-background shadow-sm hover:bg-[hsl(var(--cymru-gold-wash))] hover:text-accent-foreground",
         "outline-destructive":
-          "border border-destructive bg-background shadow-sm hover:bg-[hsl(var(--cymru-red-wash))] hover:text-destructive",
+          "border border-destructive bg-background text-destructive shadow-sm hover:bg-[hsl(var(--cymru-red-wash))] hover:text-destructive",
         secondary:
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",

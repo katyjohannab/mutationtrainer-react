@@ -133,7 +133,15 @@ export default function PracticeCardChoices({
                       <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         {label}
                       </div>
-                      <div className="text-sm text-foreground">{value}</div>
+                      {label === "Category" ? (
+                        <Badge
+                          className="mt-1 bg-[#60A561] text-white hover:bg-[#60A561]/90 border-0 rounded-full px-3 py-1 text-xs font-semibold"
+                        >
+                          {value}
+                        </Badge>
+                      ) : (
+                        <div className="text-sm text-foreground">{value}</div>
+                      )}
                     </div>
                   ))}
                 </div>

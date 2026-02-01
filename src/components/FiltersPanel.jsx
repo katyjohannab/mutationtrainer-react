@@ -110,7 +110,7 @@ export default function FiltersPanel({
                 className={cn(
                   "relative cursor-pointer rounded-xl border p-4 transition-all hover:shadow-md text-left select-none group",
                   active
-                    ? "bg-primary/10 border-primary/30 ring-1 ring-primary/30"
+                    ? "bg-primary/10 border-2 border-[hsl(var(--cymru-green-light))]"
                     : "bg-card border-border hover:border-primary/30"
                 )}
               >
@@ -147,27 +147,29 @@ export default function FiltersPanel({
           <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
             {t("mutationTypeHeading")}
           </h3>
-          <div className="flex flex-wrap gap-2">
-            <FilterBadge
-              active={isFamilyAll}
-              onClick={() => onClearFilterType?.("families")}
-            >
-              {t("filtersAll")}
-            </FilterBadge>
-            {MUTATION_FILTERS.map((item) => (
+          <div className="surface-rail p-3">
+            <div className="flex flex-wrap gap-2">
               <FilterBadge
-                key={item.id}
-                active={safeFilters.families.has(item.id)}
-                onClick={() => onToggleFilter?.("families", item.id)}
+                active={isFamilyAll}
+                onClick={() => onClearFilterType?.("families")}
               >
-                {labelFor(item)}
+                {t("filtersAll")}
               </FilterBadge>
-            ))}
-            {!isFamilyAll && (
-              <ResetBadge onClick={() => onClearFilterType?.("families")}>
-                {t("filtersReset")}
-              </ResetBadge>
-            )}
+              {MUTATION_FILTERS.map((item) => (
+                <FilterBadge
+                  key={item.id}
+                  active={safeFilters.families.has(item.id)}
+                  onClick={() => onToggleFilter?.("families", item.id)}
+                >
+                  {labelFor(item)}
+                </FilterBadge>
+              ))}
+              {!isFamilyAll && (
+                <ResetBadge onClick={() => onClearFilterType?.("families")}>
+                  {t("filtersReset")}
+                </ResetBadge>
+              )}
+            </div>
           </div>
         </div>
 
@@ -176,56 +178,58 @@ export default function FiltersPanel({
           <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
             {t("categoriesHeading")}
           </h3>
-          <div className="flex flex-wrap gap-2">
-            <FilterBadge
-              active={isCategoryAll}
-              onClick={() => onClearFilterType?.("categories")}
-            >
-              {t("filtersAll")}
-            </FilterBadge>
-            {visibleCategories.map((item) => (
+          <div className="surface-rail p-3">
+            <div className="flex flex-wrap gap-2">
               <FilterBadge
-                key={item.id}
-                active={safeFilters.categories.has(item.id)}
-                onClick={() => onToggleFilter?.("categories", item.id)}
+                active={isCategoryAll}
+                onClick={() => onClearFilterType?.("categories")}
               >
-                {labelFor(item)}
+                {t("filtersAll")}
               </FilterBadge>
-            ))}
-
-            {/* Expander */}
-            {safeAvailable.categories.length > INITIAL_CAT_COUNT && (
-              <button
-                type="button"
-                onClick={() => setExpandedCats(!expandedCats)}
-                className={cn(
-                  badgeVariants({ variant: "outline" }),
-                  "cursor-pointer select-none rounded-full px-3 py-1 text-xs font-semibold border-dashed border-accent/40 text-foreground hover:bg-accent/10",
-                  "gap-1"
-                )}
-              >
-                {t(expandedCats ? "filtersFewer" : "filtersMore")}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className={cn("transition-transform", expandedCats && "rotate-180")}
+              {visibleCategories.map((item) => (
+                <FilterBadge
+                  key={item.id}
+                  active={safeFilters.categories.has(item.id)}
+                  onClick={() => onToggleFilter?.("categories", item.id)}
                 >
-                  <path d="m6 9 6 6 6-6" />
-                </svg>
-              </button>
-            )}
-            {!isCategoryAll && (
-              <ResetBadge onClick={() => onClearFilterType?.("categories")}>
-                {t("filtersReset")}
-              </ResetBadge>
-            )}
+                  {labelFor(item)}
+                </FilterBadge>
+              ))}
+
+              {/* Expander */}
+              {safeAvailable.categories.length > INITIAL_CAT_COUNT && (
+                <button
+                  type="button"
+                  onClick={() => setExpandedCats(!expandedCats)}
+                  className={cn(
+                    badgeVariants({ variant: "outline" }),
+                    "cursor-pointer select-none rounded-full px-3 py-1 text-xs font-semibold border-dashed border-accent/40 text-foreground hover:bg-accent/10",
+                    "gap-1"
+                  )}
+                >
+                  {t(expandedCats ? "filtersFewer" : "filtersMore")}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className={cn("transition-transform", expandedCats && "rotate-180")}
+                  >
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </button>
+              )}
+              {!isCategoryAll && (
+                <ResetBadge onClick={() => onClearFilterType?.("categories")}>
+                  {t("filtersReset")}
+                </ResetBadge>
+              )}
+            </div>
           </div>
         </div>
       </section>

@@ -20,7 +20,7 @@ export default function FlashcardArea({
 
   return (
     <section className={cn("flex-1", className)}>
-      <div className="space-y-4 rounded-[var(--radius)] border border-border bg-[hsl(var(--cymru-bg))] p-5 sm:p-6">
+      <div className="space-y-4 rounded-[var(--radius)] border border-border bg-[hsl(var(--panel))] p-5 sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">

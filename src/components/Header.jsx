@@ -1,5 +1,6 @@
 import React from "react";
 import { useI18n } from "../i18n/I18nContext";
+import CymruRibbon from "./CymruRibbon";
 import {
   QuestionMarkCircleIcon,
   ChartBarIcon,
@@ -24,38 +25,45 @@ export default function Header({
   const isCy = lang === "cy";
 
   return (
-    <header className="sticky top-0 z-40 border-b shadow-sm backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6 sm:py-5 bg-[hsl(var(--cymru-white))]">
+    <header className="sticky top-0 z-40 border-b shadow-sm backdrop-blur bg-card">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 sm:gap-4 px-3 py-2 sm:px-6 sm:py-3 lg:py-3.5">
         
         {/* Logo lockup: dragon + wordmark */}
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex items-center gap-[-0.5] min-w-0 shrink">
           <img
             src="/dragon.png"
             alt=""
-            className="h-9 w-9 sm:h-11 sm:w-11 lg:h-12 lg:w-12 drop-shadow-sm"
+            className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 xl:h-14 xl:w-14 drop-shadow-sm flex-shrink-0"
             aria-hidden="true"
           />
           <h1
-            className="text-3xl sm:text-4xl lg:text-5xl uppercase tracking-[-0.03em] leading-tight text-primary flex items-center gap-0"
+            className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl uppercase tracking-[-0.03em] leading-tight flex items-center gap--0.5
+            "
             style={{
               fontFamily:
                 "'BBH Bogle', 'bbh-bogle-regular', 'Bogle', 'Poppins', 'Inter', sans-serif",
             }}
           >
-            Hyfforddwr
-            <span className="h-2 w-2 rounded-full bg-destructive flex-shrink-0 ml-1 mr-[-2px]" />
+            <span 
+              className="bg-clip-text text-transparent"
+              style={{
+                backgroundImage: `linear-gradient(to right, hsl(var(--cymru-green)) 0%, hsl(var(--cymru-green)) 10%, hsl(var(--cymru-green-light)) 90%, hsl(var(--cymru-green-light)) 100%)`
+              }}
+            >
+              Hyfforddwr
+            </span>
             <span className="text-destructive">Treiglad</span>
           </h1>
         </div>
 
         {/* Control cluster: unified minimal surface */}
         <TooltipProvider>
-          <div className="flex items-center border border-border rounded-lg bg-[hsl(var(--cymru-bg))] px-3 py-2 gap-3">
+          <div className="flex items-center border border-border rounded-lg bg-[hsl(var(--rail))] px-2 py-1.5 sm:px-3 sm:py-2 gap-2 sm:gap-3 flex-shrink-0">
             
             {/* Language toggle: EN [switch] CY */}
-            <div className="flex items-center gap-2">
+            <div className="hidden min-[400px]:flex items-center gap-1.5 sm:gap-2">
               <span className={cn(
-                "text-xs font-medium transition-colors",
+                "text-[10px] sm:text-xs font-medium transition-colors",
                 !isCy ? "text-primary" : "text-muted-foreground"
               )}>
                 EN
@@ -64,10 +72,10 @@ export default function Header({
                 checked={isCy}
                 onCheckedChange={(checked) => setLang(checked ? "cy" : "en")}
                 aria-label={t("headerSwitchLang") || "Toggle language"}
-                className="h-5"
+                className="h-4 sm:h-5"
               />
               <span className={cn(
-                "text-xs font-medium transition-colors",
+                "text-[10px] sm:text-xs font-medium transition-colors",
                 isCy ? "text-primary" : "text-muted-foreground"
               )}>
                 CY
@@ -75,7 +83,7 @@ export default function Header({
             </div>
 
             {/* Separator */}
-            <div className="h-4 w-px bg-border" />
+            <div className="hidden min-[400px]:block h-4 w-px bg-border" />
 
             {/* Icon buttons: help, stats */}
             <Tooltip>
@@ -85,9 +93,9 @@ export default function Header({
                   size="icon"
                   onClick={onOpenHelp}
                   aria-label={t("headerHelp") || "Help"}
-                  className="h-9 w-9 text-primary hover:bg-[hsl(var(--cymru-bg))]/70"
+                  className="h-8 w-8 sm:h-9 sm:w-9 text-primary hover:bg-[hsl(var(--rail))]/70"
                 >
-                  <QuestionMarkCircleIcon className="h-5 w-5" aria-hidden="true" />
+                  <QuestionMarkCircleIcon className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom">
@@ -102,9 +110,9 @@ export default function Header({
                   size="icon"
                   onClick={onOpenStats}
                   aria-label={t("headerStats") || "Stats"}
-                  className="h-9 w-9 text-primary hover:bg-[hsl(var(--cymru-bg))]/70"
+                  className="h-8 w-8 sm:h-9 sm:w-9 text-primary hover:bg-[hsl(var(--rail))]/70"
                 >
-                  <ChartBarIcon className="h-5 w-5" aria-hidden="true" />
+                  <ChartBarIcon className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom">
@@ -118,11 +126,11 @@ export default function Header({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="sm:hidden h-9 w-9 text-primary hover:bg-[hsl(var(--cymru-bg))]/70"
+                  className="sm:hidden h-8 w-8 text-primary hover:bg-[hsl(var(--rail))]/70"
                   onClick={onOpenFilters}
                   aria-label={t("headerFilters") || "Filters"}
                 >
-                  <FunnelIcon className="h-5 w-5" aria-hidden="true" />
+                  <FunnelIcon className="h-4 w-4" aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom">
@@ -132,7 +140,7 @@ export default function Header({
           </div>
         </TooltipProvider>
       </div>
-      <div className="h-0.5 bg-gradient-to-r from-[hsl(var(--cymru-green))] to-[hsl(var(--cymru-green-light))]" />
+      <div className="h-[2px] bg-gradient-to-r from-[hsl(var(--cymru-green))] to-[hsl(var(--cymru-green-light))]" />
     </header>
   );
 }

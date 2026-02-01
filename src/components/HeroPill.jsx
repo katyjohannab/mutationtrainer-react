@@ -36,12 +36,12 @@ export default function HeroPill({
     <div
       className={cn(
         "inline-flex items-center gap-2 px-4 py-2 rounded-full",
-        "ring-1 ring-[hsl(var(--ring)/0.2)]",
         "shadow-sm",
         "relative",
         styles.fill,
         styles.text,
         "font-medium tracking-tight",
+        "border-2 border-[hsl(var(--cymru-green-light))]",
         className
       )}
     >

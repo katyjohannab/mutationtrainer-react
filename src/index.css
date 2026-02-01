@@ -10,7 +10,7 @@
   --cymru-green: 167 53% 19%;
   --cymru-green-light: 121 28% 51%;
   --cymru-red: 356 64% 42%;
-  --cymru-bg: 30 29% 95%;
+  --cymru-bg: 30 3% 98%;
   --cymru-text: 343 100% 3%;
   --cymru-gold: 29 64% 55%;
   --cymru-neutral: 78 15% 78%;
@@ -24,7 +24,7 @@
 
   /* shadcn tokens */
   --radius: 0.75rem;
-  --background: var(--cymru-white);
+  --background: var(--cymru-bg);
   --foreground: var(--cymru-text);
   --card: var(--cymru-white);
   --card-foreground: var(--cymru-text);
@@ -36,7 +36,7 @@
   --secondary-foreground: var(--cymru-text);
   --neutral: var(--cymru-neutral);
   --neutral-foreground: var(--cymru-text);
-  --muted: 30 18% 92%;
+  --muted: 30 6% 92%;
   --muted-foreground: 28 10% 35%;
   --accent: var(--cymru-gold);
   --accent-foreground: var(--cymru-text);
@@ -46,9 +46,19 @@
   --success-foreground: var(--cymru-white);
   --hint: var(--cymru-gold);
   --hint-foreground: var(--cymru-text);
-  --border: 30 12% 84%;
-  --input: 30 12% 84%;
+  --border: 30 10% 86%;
+  --input: 30 10% 86%;
   --ring: var(--cymru-gold);
+  --panel: 30 10% 95%;
+  --panel-foreground: var(--foreground);
+  --rail: 30 8% 94%;
+  --rail-foreground: var(--foreground);
+  --brand-green: var(--cymru-green);
+  --brand-red: var(--cymru-red);
+  --brand-gold: var(--cymru-gold);
+  --ribbon-green: var(--brand-green);
+  --ribbon-red: var(--brand-red);
+  --ribbon-spark: var(--brand-gold);
 
   /* Gradients */
   --gradient-page: linear-gradient(130deg, hsl(var(--background)) 0%, hsl(var(--cymru-neutral) / 0.6) 100%);
@@ -96,6 +106,16 @@
   --border: 170 12% 26%;
   --input: 170 12% 26%;
   --ring: var(--cymru-gold);
+  --panel: 162 20% 14%;
+  --panel-foreground: var(--foreground);
+  --rail: 162 18% 16%;
+  --rail-foreground: var(--foreground);
+  --brand-green: var(--cymru-green);
+  --brand-red: var(--cymru-red);
+  --brand-gold: var(--cymru-gold);
+  --ribbon-green: var(--brand-green);
+  --ribbon-red: var(--brand-red);
+  --ribbon-spark: var(--brand-gold);
   --cymru-header: 162 22% 16%;
   --gradient-page: linear-gradient(150deg, hsl(162 22% 15%) 0%, hsl(170 10% 22%) 100%);
   --gradient-card: linear-gradient(145deg, hsl(162 22% 18%) 0%, hsl(170 10% 26%) 100%);
@@ -152,8 +172,11 @@
   .surface-card-elev {
     @apply bg-card rounded-[var(--radius)] border border-border shadow-sm;
   }
+  .surface-panel {
+    @apply bg-[hsl(var(--panel))] text-[hsl(var(--panel-foreground))] border border-border/60 rounded-[var(--radius)];
+  }
   .surface-rail {
-    @apply rounded-[calc(var(--radius)-2px)] bg-muted/40;
+    @apply bg-[hsl(var(--rail))] border border-border/50 rounded-[calc(var(--radius)-2px)];
   }
 
   .mt-pill {

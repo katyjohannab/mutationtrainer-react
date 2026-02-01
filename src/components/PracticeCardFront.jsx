@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
 import HeroPill from "./HeroPill";
 import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";
@@ -75,7 +76,8 @@ export default function PracticeCardFront({
               "shadow-sm",
               "relative",
               "bg-[hsl(var(--primary)/0.14)]",
-              "px-12 py-5 sm:px-14 sm:py-6"
+              "px-12 py-5 sm:px-14 sm:py-6",
+              "border-2 border-[hsl(var(--cymru-green-light))]"
             )}
           >
             {/* Faint top highlight overlay */}
@@ -88,7 +90,7 @@ export default function PracticeCardFront({
               }}
               aria-hidden="true"
             />
-            <h1 className="relative z-10 text-center text-6xl sm:text-7xl font-extrabold tracking-tight text-primary leading-none">
+            <h1 className="relative z-10 text-center text-6xl sm:text-7xl font-extrabold tracking-tight text-[hsl(var(--cymru-green))] leading-none">
               {baseword}
             </h1>
           </div>
@@ -117,7 +119,15 @@ export default function PracticeCardFront({
                       <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         {label}
                       </div>
-                      <div className="text-sm text-foreground">{value}</div>
+                      {label === "Category" ? (
+                        <Badge
+                          className="mt-1 bg-[#60A561] text-white hover:bg-[#60A561]/90 border-0 rounded-full px-3 py-1 text-xs font-semibold"
+                        >
+                          {value}
+                        </Badge>
+                      ) : (
+                        <div className="text-sm text-foreground">{value}</div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -138,7 +148,7 @@ export default function PracticeCardFront({
           onChange={(e) => setGuess(e.target.value)}
           disabled={disabledInput}
           placeholder={placeholder}
-          className="mx-2 inline-flex h-10 sm:h-11 min-w-[10ch] w-[12ch] sm:w-[15ch] lg:w-[16ch] max-w-full align-baseline rounded-lg border border-ring/40 bg-card px-3 text-base sm:text-lg text-foreground shadow-sm placeholder:text-xs sm:placeholder:text-sm placeholder:font-medium placeholder:text-muted-foreground/60 focus-visible:ring-2 focus-visible:ring-ring/50"
+          className="mx-2 inline-flex h-10 sm:h-11 min-w-[10ch] w-[12ch] sm:w-[15ch] lg:w-[16ch] max-w-full align-baseline rounded-lg border-0 bg-[hsl(var(--cymru-gold)/0.08)] px-3 text-base sm:text-lg text-foreground shadow-sm placeholder:text-xs sm:placeholder:text-sm placeholder:font-medium placeholder:text-muted-foreground/60 focus-visible:ring-2 focus-visible:ring-ring/50"
           onKeyDown={(e) => {
             if (e.key === "Enter") onCheck();
           }}
