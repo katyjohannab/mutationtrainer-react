@@ -10,16 +10,11 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "./ui/hover-card";
-import {
-  CheckIcon,
-  LightBulbIcon,
-  EyeIcon,
-  ArrowUturnRightIcon,
-} from "@heroicons/react/24/outline";
+import { CheckCircle2, Lightbulb, MonitorPlay, Undo2 } from "lucide-react";
+import AppIcon from "./icons/AppIcon";
 
 export default function PracticeCardFront({
   sent,
-  answer,
   cardState,
   guess,
   setGuess,
@@ -33,7 +28,6 @@ export default function PracticeCardFront({
   onCheck,
   onReveal,
   onSkip,
-  onNext,
   t,
   tooltipTranslate,
   tooltipWordCategory,
@@ -66,8 +60,8 @@ export default function PracticeCardFront({
         <div className="text-sm text-muted-foreground">{instructionText}</div>
       ) : null}
 
-      <div className="flex justify-center">
-        <div className="relative inline-flex">
+      <div className="flex justify-center w-full px-2">
+        <div className="relative inline-flex max-w-full">
           {/* TODO: Map cardState or parent feedback state to HeroPill state (success/destructive/hint) */}
           <div
             className={cn(
@@ -75,9 +69,10 @@ export default function PracticeCardFront({
               "ring-1 ring-[hsl(var(--ring)/0.2)]",
               "shadow-sm",
               "relative",
-              "bg-[hsl(var(--primary)/0.14)]",
-              "px-12 py-5 sm:px-14 sm:py-6",
-              "border-2 border-[hsl(var(--cymru-green-light))]"
+              "bg-[hsl(var(--hero-pill-bg))]",
+              "px-6 py-3 sm:px-12 sm:py-5 md:px-14 md:py-6",
+              "border-2 border-[hsl(var(--cymru-green-light))]",
+              "max-w-full"
             )}
           >
             {/* Faint top highlight overlay */}
@@ -90,7 +85,7 @@ export default function PracticeCardFront({
               }}
               aria-hidden="true"
             />
-            <h1 className="relative z-10 text-center text-6xl sm:text-7xl font-extrabold tracking-tight text-[hsl(var(--cymru-green))] leading-none">
+            <h1 className="relative z-10 text-center text-4xl xs:text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-[hsl(var(--cymru-green))] leading-none break-words max-w-full">
               {baseword}
             </h1>
           </div>
@@ -158,14 +153,14 @@ export default function PracticeCardFront({
 
       <Separator />
 
-      <div className="flex flex-wrap items-center gap-2">
-        <Button type="button" variant="default" onClick={onCheck}>
-          <CheckIcon className="h-4 w-4" aria-hidden="true" />
+      <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
+        <Button type="button" variant="default" onClick={onCheck} className="flex-1 sm:flex-none min-w-[120px]">
+          <AppIcon icon={CheckCircle2} className="h-4 w-4" aria-hidden="true" />
           {checkLabel}
         </Button>
 
-        <Button type="button" variant="outline-secondary" onClick={onToggleHint}>
-          <LightBulbIcon className="h-4 w-4" aria-hidden="true" />
+        <Button type="button" variant="outline-secondary" onClick={onToggleHint} className="flex-1 sm:flex-none min-w-[120px]">
+          <AppIcon icon={Lightbulb} className="h-4 w-4" aria-hidden="true" />
           {hintLabel}
         </Button>
 
@@ -174,8 +169,9 @@ export default function PracticeCardFront({
           variant="outline-destructive"
           onClick={onReveal}
           disabled={isFeedback}
+          className="flex-1 sm:flex-none min-w-[120px]"
         >
-          <EyeIcon className="h-4 w-4" aria-hidden="true" />
+          <AppIcon icon={MonitorPlay} className="h-4 w-4" aria-hidden="true" />
           {revealLabel}
         </Button>
 
@@ -184,8 +180,9 @@ export default function PracticeCardFront({
           variant="ghost"
           onClick={onSkip}
           disabled={isFeedback}
+          className="flex-1 sm:flex-none min-w-[120px]"
         >
-          <ArrowUturnRightIcon className="h-4 w-4" aria-hidden="true" />
+          <AppIcon icon={Undo2} className="h-4 w-4" aria-hidden="true" />
           {skipLabel}
         </Button>
       </div>

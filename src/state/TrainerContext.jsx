@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, {
   createContext,
   useContext,
@@ -303,6 +304,9 @@ function reducer(state, action) {
         revealed: false,
       };
 
+    case "SET_LEITNER":
+      return { ...state, leitner: action.leitner ?? {} };
+
     default:
       return state;
   }
@@ -318,79 +322,23 @@ export function TrainerProvider({ children }) {
       if (savedPreset && PRESET_DEFS[savedPreset]) {
         dispatch({ type: "APPLY_PRESET", presetId: savedPreset });
       }
-    } catch {}
+    } catch (e) {
+      console.warn("Failed to restore preset", e);
+    }
 
     try {
       const savedMode = localStorage.getItem(STORAGE_KEY_MODE);
       if (savedMode === "random" || savedMode === "smart") {
         dispatch({ type: "SET_MODE", mode: savedMode });
       }
-    } catch {}
+    } catch (e) {
+      console.warn("Failed to restore mode", e);
+    }
 
     const savedLeitner = loadJson(STORAGE_KEY_LEITNER, {});
-    dispatch({ type: "LOAD_LEITNER", leitner: savedLeitner }); // handled below via effect + setState pattern
-    // We can’t dispatch unknown types; instead set via a follow-up:
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // One-time set Leitner (since we can't use unknown reducer action above cleanly)
-  useEffect(() => {
-    const saved = loadJson(STORAGE_KEY_LEITNER, {});
-    // only set if currently empty
-    if (Object.keys(state.leitner).length === 0 && Object.keys(saved).length > 0) {
-      // direct reducer action
-      dispatch({ type: "_SET_LEITNER_INTERNAL", leitner: saved });
+    if (savedLeitner && typeof savedLeitner === "object") {
+      dispatch({ type: "SET_LEITNER", leitner: savedLeitner });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Internal action handler (keeps reducer simple for you)
-  useEffect(() => {
-    // no-op; this exists just to satisfy the pattern above
-  }, []);
-
-  // Patch reducer for internal set
-  // (React doesn't allow dynamic reducer replacement; so we do a tiny shim here)
-  const dispatchShim = (action) => {
-    if (action?.type === "_SET_LEITNER_INTERNAL") {
-      // eslint-disable-next-line no-use-before-define
-      _setLeitner(action.leitner);
-      return;
-    }
-    dispatch(action);
-  };
-
-  // Manual setter for leitner (used only once)
-  const _setLeitner = (leitner) => {
-    // mimic reducer update
-    dispatch({ type: "__REPLACE_STATE__", next: { ...state, leitner } });
-  };
-
-  // Replace-state handler (only used by _setLeitner)
-  const effectiveReducerDispatch = (action) => {
-    if (action?.type === "__REPLACE_STATE__") {
-      // eslint-disable-next-line no-use-before-define
-      _replaceState(action.next);
-      return;
-    }
-    dispatch(action);
-  };
-
-  const _replaceState = (next) => {
-    // not ideal, but keeps your setup beginner-safe without introducing extra libs
-    // We achieve this by dispatching LOAD_ROWS_SUCCESS and setting pieces, but that's messy.
-    // So instead: we just ignore. (We will handle Leitner init another way below.)
-  };
-
-  // ✅ Simpler: remove the above shim and just do Leitner init in a clean effect:
-  // We'll do it properly here:
-  useEffect(() => {
-    const saved = loadJson(STORAGE_KEY_LEITNER, {});
-    if (Object.keys(saved).length > 0 && Object.keys(state.leitner).length === 0) {
-      // Set leitner by dispatching CHECK_ANSWER is wrong. So just set directly via localStorage persistence approach:
-      // We'll accept starting empty if needed. (This will not break functionality.)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Persist preset when it changes
@@ -398,14 +346,18 @@ export function TrainerProvider({ children }) {
     try {
       if (state.activePresetId) localStorage.setItem(STORAGE_KEY_PRESET, state.activePresetId);
       else localStorage.removeItem(STORAGE_KEY_PRESET);
-    } catch {}
+    } catch (e) {
+      console.warn("Failed to persist preset", e);
+    }
   }, [state.activePresetId]);
 
   // Persist mode when it changes
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY_MODE, state.mode);
-    } catch {}
+    } catch (e) {
+      console.warn("Failed to persist mode", e);
+    }
   }, [state.mode]);
 
   // Persist leitner map when it changes
@@ -438,8 +390,7 @@ export function TrainerProvider({ children }) {
         : chooseRandomIndex(filtered.length);
 
     dispatch({ type: "RESET_FOR_NEW_DECK", index });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.activePresetId, state.rows.length, state.mode]);
+  }, [filtered, state.mode, state.leitner]);
 
   const currentCard = filtered[state.index] ?? null;
 

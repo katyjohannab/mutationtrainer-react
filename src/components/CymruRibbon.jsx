@@ -16,7 +16,7 @@ export default function CymruRibbon({
   split = "60/40",
 }) {
   // Parse split ratio
-  const [greenPercent, redPercent] = split.split("/").map((s) => s.trim());
+  const [greenPercent] = split.split("/").map((s) => s.trim());
 
   return (
     <div className={cn("relative flex w-full overflow-hidden", height, className)}>

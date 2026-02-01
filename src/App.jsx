@@ -129,6 +129,7 @@ export default function App() {
   // CRITICAL: do NOT depend on leitnerMap here, or it will jump on Check.
   useEffect(() => {
     if (!filtered.length) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentIdx(-1);
       setSessionCardCount(0);
       recentRef.current = [];
@@ -143,7 +144,6 @@ export default function App() {
     setCurrentIdx(idx);
     setSessionCardCount(1); // Reset to 1 when deck changes
     recentRef.current = [];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtered, mode]); // <-- NO leitnerMap
 
   function onResult(payload) {

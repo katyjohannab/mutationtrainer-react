@@ -1,5 +1,5 @@
 // src/components/PracticeCard.jsx
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { checkAnswer } from "../utils/checkAnswer";
 import { useI18n } from "../i18n/I18nContext";
 import { playPollyForCard } from "../services/ttsPolly";
@@ -30,21 +30,6 @@ function normalizeChoice(value) {
 
 function getAnswerValue(row) {
   return String(row?.answer ?? row?.Answer ?? "").trim();
-}
-
-function getGroupKey(row) {
-  const candidates = [
-    row?.family ?? row?.Family,
-    row?.category ?? row?.Category,
-    row?.outcome ?? row?.Outcome,
-    row?.trigger ?? row?.Trigger,
-    row?.wordCategory ?? row?.WordCategory,
-  ];
-  for (const value of candidates) {
-    const cleaned = String(value ?? "").trim();
-    if (cleaned) return cleaned;
-  }
-  return "";
 }
 
 function normalizeBase(value) {
@@ -141,19 +126,6 @@ function shuffleArray(list) {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
-}
-
-function pickUniqueAnswers(rows, excludeSet, limit) {
-  const picks = [];
-  for (const row of shuffleArray(rows)) {
-    const value = getAnswerValue(row);
-    const key = normalizeChoice(value);
-    if (!key || excludeSet.has(key)) continue;
-    excludeSet.add(key);
-    picks.push(value);
-    if (picks.length >= limit) break;
-  }
-  return picks;
 }
 
 function applyMutationSequence(base, kinds) {
@@ -268,27 +240,30 @@ export default function PracticeCard({
     setTtsLoading(false);
   }, [cardId]);
 
-  const goNext = () => {
+  const goNext = useCallback(() => {
     onResult?.({ result: "next" });
-  };
+  }, [onResult]);
 
-  const onCheck = (forcedGuess) => {
-    if (isFeedback) {
-      goNext();
-      return;
-    }
+  const onCheck = useCallback(
+    (forcedGuess) => {
+      if (isFeedback) {
+        goNext();
+        return;
+      }
 
-    const nextGuess = typeof forcedGuess === "string" ? forcedGuess : guess;
-    if (typeof forcedGuess === "string") {
-      setGuess(forcedGuess);
-    }
-    const ok = checkAnswer(row, nextGuess);
-    const result = ok ? "correct" : "wrong";
+      const nextGuess = typeof forcedGuess === "string" ? forcedGuess : guess;
+      if (typeof forcedGuess === "string") {
+        setGuess(forcedGuess);
+      }
+      const ok = checkAnswer(row, nextGuess);
+      const result = ok ? "correct" : "wrong";
 
-    setCardState(CARD_STATES.FEEDBACK);
-    setLast(result);
-    onResult?.({ result, guess: nextGuess, expected: answer });
-  };
+      setCardState(CARD_STATES.FEEDBACK);
+      setLast(result);
+      onResult?.({ result, guess: nextGuess, expected: answer });
+    },
+    [answer, goNext, guess, isFeedback, onResult, row]
+  );
 
   const onReveal = () => {
     if (isFeedback) return;
@@ -341,9 +316,7 @@ export default function PracticeCard({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isFeedback, guess, row]); // onCheck changes every render, rely on closure or include it.
-
-  if (!row) return null;
+  }, [goNext, isFeedback, onCheck, row]);
 
   const whyEn = row?.why ?? row?.Why ?? "";
   const whyCy = row?.whyCym ?? row?.["Why-Cym"] ?? row?.WhyCym ?? "";
@@ -362,13 +335,12 @@ export default function PracticeCard({
     answerMode === "tap" ? t("tapMode") || "Tap" : t("typeMode") || "Type"
   }`;
 
-  const choiceKey = `${row?.cardId ?? row?.CardId ?? ""}|${answer}|${
-    Array.isArray(deckRows) ? deckRows.length : 0
-  }`;
   const choices = useMemo(() => {
     if (!sent) return [];
     return makeChoices(row, deckRows, sent);
-  }, [choiceKey, row, deckRows, sent]);
+  }, [row, deckRows, sent]);
+
+  if (!row) return null;
 
   const cardClassName = cn(
     "w-full max-w-full rounded-[var(--radius)] shadow-md bg-card"

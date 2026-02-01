@@ -21,13 +21,14 @@
   --cymru-green-light-wash: 121 30% 92%;
   --cymru-red-wash: 356 50% 94%;
   --cymru-gold-wash: 29 50% 93%;
+  --hero-pill-bg: 121 22% 93%;
 
   /* shadcn tokens */
   --radius: 0.75rem;
   --background: var(--cymru-bg);
-  --foreground: var(--cymru-text);
+  --foreground: var(--cymru-green);
   --card: var(--cymru-white);
-  --card-foreground: var(--cymru-text);
+  --card-foreground: var(--cymru-green);
   --popover: var(--cymru-white);
   --popover-foreground: var(--cymru-text);
   --primary: var(--cymru-green);
@@ -126,6 +127,7 @@
   --cymru-green-light-wash: 121 25% 22%;
   --cymru-red-wash: 356 40% 22%;
   --cymru-gold-wash: 29 40% 22%;
+  --hero-pill-bg: 121 20% 20%;
 }
 
 @layer base {

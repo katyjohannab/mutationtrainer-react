@@ -8,12 +8,8 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "./ui/hover-card";
-import {
-  CheckIcon,
-  LightBulbIcon,
-  EyeIcon,
-  ArrowUturnRightIcon,
-} from "@heroicons/react/24/outline";
+import { CheckCircle2, Lightbulb, MonitorPlay, Undo2 } from "lucide-react";
+import AppIcon from "./icons/AppIcon";
 
 function normalizeChoice(value) {
   return String(value ?? "")
@@ -37,7 +33,6 @@ export default function PracticeCardChoices({
   onCheck,
   onReveal,
   onSkip,
-  onNext,
   t,
   tooltipTranslate,
   tooltipWordCategory,
@@ -98,13 +93,13 @@ export default function PracticeCardChoices({
         <div className="text-sm text-muted-foreground">{instructionText}</div>
       ) : null}
 
-      <div className="flex justify-center">
-        <div className="relative inline-flex">
+      <div className="flex justify-center w-full px-2">
+        <div className="relative inline-flex max-w-full">
           <Badge
             variant="secondary"
-            className="rounded-full border border-secondary/40 bg-secondary/15 px-12 py-5 sm:px-14 sm:py-6 shadow-sm"
+            className="rounded-full border-2 border-[hsl(var(--cymru-green-light))] bg-[hsl(var(--hero-pill-bg))] px-6 py-3 sm:px-12 sm:py-5 md:px-14 md:py-6 shadow-sm max-w-full"
           >
-            <h1 className="text-center text-6xl sm:text-7xl font-extrabold tracking-tight text-primary leading-none">
+            <h1 className="text-center text-4xl xs:text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-primary leading-none break-words max-w-full">
               {baseword}
             </h1>
           </Badge>
@@ -199,15 +194,15 @@ export default function PracticeCardChoices({
         })}
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center sm:gap-3">
+      <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
         <Button
           type="button"
           variant="default"
           onClick={onCheck}
           size={actionButtonSize}
-          className={actionButtonClass}
+          className="flex-1 sm:flex-none min-w-[120px]"
         >
-          <CheckIcon className="h-4 w-4" aria-hidden="true" />
+          <AppIcon icon={CheckCircle2} className="h-4 w-4" aria-hidden="true" />
           {checkLabel}
         </Button>
 
@@ -216,9 +211,9 @@ export default function PracticeCardChoices({
           variant="outline-secondary"
           onClick={onToggleHint}
           size={actionButtonSize}
-          className={actionButtonClass}
+          className="flex-1 sm:flex-none min-w-[120px]"
         >
-          <LightBulbIcon className="h-4 w-4" aria-hidden="true" />
+          <AppIcon icon={Lightbulb} className="h-4 w-4" aria-hidden="true" />
           {hintLabel}
         </Button>
 
@@ -228,9 +223,9 @@ export default function PracticeCardChoices({
           onClick={onReveal}
           disabled={isFeedback}
           size={actionButtonSize}
-          className={actionButtonClass}
+          className="flex-1 sm:flex-none min-w-[120px]"
         >
-          <EyeIcon className="h-4 w-4" aria-hidden="true" />
+          <AppIcon icon={MonitorPlay} className="h-4 w-4" aria-hidden="true" />
           {revealLabel}
         </Button>
 
@@ -240,9 +235,9 @@ export default function PracticeCardChoices({
           onClick={onSkip}
           disabled={isFeedback}
           size={actionButtonSize}
-          className={actionButtonClass}
+          className="flex-1 sm:flex-none min-w-[120px]"
         >
-          <ArrowUturnRightIcon className="h-4 w-4" aria-hidden="true" />
+          <AppIcon icon={Undo2} className="h-4 w-4" aria-hidden="true" />
           {skipLabel}
         </Button>
       </div>

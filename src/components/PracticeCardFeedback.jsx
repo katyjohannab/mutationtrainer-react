@@ -5,13 +5,14 @@ import { Badge } from "./ui/badge";
 import { Card, CardContent } from "./ui/card";
 import { cn } from "../lib/cn";
 import {
-  ArrowRightIcon,
-  CheckIcon,
-  EyeIcon,
-  XMarkIcon,
-  ArrowUturnRightIcon,
-  SpeakerWaveIcon,
-} from "@heroicons/react/24/outline";
+  ArrowRight,
+  CheckCircle2,
+  Eye,
+  X,
+  Undo2,
+  Volume2,
+} from "lucide-react";
+import AppIcon from "./icons/AppIcon";
 
 export default function PracticeCardFeedback({
   sent,
@@ -28,16 +29,14 @@ export default function PracticeCardFeedback({
   lang,
   onNext,
 }) {
-  const [autoplay, setAutoplay] = useState(false);
-  const autoplayKeyRef = useRef("");
-
-  useEffect(() => {
+  const [autoplay, setAutoplay] = useState(() => {
     try {
-      setAutoplay(localStorage.getItem("wm_autoplay") === "1");
+      return localStorage.getItem("wm_autoplay") === "1";
     } catch {
-      setAutoplay(false);
+      return false;
     }
-  }, []);
+  });
+  const autoplayKeyRef = useRef("");
 
   useEffect(() => {
     if (!autoplay) return;
@@ -66,13 +65,12 @@ export default function PracticeCardFeedback({
   const nextLabel = t("next") || "Next";
   const statusIcon = useMemo(() => {
     if (!last) return null;
-    if (last === "correct") return CheckIcon;
-    if (last === "wrong") return XMarkIcon;
-    if (last === "revealed") return EyeIcon;
-    if (last === "skipped") return ArrowUturnRightIcon;
+    if (last === "correct") return CheckCircle2;
+    if (last === "wrong") return X;
+    if (last === "revealed") return Eye;
+    if (last === "skipped") return Undo2;
     return null;
   }, [last]);
-  const StatusIcon = statusIcon;
   const panelClass = cn(
     "rounded-2xl border p-5 shadow-sm",
     isCorrect
@@ -86,8 +84,12 @@ export default function PracticeCardFeedback({
         <CardContent className="space-y-5 p-0">
           {statusLabel ? (
             <div className="flex items-center gap-3">
-              {StatusIcon ? (
-                <StatusIcon className="h-10 w-10 text-white flex-shrink-0 stroke-[2.5]" aria-hidden="true" />
+              {statusIcon ? (
+                <AppIcon
+                  icon={statusIcon}
+                  className="h-10 w-10 text-white flex-shrink-0"
+                  aria-hidden="true"
+                />
               ) : null}
               <h1 className="text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-white">
                 {statusLabel}
@@ -114,7 +116,7 @@ export default function PracticeCardFeedback({
                 tabIndex={0}
                 onKeyDown={(e) => e.key === "Enter" && onHear?.()}
               >
-                <SpeakerWaveIcon className="h-3.5 w-3.5" aria-hidden="true" />
+                <AppIcon icon={Volume2} className="h-3.5 w-3.5" aria-hidden="true" />
                 {ttsLoading ? loadingLabel : hearLabel}
               </Badge>
 
@@ -154,7 +156,7 @@ export default function PracticeCardFeedback({
           <div className="flex justify-end">
             <Button type="button" onClick={onNext} size="lg">
               {nextLabel}
-              <ArrowRightIcon aria-hidden="true" />
+              <AppIcon icon={ArrowRight} className="h-5 w-5" aria-hidden="true" />
             </Button>
           </div>
         </CardContent>

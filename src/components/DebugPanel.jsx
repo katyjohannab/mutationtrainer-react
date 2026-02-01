@@ -4,7 +4,10 @@ import { useTrainer } from "../state/TrainerContext";
 export default function DebugPanel() {
   const { state, filtered } = useTrainer();
 
-  const rows = state?.rows ?? [];
+  const rows = useMemo(
+    () => (Array.isArray(state?.rows) ? state.rows : []),
+    [state]
+  );
   const safeFiltered = Array.isArray(filtered) ? filtered : [];
 
   const sampleSources = useMemo(() => {

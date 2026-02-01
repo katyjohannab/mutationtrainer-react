@@ -1,4 +1,5 @@
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { X } from "lucide-react";
+import AppIcon from "./icons/AppIcon";
 import { useI18n } from "../i18n/I18nContext";
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle } from "./ui/sheet";
 import { Button } from "./ui/button";
@@ -17,7 +18,7 @@ export default function FilterSheet({ open, onOpenChange, children }) {
               size="icon"
               aria-label={t("headerFilters")}
             >
-              <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+              <AppIcon icon={X} className="h-5 w-5" aria-hidden="true" />
             </Button>
           </SheetClose>
         </SheetHeader>

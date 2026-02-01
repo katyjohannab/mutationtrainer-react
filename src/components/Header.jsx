@@ -1,11 +1,8 @@
 import React from "react";
 import { useI18n } from "../i18n/I18nContext";
 import CymruRibbon from "./CymruRibbon";
-import {
-  QuestionMarkCircleIcon,
-  ChartBarIcon,
-  FunnelIcon,
-} from "@heroicons/react/24/outline";
+import { HelpCircle, BarChart3, Filter } from "lucide-react";
+import AppIcon from "./icons/AppIcon";
 import { Button } from "./ui/button";
 import { Switch } from "./ui/switch";
 import {
@@ -25,7 +22,7 @@ export default function Header({
   const isCy = lang === "cy";
 
   return (
-    <header className="sticky top-0 z-40 border-b shadow-sm backdrop-blur bg-card">
+    <header className="sticky top-0 z-40 backdrop-blur bg-card" style={{ boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05)' }}>
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 sm:gap-4 px-3 py-2 sm:px-6 sm:py-3 lg:py-3.5">
         
         {/* Logo lockup: dragon + wordmark */}
@@ -44,12 +41,7 @@ export default function Header({
                 "'BBH Bogle', 'bbh-bogle-regular', 'Bogle', 'Poppins', 'Inter', sans-serif",
             }}
           >
-            <span 
-              className="bg-clip-text text-transparent"
-              style={{
-                backgroundImage: `linear-gradient(to right, hsl(var(--cymru-green)) 0%, hsl(var(--cymru-green)) 10%, hsl(var(--cymru-green-light)) 90%, hsl(var(--cymru-green-light)) 100%)`
-              }}
-            >
+            <span className="text-[hsl(var(--cymru-green))]">
               Hyfforddwr
             </span>
             <span className="text-destructive">Treiglad</span>
@@ -95,7 +87,11 @@ export default function Header({
                   aria-label={t("headerHelp") || "Help"}
                   className="h-8 w-8 sm:h-9 sm:w-9 text-primary hover:bg-[hsl(var(--rail))]/70"
                 >
-                  <QuestionMarkCircleIcon className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
+                  <AppIcon
+                    icon={HelpCircle}
+                    className="h-4 w-4 sm:h-5 sm:w-5"
+                    aria-hidden="true"
+                  />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom">
@@ -112,7 +108,11 @@ export default function Header({
                   aria-label={t("headerStats") || "Stats"}
                   className="h-8 w-8 sm:h-9 sm:w-9 text-primary hover:bg-[hsl(var(--rail))]/70"
                 >
-                  <ChartBarIcon className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
+                  <AppIcon
+                    icon={BarChart3}
+                    className="h-4 w-4 sm:h-5 sm:w-5"
+                    aria-hidden="true"
+                  />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom">
@@ -130,7 +130,11 @@ export default function Header({
                   onClick={onOpenFilters}
                   aria-label={t("headerFilters") || "Filters"}
                 >
-                  <FunnelIcon className="h-4 w-4" aria-hidden="true" />
+                  <AppIcon
+                    icon={Filter}
+                    className="h-4 w-4"
+                    aria-hidden="true"
+                  />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom">
@@ -140,7 +144,6 @@ export default function Header({
           </div>
         </TooltipProvider>
       </div>
-      <div className="h-[2px] bg-gradient-to-r from-[hsl(var(--cymru-green))] to-[hsl(var(--cymru-green-light))]" />
     </header>
   );
 }

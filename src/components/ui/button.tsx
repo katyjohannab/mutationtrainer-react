@@ -23,7 +23,7 @@ const buttonVariants = cva(
           "border border-destructive bg-background text-destructive shadow-sm hover:bg-[hsl(var(--cymru-red-wash))] hover:text-destructive",
         secondary:
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+        ghost: "border border-transparent hover:border-border hover:bg-muted/60 hover:shadow-sm",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
