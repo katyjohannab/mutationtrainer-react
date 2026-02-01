@@ -28,7 +28,7 @@ export default function Header({
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6 sm:py-5 bg-[hsl(var(--cymru-white))]">
         
         {/* Logo lockup: dragon + wordmark */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-1 shrink-0">
           <img
             src="/dragon.png"
             alt=""
@@ -36,13 +36,15 @@ export default function Header({
             aria-hidden="true"
           />
           <h1
-            className="text-3xl sm:text-4xl lg:text-5xl uppercase tracking-[-0.03em] leading-tight text-primary"
+            className="text-3xl sm:text-4xl lg:text-5xl uppercase tracking-[-0.03em] leading-tight text-primary flex items-center gap-0"
             style={{
               fontFamily:
                 "'BBH Bogle', 'bbh-bogle-regular', 'Bogle', 'Poppins', 'Inter', sans-serif",
             }}
           >
-            Hyfforddwr <span className="text-destructive">Treiglad</span>
+            Hyfforddwr
+            <span className="h-2 w-2 rounded-full bg-destructive flex-shrink-0 ml-1 mr-[-2px]" />
+            <span className="text-destructive">Treiglad</span>
           </h1>
         </div>
 

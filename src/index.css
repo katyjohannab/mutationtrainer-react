@@ -42,6 +42,10 @@
   --accent-foreground: var(--cymru-text);
   --destructive: var(--cymru-red);
   --destructive-foreground: var(--cymru-white);
+  --success: var(--cymru-green-light);
+  --success-foreground: var(--cymru-white);
+  --hint: var(--cymru-gold);
+  --hint-foreground: var(--cymru-text);
   --border: 30 12% 84%;
   --input: 30 12% 84%;
   --ring: var(--cymru-gold);
@@ -85,6 +89,10 @@
   --accent-foreground: var(--cymru-text);
   --destructive: 355 65% 34%;
   --destructive-foreground: 0 0% 98%;
+  --success: 121 38% 62%;
+  --success-foreground: 162 36% 10%;
+  --hint: 29 70% 60%;
+  --hint-foreground: 162 36% 10%;
   --border: 170 12% 26%;
   --input: 170 12% 26%;
   --ring: var(--cymru-gold);
