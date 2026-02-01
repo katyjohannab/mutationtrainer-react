@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
+import HeroPill from "./HeroPill";
 import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";
 import { cn } from "../lib/cn";
@@ -67,14 +67,31 @@ export default function PracticeCardFront({
 
       <div className="flex justify-center">
         <div className="relative inline-flex">
-          <Badge
-            variant="secondary"
-            className="rounded-full border border-secondary/40 bg-secondary/15 px-12 py-5 sm:px-14 sm:py-6 shadow-sm"
+          {/* TODO: Map cardState or parent feedback state to HeroPill state (success/destructive/hint) */}
+          <div
+            className={cn(
+              "inline-flex items-center rounded-full",
+              "ring-1 ring-[hsl(var(--ring)/0.2)]",
+              "shadow-sm",
+              "relative",
+              "bg-[hsl(var(--primary)/0.14)]",
+              "px-12 py-5 sm:px-14 sm:py-6"
+            )}
           >
-            <h1 className="text-center text-6xl sm:text-7xl font-extrabold tracking-tight text-primary leading-none">
+            {/* Faint top highlight overlay */}
+            <div
+              className="absolute inset-0 rounded-full"
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 70%)",
+                pointerEvents: "none",
+              }}
+              aria-hidden="true"
+            />
+            <h1 className="relative z-10 text-center text-6xl sm:text-7xl font-extrabold tracking-tight text-primary leading-none">
               {baseword}
             </h1>
-          </Badge>
+          </div>
 
           {tooltipLines.length > 0 ? (
             <HoverCard>
