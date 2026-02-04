@@ -8,6 +8,7 @@ const __dirname = dirname(__filename);
 
 export default defineConfig({
   plugins: [react()],
+  base: '/mutationtrainer-react/',
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
