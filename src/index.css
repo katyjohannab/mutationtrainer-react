@@ -182,18 +182,21 @@
   }
 
   .brandLockup {
-    column-gap: 0.5em;
+    column-gap: 0.34em;
+    align-items: flex-end;
   }
 
   .brandMark {
     position: relative;
-    top: 1px;
+    top: 0;
+    display: block;
     image-rendering: -webkit-optimize-contrast;
   }
 
   .brandWordmark {
     display: inline-flex;
-    align-items: baseline;
+    align-items: flex-end;
+    transform: translateY(0.02em);
     font-kerning: normal;
     font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
@@ -202,26 +205,26 @@
 
   .brandPrimary {
     display: inline-flex;
-    letter-spacing: 0.018em;
+    letter-spacing: -0.01em;
   }
 
   .brandSecondary {
     display: inline-flex;
-    letter-spacing: 0.04em;
+    letter-spacing: -0.01em;
   }
 
   .brandGap {
     display: inline-block;
-    width: 0.28em;
+    width: 0.16em;
   }
 
   @media (max-width: 640px) {
     .brandLockup {
-      column-gap: 0.36em;
+      column-gap: 0.26em;
     }
 
     .brandGap {
-      width: 0.22em;
+      width: 0.12em;
     }
   }
 

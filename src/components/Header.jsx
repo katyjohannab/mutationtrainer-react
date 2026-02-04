@@ -20,14 +20,14 @@ export default function Header({
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur bg-card" style={{ boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05)' }}>
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 sm:gap-4 px-3 py-2 sm:px-6 sm:py-3 lg:py-3.5">
+      <div className="mx-auto flex max-w-6xl items-end justify-between gap-2 sm:gap-4 px-3 pt-2 pb-2.5 sm:px-6 sm:pt-3 sm:pb-3 lg:pb-3.5">
         
         {/* Logo lockup: dragon + wordmark */}
-        <div className="brandLockup flex items-baseline min-w-0 shrink whitespace-nowrap">
+        <div className="brandLockup flex items-end min-w-0 shrink whitespace-nowrap">
           <img
             src="dragon.png"
             alt=""
-            className="brandMark h-7 w-auto sm:h-8 md:h-9 lg:h-10 flex-shrink-0"
+            className="brandMark h-8 w-auto sm:h-9 md:h-10 lg:h-11 flex-shrink-0"
             aria-hidden="true"
           />
           <h1
