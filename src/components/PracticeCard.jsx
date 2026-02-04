@@ -331,9 +331,6 @@ export default function PracticeCard({
   const hearLabel = (t("hear") || "Hear").trim();
   const loadingLabel = (t("loading") || "Loading...").trim();
   const placeholder = t("placeholderType") || "Type the mutated form...";
-  const instructionText = `${t("inputMode") || "Answer mode"}: ${
-    answerMode === "tap" ? t("tapMode") || "Tap" : t("typeMode") || "Type"
-  }`;
 
   const choices = useMemo(() => {
     if (!sent) return [];
@@ -371,7 +368,6 @@ export default function PracticeCard({
                 t={t}
                 tooltipTranslate={tooltipTranslate}
                 tooltipWordCategory={wordCategory}
-                instructionText={instructionText}
                 guess={guess}
               />
             ) : (
@@ -395,7 +391,6 @@ export default function PracticeCard({
                 t={t}
                 tooltipTranslate={tooltipTranslate}
                 tooltipWordCategory={wordCategory}
-                instructionText={instructionText}
               />
             )}
           </div>

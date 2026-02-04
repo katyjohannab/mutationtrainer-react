@@ -31,7 +31,6 @@ export default function PracticeCardFront({
   t,
   tooltipTranslate,
   tooltipWordCategory,
-  instructionText,
 }) {
   const isFeedback = cardState === "feedback";
   const baseword = sent?.base || "_____";
@@ -56,10 +55,6 @@ export default function PracticeCardFront({
 
   return (
     <div className="space-y-6">
-      {instructionText ? (
-        <div className="text-sm text-muted-foreground">{instructionText}</div>
-      ) : null}
-
       <div className="flex justify-center w-full px-2">
         <div className="relative inline-flex max-w-full">
           {/* TODO: Map cardState or parent feedback state to HeroPill state (success/destructive/hint) */}
