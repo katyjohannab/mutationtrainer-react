@@ -28,7 +28,7 @@ export default function Header({
         {/* Logo lockup: dragon + wordmark */}
         <div className="flex items-center gap-[-0.5] min-w-0 shrink">
           <img
-            src="/dragon.png"
+            src="dragon.png"
             alt=""
             className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 xl:h-14 xl:w-14 drop-shadow-sm flex-shrink-0"
             aria-hidden="true"
