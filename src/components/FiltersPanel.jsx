@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Zap, Filter } from "lucide-react";
+import { HelpCircle, Zap, Filter } from "lucide-react";
 import AppIcon from "./icons/AppIcon";
 import { useI18n } from "../i18n/I18nContext";
 import { cn } from "../lib/cn";
@@ -91,7 +91,37 @@ export default function FiltersPanel({
 
   return (
     <div className={cn("space-y-8 py-2 px-1", className)}>
-      <Accordion className="w-full" collapsible defaultValue="item-quick" type="single">
+      <Accordion className="w-full" collapsible defaultValue="item-start" type="single">
+        <AccordionItem value="item-start">
+          <AccordionTrigger>
+            <div className="flex items-center gap-3">
+              <AppIcon
+                icon={HelpCircle}
+                className="h-5 w-5 text-primary"
+                aria-hidden="true"
+              />
+              <span className="text-base font-bold text-foreground">
+                {t("startHereTitle")}
+              </span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <GlassPanel className="p-4 space-y-3">
+              <p className="text-sm text-foreground font-semibold">
+                {t("startHereSubtitle")}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {t("startHereIntro")}
+              </p>
+              <ul className="text-sm text-muted-foreground space-y-2 list-disc pl-5">
+                <li>{t("startHereStepPick")}</li>
+                <li>{t("startHereStepRefine")}</li>
+                <li>{t("startHereStepPractice")}</li>
+              </ul>
+            </GlassPanel>
+          </AccordionContent>
+        </AccordionItem>
+
         <AccordionItem value="item-quick">
           <AccordionTrigger>
             <div className="flex items-center gap-3">

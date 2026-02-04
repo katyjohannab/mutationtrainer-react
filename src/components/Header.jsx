@@ -1,7 +1,7 @@
 import React from "react";
 import { useI18n } from "../i18n/I18nContext";
 import CymruRibbon from "./CymruRibbon";
-import { HelpCircle, BarChart3, Filter } from "lucide-react";
+import { Filter } from "lucide-react";
 import AppIcon from "./icons/AppIcon";
 import { Button } from "./ui/button";
 import { Switch } from "./ui/switch";
@@ -14,8 +14,6 @@ import {
 import { cn } from "../lib/cn";
 
 export default function Header({
-  onOpenHelp,
-  onOpenStats,
   onOpenFilters,
 }) {
   const { lang, setLang, t } = useI18n();
@@ -76,49 +74,6 @@ export default function Header({
 
             {/* Separator */}
             <div className="hidden min-[400px]:block h-4 w-px bg-border" />
-
-            {/* Icon buttons: help, stats */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={onOpenHelp}
-                  aria-label={t("headerHelp") || "Help"}
-                  className="h-8 w-8 sm:h-9 sm:w-9 text-primary hover:bg-[hsl(var(--rail))]/70"
-                >
-                  <AppIcon
-                    icon={HelpCircle}
-                    className="h-4 w-4 sm:h-5 sm:w-5"
-                    aria-hidden="true"
-                  />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                {t("headerHelp") || "Help"}
-              </TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={onOpenStats}
-                  aria-label={t("headerStats") || "Stats"}
-                  className="h-8 w-8 sm:h-9 sm:w-9 text-primary hover:bg-[hsl(var(--rail))]/70"
-                >
-                  <AppIcon
-                    icon={BarChart3}
-                    className="h-4 w-4 sm:h-5 sm:w-5"
-                    aria-hidden="true"
-                  />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                {t("headerStats") || "Stats"}
-              </TooltipContent>
-            </Tooltip>
 
             {/* Mobile filters button */}
             <Tooltip>
