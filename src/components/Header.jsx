@@ -23,11 +23,11 @@ export default function Header({
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 sm:gap-4 px-3 py-2 sm:px-6 sm:py-3 lg:py-3.5">
         
         {/* Logo lockup: dragon + wordmark */}
-        <div className="brandLockup flex items-baseline min-w-0 shrink">
+        <div className="brandLockup flex items-baseline min-w-0 shrink whitespace-nowrap">
           <img
             src="dragon.png"
             alt=""
-            className="brandMark drop-shadow-sm flex-shrink-0"
+            className="brandMark h-7 w-auto sm:h-8 md:h-9 lg:h-10 flex-shrink-0"
             aria-hidden="true"
           />
           <h1
@@ -38,12 +38,12 @@ export default function Header({
             }}
           >
             <span className="brandWordmark" aria-label="HYFFORDDWR TREIGLAD">
-              <span className="brandWord brandWord--primary text-[hsl(var(--cymru-green))]">
+              <span className="brandPrimary text-[hsl(var(--cymru-green))]">
                 <span className="brandWordPart">HYFFORDD</span>
                 <span className="brandWordPart brandWordPart--kern">WR</span>
               </span>
               <span className="brandGap" aria-hidden="true" />
-              <span className="brandWord brandWord--secondary text-destructive">
+              <span className="brandSecondary text-destructive">
                 TREIGLAD
               </span>
             </span>

@@ -182,13 +182,13 @@
   }
 
   .brandLockup {
-    column-gap: 0.45em;
+    column-gap: 0.5em;
   }
 
   .brandMark {
-    width: 0.95em;
-    height: 0.95em;
-    transform: translateY(1px);
+    position: relative;
+    top: 1px;
+    image-rendering: -webkit-optimize-contrast;
   }
 
   .brandWordmark {
@@ -200,21 +200,29 @@
     text-rendering: geometricPrecision;
   }
 
-  .brandWord {
+  .brandPrimary {
     display: inline-flex;
+    letter-spacing: 0.018em;
   }
 
-  .brandWord--primary {
-    letter-spacing: 0.015em;
-  }
-
-  .brandWord--secondary {
+  .brandSecondary {
+    display: inline-flex;
     letter-spacing: 0.04em;
   }
 
   .brandGap {
     display: inline-block;
-    width: 0.26em;
+    width: 0.28em;
+  }
+
+  @media (max-width: 640px) {
+    .brandLockup {
+      column-gap: 0.36em;
+    }
+
+    .brandGap {
+      width: 0.22em;
+    }
   }
 
   .brandWordPart--kern {
