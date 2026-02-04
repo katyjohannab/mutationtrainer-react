@@ -36,7 +36,6 @@ export default function PracticeCardChoices({
   t,
   tooltipTranslate,
   tooltipWordCategory,
-  instructionText,
   guess,
 }) {
   const isFeedback = cardState === "feedback";
@@ -89,10 +88,6 @@ export default function PracticeCardChoices({
 
   return (
     <div className="space-y-6">
-      {instructionText ? (
-        <div className="text-sm text-muted-foreground">{instructionText}</div>
-      ) : null}
-
       <div className="flex justify-center w-full px-2">
         <div className="relative inline-flex max-w-full">
           <Badge
