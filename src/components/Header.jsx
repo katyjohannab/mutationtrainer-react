@@ -1,6 +1,5 @@
 import React from "react";
 import { useI18n } from "../i18n/I18nContext";
-import CymruRibbon from "./CymruRibbon";
 import { Filter } from "lucide-react";
 import AppIcon from "./icons/AppIcon";
 import { Button } from "./ui/button";
@@ -24,25 +23,30 @@ export default function Header({
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 sm:gap-4 px-3 py-2 sm:px-6 sm:py-3 lg:py-3.5">
         
         {/* Logo lockup: dragon + wordmark */}
-        <div className="flex items-center gap-[-0.5] min-w-0 shrink">
+        <div className="brandLockup flex items-baseline min-w-0 shrink">
           <img
             src="dragon.png"
             alt=""
-            className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 xl:h-14 xl:w-14 drop-shadow-sm flex-shrink-0"
+            className="brandMark drop-shadow-sm flex-shrink-0"
             aria-hidden="true"
           />
           <h1
-            className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl uppercase tracking-[-0.03em] leading-tight flex items-center gap--0.5
-            "
+            className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl uppercase leading-none whitespace-nowrap"
             style={{
               fontFamily:
                 "'BBH Bogle', 'bbh-bogle-regular', 'Bogle', 'Poppins', 'Inter', sans-serif",
             }}
           >
-            <span className="text-[hsl(var(--cymru-green))]">
-              Hyfforddwr
+            <span className="brandWordmark" aria-label="HYFFORDDWR TREIGLAD">
+              <span className="brandWord brandWord--primary text-[hsl(var(--cymru-green))]">
+                <span className="brandWordPart">HYFFORDD</span>
+                <span className="brandWordPart brandWordPart--kern">WR</span>
+              </span>
+              <span className="brandGap" aria-hidden="true" />
+              <span className="brandWord brandWord--secondary text-destructive">
+                TREIGLAD
+              </span>
             </span>
-            <span className="text-destructive">Treiglad</span>
           </h1>
         </div>
 

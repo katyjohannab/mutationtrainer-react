@@ -181,6 +181,46 @@
     @apply bg-[hsl(var(--rail))] border border-border/50 rounded-[calc(var(--radius)-2px)];
   }
 
+  .brandLockup {
+    column-gap: 0.45em;
+  }
+
+  .brandMark {
+    width: 0.95em;
+    height: 0.95em;
+    transform: translateY(1px);
+  }
+
+  .brandWordmark {
+    display: inline-flex;
+    align-items: baseline;
+    font-kerning: normal;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
+  }
+
+  .brandWord {
+    display: inline-flex;
+  }
+
+  .brandWord--primary {
+    letter-spacing: 0.015em;
+  }
+
+  .brandWord--secondary {
+    letter-spacing: 0.04em;
+  }
+
+  .brandGap {
+    display: inline-block;
+    width: 0.26em;
+  }
+
+  .brandWordPart--kern {
+    margin-left: 0.03em;
+  }
+
   .mt-pill {
     font-size: var(--text-label-size);
     line-height: var(--text-label-line);
