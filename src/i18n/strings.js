@@ -47,6 +47,13 @@ export const STRINGS = {
     headerClearFocus: "Clirio ffocws",
     headerSwitchLang: "Newid iaith",
 
+    startHereTitle: "Dechrau yma",
+    startHereSubtitle: "Canllaw cyflym i ddechrau.",
+    startHereIntro: "Dewiswch becyn neu addaswch yr hidlwyr i siapio eich sesiwn.",
+    startHereStepPick: "Dewiswch becyn cyflym i neidio i bwnc.",
+    startHereStepRefine: "Addaswch y math o dreiglad a’r categorïau isod.",
+    startHereStepPractice: "Ymarferwch, gwrandewch, a defnyddiwch awgrymiadau wrth i chi fynd.",
+
     quickPacksTitle: "Pecynnau cyflym",
     quickPacksSubtitle: "Dechreuwch gyda phecyn neu addaswch isod.",
     quickPacksHint: "Setiau dan arweiniad i neidio i bwnc.",
@@ -121,6 +128,13 @@ export const STRINGS = {
     headerNoFocus: "No focus",
     headerClearFocus: "Clear focus",
     headerSwitchLang: "Switch language",  
+
+    startHereTitle: "Start here",
+    startHereSubtitle: "A quick guide to get going.",
+    startHereIntro: "Pick a pack or adjust the filters to shape your session.",
+    startHereStepPick: "Choose a quick pack to jump into a topic.",
+    startHereStepRefine: "Refine mutation type and categories below.",
+    startHereStepPractice: "Practice, listen, and use hints as you go.",
 
     quickPacksTitle: "Quick packs",
     quickPacksSubtitle: "Start with a pack or fine-tune below.",

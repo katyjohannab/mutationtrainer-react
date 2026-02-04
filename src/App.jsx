@@ -187,8 +187,6 @@ export default function App() {
   return (
     <div className="min-h-full">
       <Header
-        onOpenHelp={() => {}}
-        onOpenStats={() => {}}
         onOpenFilters={() => setFiltersOpen(true)}
       />
 
