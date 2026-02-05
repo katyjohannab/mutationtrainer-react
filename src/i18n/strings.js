@@ -106,8 +106,8 @@ export const STRINGS = {
 
     noCards: "No cards available. Check your filters/preset.",
 
-    correct: "✅ Correct",
-    notQuite: "❌ Not quite",
+    correct: "Correct",
+    notQuite: "Not quite",
     expected: "Expected",
 
     showDebug: "Show debug",
