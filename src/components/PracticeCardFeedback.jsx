@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "./ui/button";
-import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
-import { Badge } from "./ui/badge";
 import { Card, CardContent } from "./ui/card";
 import { cn } from "../lib/cn";
 import {
@@ -62,6 +60,7 @@ export default function PracticeCardFeedback({
     return "";
   }, [last, t]);
   const isCorrect = last === "correct";
+  const hearButtonVariant = isCorrect ? "success" : "secondary";
   const nextLabel = t("next") || "Next";
   const statusIcon = useMemo(() => {
     if (!last) return null;
@@ -108,17 +107,15 @@ export default function PracticeCardFeedback({
             </p>
 
             <div className="flex flex-wrap items-center gap-3">
-              <Badge
-                variant="destructive"
-                className="cursor-pointer gap-1.5 rounded-full px-3 py-1.5"
+              <Button
+                type="button"
+                size="xs"
+                variant={hearButtonVariant}
                 onClick={onHear}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => e.key === "Enter" && onHear?.()}
               >
                 <AppIcon icon={Volume2} className="h-3.5 w-3.5" aria-hidden="true" />
                 {ttsLoading ? loadingLabel : hearLabel}
-              </Badge>
+              </Button>
 
               <label className="flex items-center gap-2 cursor-pointer text-sm text-muted-foreground">
                 <input
