@@ -67,8 +67,8 @@
   --gradient-header-bar: linear-gradient(90deg, hsl(var(--cymru-red)) 0%, hsl(var(--cymru-green)) 55%, hsl(var(--cymru-green-light)) 100%);
   --feedback-correct-base: var(--cymru-green-light);
   --feedback-incorrect-base: var(--cymru-red);
-  --feedback-gradient-shine: 0.55;
-  --feedback-gradient-shadow: 0.35;
+  --feedback-gradient-shine: 0.78;
+  --feedback-gradient-shadow: 0.58;
   --gradient-correct: linear-gradient(
     135deg,
     hsl(var(--feedback-correct-base) / var(--feedback-gradient-shine)) 0%,
@@ -135,8 +135,8 @@
   --gradient-header-bar: linear-gradient(90deg, hsl(var(--cymru-red)) 0%, hsl(var(--cymru-green)) 55%, hsl(var(--cymru-green-light)) 100%);
   --feedback-correct-base: var(--cymru-green-light);
   --feedback-incorrect-base: var(--cymru-red);
-  --feedback-gradient-shine: 0.5;
-  --feedback-gradient-shadow: 0.3;
+  --feedback-gradient-shine: 0.68;
+  --feedback-gradient-shadow: 0.48;
   --gradient-correct: linear-gradient(
     135deg,
     hsl(var(--feedback-correct-base) / var(--feedback-gradient-shine)) 0%,
