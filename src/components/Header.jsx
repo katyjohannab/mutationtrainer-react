@@ -1,8 +1,14 @@
 import React from "react";
 import { useI18n } from "../i18n/I18nContext";
-import { Filter } from "lucide-react";
+import { Check, Filter, Globe } from "lucide-react";
 import AppIcon from "./icons/AppIcon";
 import { Button } from "./ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 import { Switch } from "./ui/switch";
 import {
   Tooltip,
@@ -31,7 +37,7 @@ export default function Header({
             aria-hidden="true"
           />
           <h1
-            className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl uppercase leading-none whitespace-nowrap"
+            className="-ml-1 sm:-ml-2 text-2xl sm:text-3xl lg:text-4xl xl:text-5xl uppercase leading-none whitespace-nowrap"
             style={{
               fontFamily:
                 "'BBH Bogle', 'bbh-bogle-regular', 'Bogle', 'Poppins', 'Inter', sans-serif",
@@ -55,7 +61,48 @@ export default function Header({
           <div className="flex items-center border border-border rounded-lg bg-[hsl(var(--rail))] px-2 py-1.5 sm:px-3 sm:py-2 gap-2 sm:gap-3 flex-shrink-0">
             
             {/* Language toggle: EN [switch] CY */}
-            <div className="hidden min-[400px]:flex items-center gap-1.5 sm:gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="sm:hidden h-8 w-8 text-primary hover:bg-[hsl(var(--rail))]/70"
+                  aria-label={t("headerSwitchLang") || "Toggle language"}
+                >
+                  <AppIcon icon={Globe} className="h-4 w-4" aria-hidden="true" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="min-w-[160px]">
+                <DropdownMenuItem
+                  className={cn("text-xs", !isCy && "text-primary")}
+                  onSelect={() => setLang("en")}
+                >
+                  English (EN)
+                  {!isCy ? (
+                    <AppIcon
+                      icon={Check}
+                      className="ml-auto h-3 w-3 text-primary"
+                      aria-hidden="true"
+                    />
+                  ) : null}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className={cn("text-xs", isCy && "text-primary")}
+                  onSelect={() => setLang("cy")}
+                >
+                  Cymraeg (CY)
+                  {isCy ? (
+                    <AppIcon
+                      icon={Check}
+                      className="ml-auto h-3 w-3 text-primary"
+                      aria-hidden="true"
+                    />
+                  ) : null}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <div className="hidden sm:flex items-center gap-1.5 sm:gap-2">
               <span className={cn(
                 "text-[10px] sm:text-xs font-medium transition-colors",
                 !isCy ? "text-primary" : "text-muted-foreground"
@@ -77,7 +124,7 @@ export default function Header({
             </div>
 
             {/* Separator */}
-            <div className="hidden min-[400px]:block h-4 w-px bg-border" />
+            <div className="hidden sm:block h-4 w-px bg-border" />
 
             {/* Mobile filters button */}
             <Tooltip>
