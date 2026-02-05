@@ -65,8 +65,20 @@
   --gradient-page: linear-gradient(130deg, hsl(var(--background)) 0%, hsl(var(--cymru-neutral) / 0.6) 100%);
   --gradient-card: linear-gradient(150deg, hsl(var(--card)) 0%, hsl(var(--cymru-neutral) / 0.35) 100%);
   --gradient-header-bar: linear-gradient(90deg, hsl(var(--cymru-red)) 0%, hsl(var(--cymru-green)) 55%, hsl(var(--cymru-green-light)) 100%);
-  --gradient-correct: linear-gradient(135deg, hsl(var(--cymru-green-light)) 0%, hsl(var(--cymru-green-light) / 0.8) 100%);
-  --gradient-incorrect: linear-gradient(135deg, hsl(var(--cymru-red)) 0%, hsl(var(--cymru-red) / 0.85) 100%);
+  --feedback-correct-base: var(--cymru-green-light);
+  --feedback-incorrect-base: var(--cymru-red);
+  --feedback-gradient-shine: 0.78;
+  --feedback-gradient-shadow: 0.58;
+  --gradient-correct: linear-gradient(
+    135deg,
+    hsl(var(--feedback-correct-base) / var(--feedback-gradient-shine)) 0%,
+    hsl(var(--feedback-correct-base) / var(--feedback-gradient-shadow)) 100%
+  );
+  --gradient-incorrect: linear-gradient(
+    135deg,
+    hsl(var(--feedback-incorrect-base) / var(--feedback-gradient-shine)) 0%,
+    hsl(var(--feedback-incorrect-base) / var(--feedback-gradient-shadow)) 100%
+  );
 
   /* Typography */
   --font-body: "Inter", "SF Pro Display", "Segoe UI", system-ui, -apple-system, sans-serif;
@@ -121,6 +133,20 @@
   --gradient-page: linear-gradient(150deg, hsl(162 22% 15%) 0%, hsl(170 10% 22%) 100%);
   --gradient-card: linear-gradient(145deg, hsl(162 22% 18%) 0%, hsl(170 10% 26%) 100%);
   --gradient-header-bar: linear-gradient(90deg, hsl(var(--cymru-red)) 0%, hsl(var(--cymru-green)) 55%, hsl(var(--cymru-green-light)) 100%);
+  --feedback-correct-base: var(--cymru-green-light);
+  --feedback-incorrect-base: var(--cymru-red);
+  --feedback-gradient-shine: 0.68;
+  --feedback-gradient-shadow: 0.48;
+  --gradient-correct: linear-gradient(
+    135deg,
+    hsl(var(--feedback-correct-base) / var(--feedback-gradient-shine)) 0%,
+    hsl(var(--feedback-correct-base) / var(--feedback-gradient-shadow)) 100%
+  );
+  --gradient-incorrect: linear-gradient(
+    135deg,
+    hsl(var(--feedback-incorrect-base) / var(--feedback-gradient-shine)) 0%,
+    hsl(var(--feedback-incorrect-base) / var(--feedback-gradient-shadow)) 100%
+  );
 
   /* Dark mode wash variants */
   --cymru-green-wash: 167 40% 20%;
