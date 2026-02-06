@@ -122,14 +122,14 @@ export default function FiltersPanel({
 
         <AccordionItem value="item-quick">
           <AccordionTrigger>
-            <Badge className="gap-2 rounded-full border border-[hsl(var(--cymru-green-light))] bg-[hsl(var(--cymru-green-wash))] px-3 py-1 text-xs font-semibold text-[hsl(var(--cymru-green))]">
+            <div className="flex items-center gap-2 text-[hsl(var(--cymru-green))]">
               <AppIcon
                 icon={Zap}
                 className="h-4 w-4 text-[hsl(var(--cymru-green))]"
                 aria-hidden="true"
               />
-              <span>{t("quickPacksTitle")}</span>
-            </Badge>
+              <span className="text-xs font-semibold">{t("quickPacksTitle")}</span>
+            </div>
           </AccordionTrigger>
           <AccordionContent>
             <div className="mb-3">
@@ -183,14 +183,14 @@ export default function FiltersPanel({
 
         <AccordionItem value="item-core">
           <AccordionTrigger>
-            <Badge className="gap-2 rounded-full border border-[hsl(var(--cymru-green-light))] bg-[hsl(var(--cymru-green-wash))] px-3 py-1 text-xs font-semibold text-[hsl(var(--cymru-green))]">
+            <div className="flex items-center gap-2 text-[hsl(var(--cymru-green))]">
               <AppIcon
                 icon={Filter}
                 className="h-4 w-4 text-[hsl(var(--cymru-green))]"
                 aria-hidden="true"
               />
-              <span>{t("coreFiltersTitle")}</span>
-            </Badge>
+              <span className="text-xs font-semibold">{t("coreFiltersTitle")}</span>
+            </div>
           </AccordionTrigger>
           <AccordionContent>
             <div className="mb-3">
