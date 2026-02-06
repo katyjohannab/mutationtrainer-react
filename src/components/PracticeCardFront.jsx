@@ -87,7 +87,7 @@ export default function PracticeCardFront({
               }}
               aria-hidden="true"
             />
-            <h1 className="relative z-10 text-center text-4xl xs:text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-[hsl(var(--cymru-green))] leading-none break-words max-w-full">
+            <h1 className="relative z-10 text-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-[hsl(var(--cymru-green))] leading-none break-words max-w-full">
               {baseword}
             </h1>
           </div>
