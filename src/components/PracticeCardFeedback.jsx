@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
+import { badgeVariants } from "./ui/badge";
 import { cn } from "../lib/cn";
 import {
   ArrowRight,
@@ -64,7 +65,7 @@ export default function PracticeCardFeedback({
     return "";
   }, [last, t]);
   const isCorrect = last === "correct";
-  const hearButtonVariant = isCorrect ? "success" : "secondary";
+  const hearButtonVariant = "cymru-light";
   const nextLabel = t("next") || "Next";
   const easyLabel = t("easy") || "Easy";
   const againLabel = t("again") || "Again";
@@ -125,15 +126,18 @@ export default function PracticeCardFeedback({
             </p>
 
             <div className="flex flex-wrap items-center gap-3">
-              <Button
+              <button
                 type="button"
-                size="action"
-                variant={hearButtonVariant}
                 onClick={onHear}
+                className={cn(
+                  badgeVariants({ variant: hearButtonVariant }),
+                  "cursor-pointer select-none rounded-full px-3 py-1 text-xs font-semibold transition-colors",
+                  "inline-flex items-center gap-1.5"
+                )}
               >
                 <AppIcon icon={Volume2} className="h-3.5 w-3.5" aria-hidden="true" />
                 {ttsLoading ? loadingLabel : hearLabel}
-              </Button>
+              </button>
 
               <label className="flex items-center gap-2 cursor-pointer text-sm text-muted-foreground">
                 <input
