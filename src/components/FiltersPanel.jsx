@@ -58,6 +58,9 @@ export default function FiltersPanel({
   filters = { families: new Set(), categories: new Set() },
   onToggleFilter,
   onClearFilterType,
+  openItems,
+  onOpenItemsChange,
+  accordionType = "single",
 }) {
   const { t } = useI18n();
 
@@ -91,9 +94,19 @@ export default function FiltersPanel({
     return item.label ?? "";
   };
 
+  const accordionProps =
+    openItems !== undefined
+      ? { value: openItems, onValueChange: onOpenItemsChange }
+      : { defaultValue: "item-start" };
+
   return (
     <div className={cn("space-y-8 py-2 px-1", className)}>
-      <Accordion className="w-full" collapsible defaultValue="item-start" type="single">
+      <Accordion
+        className="w-full"
+        collapsible={accordionType === "single"}
+        type={accordionType}
+        {...accordionProps}
+      >
         <AccordionItem value="item-start">
           <AccordionTrigger>
             <Badge
