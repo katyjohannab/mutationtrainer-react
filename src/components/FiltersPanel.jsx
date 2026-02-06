@@ -156,7 +156,7 @@ export default function FiltersPanel({
               <p className="text-xs text-muted-foreground">
                 {t("quickPacksSubtitle")}
               </p>
-              <p className="text-[0.7rem] text-muted-foreground mt-1">
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                 {t("quickPacksHint")}
               </p>
             </div>
