@@ -10,7 +10,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "./ui/hover-card";
-import { CheckCircle2, Lightbulb, MonitorPlay, Undo2 } from "lucide-react";
+import { CheckCircle2, Lightbulb, MonitorPlay } from "lucide-react";
 import AppIcon from "./icons/AppIcon";
 
 export default function PracticeCardFront({
@@ -26,8 +26,7 @@ export default function PracticeCardFront({
   showHint,
   onToggleHint,
   onCheck,
-  onReveal,
-  onSkip,
+  onRevealOrSkip,
   t,
   tooltipTranslate,
   tooltipWordCategory,
@@ -52,6 +51,7 @@ export default function PracticeCardFront({
   const hintLabel = t("hint") || "Hint";
   const revealLabel = t("reveal") || "Reveal";
   const skipLabel = t("skip") || "Skip";
+  const revealSkipLabel = `${revealLabel} / ${skipLabel}`;
 
   return (
     <div className="space-y-6">
@@ -161,24 +161,13 @@ export default function PracticeCardFront({
 
         <Button
           type="button"
-          variant="outline-destructive"
-          onClick={onReveal}
+          variant="ghost"
+          onClick={onRevealOrSkip}
           disabled={isFeedback}
           className="flex-1 sm:flex-none min-w-[120px]"
         >
           <AppIcon icon={MonitorPlay} className="h-4 w-4" aria-hidden="true" />
-          {revealLabel}
-        </Button>
-
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={onSkip}
-          disabled={isFeedback}
-          className="flex-1 sm:flex-none min-w-[120px]"
-        >
-          <AppIcon icon={Undo2} className="h-4 w-4" aria-hidden="true" />
-          {skipLabel}
+          {revealSkipLabel}
         </Button>
       </div>
 

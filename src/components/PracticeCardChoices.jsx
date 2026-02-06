@@ -8,7 +8,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "./ui/hover-card";
-import { CheckCircle2, Lightbulb, MonitorPlay, Undo2 } from "lucide-react";
+import { CheckCircle2, Lightbulb, MonitorPlay } from "lucide-react";
 import AppIcon from "./icons/AppIcon";
 
 function normalizeChoice(value) {
@@ -31,8 +31,7 @@ export default function PracticeCardChoices({
   onToggleHint,
   onPick,
   onCheck,
-  onReveal,
-  onSkip,
+  onRevealOrSkip,
   t,
   tooltipTranslate,
   tooltipWordCategory,
@@ -80,7 +79,7 @@ export default function PracticeCardChoices({
   const hintLabel = t("hint") || "Hint";
   const revealLabel = t("reveal") || "Reveal";
   const skipLabel = t("skip") || "Skip";
-  const actionButtonClass = "w-full sm:w-auto min-w-[104px]";
+  const revealSkipLabel = `${revealLabel} / ${skipLabel}`;
   const actionButtonSize = "lg";
 
   const normalizedAnswer = normalizeChoice(answer);
@@ -214,26 +213,14 @@ export default function PracticeCardChoices({
 
         <Button
           type="button"
-          variant="outline-destructive"
-          onClick={onReveal}
+          variant="ghost"
+          onClick={onRevealOrSkip}
           disabled={isFeedback}
           size={actionButtonSize}
           className="flex-1 sm:flex-none min-w-[120px]"
         >
           <AppIcon icon={MonitorPlay} className="h-4 w-4" aria-hidden="true" />
-          {revealLabel}
-        </Button>
-
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={onSkip}
-          disabled={isFeedback}
-          size={actionButtonSize}
-          className="flex-1 sm:flex-none min-w-[120px]"
-        >
-          <AppIcon icon={Undo2} className="h-4 w-4" aria-hidden="true" />
-          {skipLabel}
+          {revealSkipLabel}
         </Button>
       </div>
 

@@ -66,6 +66,8 @@ export default function PracticeCardFeedback({
   const isCorrect = last === "correct";
   const hearButtonVariant = isCorrect ? "success" : "secondary";
   const nextLabel = t("next") || "Next";
+  const easyLabel = t("easy") || "Easy";
+  const againLabel = t("again") || "Again";
   const statusIcon = useMemo(() => {
     if (!last) return null;
     if (last === "correct") return CheckCircle2;
@@ -75,10 +77,10 @@ export default function PracticeCardFeedback({
     return null;
   }, [last]);
   const panelClass = cn(
-    "rounded-2xl border p-5 shadow-sm",
+    "rounded-2xl border border-border p-5 shadow-md",
     isCorrect
-      ? "border-secondary/40 bg-[image:var(--gradient-correct)]"
-      : "border-destructive/30 bg-[image:var(--gradient-incorrect)]"
+      ? "bg-[image:var(--gradient-correct)]"
+      : "bg-[image:var(--gradient-incorrect)]"
   );
   const isSmartMode = mode === "smart";
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -115,7 +117,7 @@ export default function PracticeCardFeedback({
           ) : null}
 
           {/* White content window */}
-          <div className="rounded-xl bg-card p-5 space-y-4">
+          <div className="rounded-xl bg-card p-5 shadow-sm space-y-4">
             <p className="text-xl sm:text-2xl leading-relaxed text-foreground font-medium">
               <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
               <span className="mx-1 rounded-md border border-[hsl(var(--cymru-gold))] bg-[hsl(var(--cymru-gold-wash))] px-2 py-0.5 font-semibold text-foreground">

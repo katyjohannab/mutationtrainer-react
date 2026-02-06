@@ -20,6 +20,7 @@ export function updateLeitner(map, cardKey, result, options = {}) {
   const now = options.reviewedAt ?? Date.now();
   const current = map[cardKey] ?? { box: 0, dueAt: now };
 
+  const maxBox = BOX_MINUTES.length - 1;
   let nextBox = current.box;
 
   let baseResult = options.baseResult ?? result;
@@ -39,7 +40,7 @@ export function updateLeitner(map, cardKey, result, options = {}) {
   }
 
   const minutes = BOX_MINUTES[nextBox] ?? 0;
-  const dueAt = now + minutes * 60 * 1000;
+  const dueAt = result === "again" ? now : now + minutes * 60 * 1000;
 
   const next = {
     box: nextBox,
