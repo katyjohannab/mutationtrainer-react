@@ -216,7 +216,7 @@ export default function FiltersPanel({
                   <FilterBadge
                     active={isFamilyAll}
                     onClick={() => onClearFilterType?.("families")}
-                    variant={isFamilyAll ? "cymru-dark" : "cymru-wash"}
+                    variant={isFamilyAll ? "cymru-dark" : "cymru-dark-wash"}
                   >
                     {t("filtersAll")}
                   </FilterBadge>
@@ -226,7 +226,9 @@ export default function FiltersPanel({
                       active={safeFilters.families.has(item.id)}
                       onClick={() => onToggleFilter?.("families", item.id)}
                       variant={
-                        safeFilters.families.has(item.id) ? "cymru-dark" : "cymru-wash"
+                        safeFilters.families.has(item.id)
+                          ? "cymru-dark"
+                          : "cymru-dark-wash"
                       }
                     >
                       {labelFor(item)}
@@ -251,7 +253,7 @@ export default function FiltersPanel({
                   <FilterBadge
                     active={isCategoryAll}
                     onClick={() => onClearFilterType?.("categories")}
-                    variant={isCategoryAll ? "cymru-light" : "cymru-wash"}
+                    variant={isCategoryAll ? "cymru-light" : "cymru-light-wash"}
                   >
                     {t("filtersAll")}
                   </FilterBadge>
@@ -263,7 +265,7 @@ export default function FiltersPanel({
                       variant={
                         safeFilters.categories.has(item.id)
                           ? "cymru-light"
-                          : "cymru-wash"
+                          : "cymru-light-wash"
                       }
                     >
                       {labelFor(item)}
