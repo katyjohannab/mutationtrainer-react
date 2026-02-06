@@ -34,10 +34,15 @@ export default function App() {
   const recentRef = useRef([]);
   // always have the latest Leitner map available synchronously
   const leitnerRef = useRef(leitnerMap);
+  const handledReviewIdsRef = useRef(new Set());
 
   useEffect(() => {
     leitnerRef.current = leitnerMap;
   }, [leitnerMap]);
+
+  useEffect(() => {
+    handledReviewIdsRef.current.clear();
+  }, [currentIdx, mode]);
 
   const canon = (s) =>
     (s ?? "")
@@ -156,6 +161,13 @@ export default function App() {
       const baseResult = payload?.baseResult;
       const reviewId = payload?.reviewId;
       const currentEntry = leitnerRef.current[key];
+
+      if (reviewId) {
+        if (handledReviewIdsRef.current.has(reviewId)) {
+          return;
+        }
+        handledReviewIdsRef.current.add(reviewId);
+      }
 
       if (reviewId && currentEntry?.lastReviewId === reviewId) {
         return;
