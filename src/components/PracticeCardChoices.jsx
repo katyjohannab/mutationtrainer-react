@@ -8,7 +8,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "./ui/hover-card";
-import { CheckCircle2, Lightbulb, MonitorPlay } from "lucide-react";
+import { CheckCircle2, Lightbulb, MonitorPlay, SkipForward } from "lucide-react";
 import AppIcon from "./icons/AppIcon";
 
 function normalizeChoice(value) {
@@ -31,7 +31,8 @@ export default function PracticeCardChoices({
   onToggleHint,
   onPick,
   onCheck,
-  onRevealOrSkip,
+  onReveal,
+  onSkip,
   t,
   tooltipTranslate,
   tooltipWordCategory,
@@ -79,8 +80,6 @@ export default function PracticeCardChoices({
   const hintLabel = t("hint") || "Hint";
   const revealLabel = t("reveal") || "Reveal";
   const skipLabel = t("skip") || "Skip";
-  const revealSkipLabel = `${revealLabel} / ${skipLabel}`;
-  const actionButtonSize = "lg";
 
   const normalizedAnswer = normalizeChoice(answer);
   const normalizedGuess = normalizeChoice(guess);
@@ -193,7 +192,7 @@ export default function PracticeCardChoices({
           type="button"
           variant="default"
           onClick={onCheck}
-          size={actionButtonSize}
+          size="action"
           className="flex-1 sm:flex-none min-w-[120px]"
         >
           <AppIcon icon={CheckCircle2} className="h-4 w-4" aria-hidden="true" />
@@ -204,7 +203,7 @@ export default function PracticeCardChoices({
           type="button"
           variant="outline-secondary"
           onClick={onToggleHint}
-          size={actionButtonSize}
+          size="action"
           className="flex-1 sm:flex-none min-w-[120px]"
         >
           <AppIcon icon={Lightbulb} className="h-4 w-4" aria-hidden="true" />
@@ -214,13 +213,25 @@ export default function PracticeCardChoices({
         <Button
           type="button"
           variant="ghost"
-          onClick={onRevealOrSkip}
+          onClick={onReveal}
           disabled={isFeedback}
-          size={actionButtonSize}
+          size="action"
           className="flex-1 sm:flex-none min-w-[120px]"
         >
           <AppIcon icon={MonitorPlay} className="h-4 w-4" aria-hidden="true" />
-          {revealSkipLabel}
+          {revealLabel}
+        </Button>
+
+        <Button
+          type="button"
+          variant="outline-accent"
+          onClick={onSkip}
+          disabled={isFeedback}
+          size="action"
+          className="flex-1 sm:flex-none min-w-[120px]"
+        >
+          <AppIcon icon={SkipForward} className="h-4 w-4" aria-hidden="true" />
+          {skipLabel}
         </Button>
       </div>
 

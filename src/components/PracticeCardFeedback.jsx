@@ -84,8 +84,6 @@ export default function PracticeCardFeedback({
   );
   const isSmartMode = mode === "smart";
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const againLabel = t("again") || "Again";
-  const easyLabel = t("easy") || "Easy";
 
   const handleSmartResult = (result) => {
     if (!onResult || isSubmitting) return;
@@ -129,7 +127,7 @@ export default function PracticeCardFeedback({
             <div className="flex flex-wrap items-center gap-3">
               <Button
                 type="button"
-                size="xs"
+                size="action"
                 variant={hearButtonVariant}
                 onClick={onHear}
               >
@@ -177,15 +175,16 @@ export default function PracticeCardFeedback({
                   type="button"
                   variant="outline-secondary"
                   onClick={() => handleSmartResult("again")}
-                  size="lg"
+                  size="action"
                   disabled={isSubmitting}
                 >
+                  <AppIcon icon={Undo2} className="h-4 w-4" aria-hidden="true" />
                   {againLabel}
                 </Button>
                 <Button
                   type="button"
                   onClick={() => handleSmartResult("next")}
-                  size="lg"
+                  size="action"
                   disabled={isSubmitting}
                 >
                   {nextLabel}
@@ -195,14 +194,15 @@ export default function PracticeCardFeedback({
                   type="button"
                   variant="success"
                   onClick={() => handleSmartResult("easy")}
-                  size="lg"
+                  size="action"
                   disabled={isSubmitting}
                 >
+                  <AppIcon icon={CheckCircle2} className="h-4 w-4" aria-hidden="true" />
                   {easyLabel}
                 </Button>
               </>
             ) : (
-              <Button type="button" onClick={onNext} size="lg">
+              <Button type="button" onClick={onNext} size="action">
                 {nextLabel}
                 <AppIcon icon={ArrowRight} className="h-5 w-5" aria-hidden="true" />
               </Button>
