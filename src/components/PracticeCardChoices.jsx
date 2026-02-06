@@ -90,9 +90,9 @@ export default function PracticeCardChoices({
         <div className="relative inline-flex max-w-full">
           <Badge
             variant="secondary"
-            className="rounded-full border-2 border-[hsl(var(--cymru-green-light))] bg-[hsl(var(--hero-pill-bg))] px-6 py-3 sm:px-12 sm:py-5 md:px-14 md:py-6 shadow-sm max-w-full"
+            className="w-full max-w-[min(100%,52rem)] rounded-full border-2 border-[hsl(var(--cymru-green-light))] bg-[hsl(var(--hero-pill-bg))] px-[clamp(1.5rem,5vw,4.5rem)] py-[clamp(1rem,3vw,2.25rem)] shadow-sm"
           >
-            <h1 className="text-center text-4xl xs:text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-primary leading-none break-words max-w-full">
+            <h1 className="text-center text-[clamp(2.5rem,6vw,5.25rem)] font-extrabold tracking-tight text-primary leading-[0.95] text-balance break-words">
               {baseword}
             </h1>
           </Badge>
