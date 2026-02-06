@@ -149,6 +149,31 @@ export default function App() {
   function onResult(payload) {
     const result = payload?.result;
 
+    if (mode === "smart") {
+      if (!currentRow) return;
+
+      const key = getCardKey(currentRow, currentIdx);
+      const baseResult = payload?.baseResult;
+      const reviewId = payload?.reviewId;
+      const currentEntry = leitnerRef.current[key];
+
+      if (reviewId && currentEntry?.lastReviewId === reviewId) {
+        return;
+      }
+
+      if (result === "easy" || result === "again" || result === "next") {
+        const normalizedBase = baseResult === "correct" ? "correct" : "wrong";
+        const nextMap = updateLeitner(leitnerRef.current, key, normalizedBase, {
+          baseResult: normalizedBase,
+          ease: result,
+          reviewId,
+        });
+        setLeitnerMap(nextMap);
+        pickNext(nextMap);
+      }
+      return;
+    }
+
     // Only "next" advances
     if (result === "next") {
       pickNext(leitnerRef.current);

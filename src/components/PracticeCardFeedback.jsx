@@ -26,6 +26,10 @@ export default function PracticeCardFeedback({
   whyCy,
   lang,
   onNext,
+  onResult,
+  mode,
+  pendingResult,
+  pendingReviewId,
 }) {
   const [autoplay, setAutoplay] = useState(() => {
     try {
@@ -76,6 +80,20 @@ export default function PracticeCardFeedback({
       ? "border-secondary/40 bg-[image:var(--gradient-correct)]"
       : "border-destructive/30 bg-[image:var(--gradient-incorrect)]"
   );
+  const isSmartMode = mode === "smart";
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const againLabel = t("again") || "Again";
+  const easyLabel = t("easy") || "Easy";
+
+  const handleSmartResult = (result) => {
+    if (!onResult || isSubmitting) return;
+    setIsSubmitting(true);
+    onResult({
+      result,
+      baseResult: pendingResult,
+      reviewId: pendingReviewId,
+    });
+  };
 
   return (
     <div className="space-y-5">
@@ -150,11 +168,43 @@ export default function PracticeCardFeedback({
             ) : null}
           </div>
 
-          <div className="flex justify-end">
-            <Button type="button" onClick={onNext} size="lg">
-              {nextLabel}
-              <AppIcon icon={ArrowRight} className="h-5 w-5" aria-hidden="true" />
-            </Button>
+          <div className="flex flex-wrap justify-end gap-2">
+            {isSmartMode ? (
+              <>
+                <Button
+                  type="button"
+                  variant="outline-secondary"
+                  onClick={() => handleSmartResult("again")}
+                  size="lg"
+                  disabled={isSubmitting}
+                >
+                  {againLabel}
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => handleSmartResult("next")}
+                  size="lg"
+                  disabled={isSubmitting}
+                >
+                  {nextLabel}
+                  <AppIcon icon={ArrowRight} className="h-5 w-5" aria-hidden="true" />
+                </Button>
+                <Button
+                  type="button"
+                  variant="success"
+                  onClick={() => handleSmartResult("easy")}
+                  size="lg"
+                  disabled={isSubmitting}
+                >
+                  {easyLabel}
+                </Button>
+              </>
+            ) : (
+              <Button type="button" onClick={onNext} size="lg">
+                {nextLabel}
+                <AppIcon icon={ArrowRight} className="h-5 w-5" aria-hidden="true" />
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
