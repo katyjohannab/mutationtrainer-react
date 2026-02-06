@@ -215,6 +215,7 @@ export default function FiltersPanel({
                   <FilterBadge
                     active={isFamilyAll}
                     onClick={() => onClearFilterType?.("families")}
+                    className="bg-[hsl(var(--cymru-green))] text-[hsl(var(--cymru-white))] hover:bg-[hsl(var(--cymru-green)/0.9)]"
                   >
                     {t("filtersAll")}
                   </FilterBadge>
@@ -223,6 +224,7 @@ export default function FiltersPanel({
                       key={item.id}
                       active={safeFilters.families.has(item.id)}
                       onClick={() => onToggleFilter?.("families", item.id)}
+                      className="border-[hsl(var(--cymru-green)/0.2)] bg-[hsl(var(--cymru-green-wash))] text-[hsl(var(--cymru-green))] hover:bg-[hsl(var(--cymru-green-wash)/0.85)]"
                     >
                       {labelFor(item)}
                     </FilterBadge>
@@ -246,6 +248,7 @@ export default function FiltersPanel({
                   <FilterBadge
                     active={isCategoryAll}
                     onClick={() => onClearFilterType?.("categories")}
+                    className="bg-[hsl(var(--cymru-green-light))] text-[hsl(var(--cymru-text))] hover:bg-[hsl(var(--cymru-green-light)/0.9)]"
                   >
                     {t("filtersAll")}
                   </FilterBadge>
