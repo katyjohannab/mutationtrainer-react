@@ -209,10 +209,9 @@ function makeChoices(currentRow, deckRows, sent) {
 export default function PracticeCard({
   row,
   onResult,
-  mode,
+  mode = "random",
   answerMode = "type",
   deckRows = [],
-  mode = "random",
 }) {
   const { t, lang } = useI18n();
 
@@ -284,7 +283,7 @@ export default function PracticeCard({
     [answer, cardId, goNext, guess, isFeedback, mode, onResult, row]
   );
 
-  const onRevealOrSkip = () => {
+  const onReveal = () => {
     if (isFeedback) return;
 
     setCardState(CARD_STATES.FEEDBACK);
@@ -299,12 +298,8 @@ export default function PracticeCard({
 
   const onSkip = () => {
     if (isFeedback) return;
-
-    setCardState(CARD_STATES.FEEDBACK);
-    setLast("skipped");
     if (mode === "smart") {
-      setPendingResult("skipped");
-      setPendingReviewId(`${cardId}-${Date.now()}`);
+      onResult?.({ result: "skipped" });
       return;
     }
     onResult?.({ result: "skipped", guess: "", expected: answer });
@@ -391,7 +386,8 @@ export default function PracticeCard({
                 onToggleHint={() => setShowHint((s) => !s)}
                 onPick={(option) => onCheck(option)}
                 onCheck={onCheck}
-                onRevealOrSkip={onRevealOrSkip}
+                onReveal={onReveal}
+                onSkip={onSkip}
                 t={t}
                 tooltipTranslate={tooltipTranslate}
                 tooltipWordCategory={wordCategory}
@@ -412,7 +408,8 @@ export default function PracticeCard({
                 showHint={showHint}
                 onToggleHint={() => setShowHint((s) => !s)}
                 onCheck={onCheck}
-                onRevealOrSkip={onRevealOrSkip}
+                onReveal={onReveal}
+                onSkip={onSkip}
                 t={t}
                 tooltipTranslate={tooltipTranslate}
                 tooltipWordCategory={wordCategory}

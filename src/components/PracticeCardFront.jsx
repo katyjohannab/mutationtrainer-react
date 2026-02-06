@@ -10,7 +10,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "./ui/hover-card";
-import { CheckCircle2, Lightbulb, MonitorPlay } from "lucide-react";
+import { CheckCircle2, Lightbulb, MonitorPlay, SkipForward } from "lucide-react";
 import AppIcon from "./icons/AppIcon";
 
 export default function PracticeCardFront({
@@ -26,7 +26,8 @@ export default function PracticeCardFront({
   showHint,
   onToggleHint,
   onCheck,
-  onRevealOrSkip,
+  onReveal,
+  onSkip,
   t,
   tooltipTranslate,
   tooltipWordCategory,
@@ -51,7 +52,6 @@ export default function PracticeCardFront({
   const hintLabel = t("hint") || "Hint";
   const revealLabel = t("reveal") || "Reveal";
   const skipLabel = t("skip") || "Skip";
-  const revealSkipLabel = `${revealLabel} / ${skipLabel}`;
 
   return (
     <div className="space-y-6">
@@ -149,12 +149,24 @@ export default function PracticeCardFront({
       <Separator />
 
       <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
-        <Button type="button" variant="default" onClick={onCheck} className="flex-1 sm:flex-none min-w-[120px]">
+        <Button
+          type="button"
+          variant="default"
+          onClick={onCheck}
+          size="action"
+          className="flex-1 sm:flex-none min-w-[120px]"
+        >
           <AppIcon icon={CheckCircle2} className="h-4 w-4" aria-hidden="true" />
           {checkLabel}
         </Button>
 
-        <Button type="button" variant="outline-secondary" onClick={onToggleHint} className="flex-1 sm:flex-none min-w-[120px]">
+        <Button
+          type="button"
+          variant="outline-secondary"
+          onClick={onToggleHint}
+          size="action"
+          className="flex-1 sm:flex-none min-w-[120px]"
+        >
           <AppIcon icon={Lightbulb} className="h-4 w-4" aria-hidden="true" />
           {hintLabel}
         </Button>
@@ -162,12 +174,25 @@ export default function PracticeCardFront({
         <Button
           type="button"
           variant="ghost"
-          onClick={onRevealOrSkip}
+          onClick={onReveal}
           disabled={isFeedback}
+          size="action"
           className="flex-1 sm:flex-none min-w-[120px]"
         >
           <AppIcon icon={MonitorPlay} className="h-4 w-4" aria-hidden="true" />
-          {revealSkipLabel}
+          {revealLabel}
+        </Button>
+
+        <Button
+          type="button"
+          variant="outline-accent"
+          onClick={onSkip}
+          disabled={isFeedback}
+          size="action"
+          className="flex-1 sm:flex-none min-w-[120px]"
+        >
+          <AppIcon icon={SkipForward} className="h-4 w-4" aria-hidden="true" />
+          {skipLabel}
         </Button>
       </div>
 

@@ -37,7 +37,7 @@ export default function FlashcardArea({
                 type="single"
                 value={mode}
                 onValueChange={(value) => value && onModeChange(value)}
-                className="flex flex-wrap items-center gap-1 rounded-lg border border-border bg-card p-1 sm:flex-nowrap"
+                className="flex items-center gap-1 rounded-lg border border-border bg-card p-1 sm:flex-nowrap"
               >
                 <ToggleGroupItem
                   value="random"
@@ -63,7 +63,7 @@ export default function FlashcardArea({
                   type="single"
                   value={answerMode}
                   onValueChange={(value) => value && onAnswerModeChange(value)}
-                  className="flex flex-wrap items-center gap-1 rounded-lg border border-border bg-card p-1 sm:flex-nowrap"
+                  className="flex items-center gap-1 rounded-lg border border-border bg-card p-1 sm:flex-nowrap"
                 >
                   <ToggleGroupItem
                     value="type"
