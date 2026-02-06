@@ -164,7 +164,12 @@ export default function App() {
     const nextMap = updateLeitner(leitnerRef.current, key, result);
     setLeitnerMap(nextMap);
 
-    // IMPORTANT: no pickNext() here
+    if (result === "easy" || result === "again") {
+      pickNext(nextMap);
+      return;
+    }
+
+    // IMPORTANT: no pickNext() here for standard grading
   }
 
   function handleTogglePreset(id) {

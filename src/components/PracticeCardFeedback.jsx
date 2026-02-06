@@ -26,6 +26,8 @@ export default function PracticeCardFeedback({
   whyCy,
   lang,
   onNext,
+  mode = "random",
+  onResult,
 }) {
   const [autoplay, setAutoplay] = useState(() => {
     try {
@@ -62,6 +64,8 @@ export default function PracticeCardFeedback({
   const isCorrect = last === "correct";
   const hearButtonVariant = isCorrect ? "success" : "secondary";
   const nextLabel = t("next") || "Next";
+  const easyLabel = t("easy") || "Easy";
+  const againLabel = t("again") || "Again";
   const statusIcon = useMemo(() => {
     if (!last) return null;
     if (last === "correct") return CheckCircle2;
@@ -71,10 +75,10 @@ export default function PracticeCardFeedback({
     return null;
   }, [last]);
   const panelClass = cn(
-    "rounded-2xl border p-5 shadow-sm",
+    "rounded-2xl border border-border p-5 shadow-md",
     isCorrect
-      ? "border-secondary/40 bg-[image:var(--gradient-correct)]"
-      : "border-destructive/30 bg-[image:var(--gradient-incorrect)]"
+      ? "bg-[image:var(--gradient-correct)]"
+      : "bg-[image:var(--gradient-incorrect)]"
   );
 
   return (
@@ -97,7 +101,7 @@ export default function PracticeCardFeedback({
           ) : null}
 
           {/* White content window */}
-          <div className="rounded-xl bg-card p-5 space-y-4">
+          <div className="rounded-xl bg-card p-5 shadow-sm space-y-4">
             <p className="text-xl sm:text-2xl leading-relaxed text-foreground font-medium">
               <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
               <span className="mx-1 rounded-md border border-[hsl(var(--cymru-gold))] bg-[hsl(var(--cymru-gold-wash))] px-2 py-0.5 font-semibold text-foreground">
@@ -150,11 +154,51 @@ export default function PracticeCardFeedback({
             ) : null}
           </div>
 
-          <div className="flex justify-end">
-            <Button type="button" onClick={onNext} size="lg">
-              {nextLabel}
-              <AppIcon icon={ArrowRight} className="h-5 w-5" aria-hidden="true" />
-            </Button>
+          <div className="flex flex-wrap justify-end gap-2">
+            {mode === "smart" ? (
+              <>
+                <Button
+                  type="button"
+                  onClick={() => onResult?.({ result: "again" })}
+                  size="lg"
+                  variant="outline-destructive"
+                  className="min-w-[140px] justify-center"
+                >
+                  <AppIcon icon={Undo2} className="h-4 w-4" aria-hidden="true" />
+                  {againLabel}
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => onResult?.({ result: "easy" })}
+                  size="lg"
+                  variant="outline-secondary"
+                  className="min-w-[140px] justify-center"
+                >
+                  <AppIcon icon={CheckCircle2} className="h-4 w-4" aria-hidden="true" />
+                  {easyLabel}
+                </Button>
+                <Button
+                  type="button"
+                  onClick={onNext}
+                  size="lg"
+                  variant="default"
+                  className="min-w-[140px] justify-center"
+                >
+                  {nextLabel}
+                  <AppIcon icon={ArrowRight} className="h-5 w-5" aria-hidden="true" />
+                </Button>
+              </>
+            ) : (
+              <Button
+                type="button"
+                onClick={onNext}
+                size="lg"
+                className="min-w-[140px] justify-center"
+              >
+                {nextLabel}
+                <AppIcon icon={ArrowRight} className="h-5 w-5" aria-hidden="true" />
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>

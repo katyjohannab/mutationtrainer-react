@@ -20,17 +20,22 @@ export function updateLeitner(map, cardKey, result) {
   const now = Date.now();
   const current = map[cardKey] ?? { box: 0, dueAt: now };
 
+  const maxBox = BOX_MINUTES.length - 1;
   let nextBox = current.box;
 
-  if (result === "correct") {
-    nextBox = Math.min(current.box + 1, BOX_MINUTES.length - 1);
+  if (result === "easy") {
+    nextBox = Math.min(current.box + 2, maxBox);
+  } else if (result === "correct") {
+    nextBox = Math.min(current.box + 1, maxBox);
+  } else if (result === "again") {
+    nextBox = 0;
   } else {
     // wrong, revealed, skipped => reset
     nextBox = 0;
   }
 
   const minutes = BOX_MINUTES[nextBox] ?? 0;
-  const dueAt = now + minutes * 60 * 1000;
+  const dueAt = result === "again" ? now : now + minutes * 60 * 1000;
 
   const next = { box: nextBox, dueAt };
   const out = { ...map, [cardKey]: next };
