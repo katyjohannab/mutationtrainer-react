@@ -23,11 +23,11 @@ const MUTATION_FILTERS = [
 
 const MUTATION_FILTER_IDS = new Set(MUTATION_FILTERS.map((item) => item.id));
 
-function FilterBadge({ active, onClick, children, className }) {
+function FilterBadge({ active, onClick, children, className, variant }) {
   return (
     <Badge
       onClick={onClick}
-      variant={active ? "default" : "soft"}
+      variant={variant ?? (active ? "default" : "soft")}
       className={cn(
         "cursor-pointer select-none rounded-full px-3 py-1 text-xs font-semibold transition-colors",
         active && "ring-1 ring-primary/30",
@@ -248,7 +248,7 @@ export default function FiltersPanel({
                   <FilterBadge
                     active={isCategoryAll}
                     onClick={() => onClearFilterType?.("categories")}
-                    className="bg-[hsl(var(--cymru-green-light))] text-[hsl(var(--cymru-text))] hover:bg-[hsl(var(--cymru-green-light)/0.9)]"
+                    variant="cymru-light"
                   >
                     {t("filtersAll")}
                   </FilterBadge>

@@ -20,6 +20,8 @@ const badgeVariants = cva(
           "border-secondary/30 bg-secondary/15 text-foreground hover:bg-secondary/25",
         outline:
           "border-border bg-transparent text-foreground hover:bg-secondary/15",
+        "cymru-light":
+          "border-transparent bg-[hsl(var(--cymru-green-light))] text-[hsl(var(--cymru-white))] hover:bg-[hsl(var(--cymru-green-light)/0.9)]",
       },
     },
     defaultVariants: {
