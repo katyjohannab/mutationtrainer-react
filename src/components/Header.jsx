@@ -60,7 +60,7 @@ export default function Header({
 
         {/* Control cluster: unified minimal surface */}
         <TooltipProvider>
-          <div className="flex items-center self-center sm:border sm:border-border sm:rounded-lg sm:bg-[hsl(var(--rail))] px-0 py-0 sm:px-3 sm:py-2 gap-2 sm:gap-3 flex-shrink-0">
+          <div className="flex items-center self-center gap-2 sm:gap-3 flex-shrink-0">
             
             {/* Language toggle: EN [switch] CY */}
             <DropdownMenu>
@@ -92,7 +92,7 @@ export default function Header({
                   className={cn("text-xs", isCy && "text-primary")}
                   onSelect={() => setLang("cy")}
                 >
-                  Cymraeg (CY)
+                  Cymraeg (CYM)
                   {isCy ? (
                     <AppIcon
                       icon={Check}
@@ -115,18 +115,15 @@ export default function Header({
                 checked={isCy}
                 onCheckedChange={(checked) => setLang(checked ? "cy" : "en")}
                 aria-label={t("headerSwitchLang") || "Toggle language"}
-                className="h-4 sm:h-5"
+                className="h-4 sm:h-5 data-[state=checked]:bg-[hsl(var(--cymru-green-light))]"
               />
               <span className={cn(
                 "text-[10px] sm:text-xs font-medium transition-colors",
                 isCy ? "text-primary" : "text-muted-foreground"
               )}>
-                CY
+                CYM
               </span>
             </div>
-
-            {/* Separator */}
-            <div className="hidden sm:block h-4 w-px bg-border" />
 
             {/* Mobile filters button */}
             <Tooltip>
