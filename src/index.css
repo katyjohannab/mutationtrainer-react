@@ -72,8 +72,8 @@
   --feedback-gradient-shadow: 0.06;
   --gradient-correct: linear-gradient(
     180deg,
-    hsl(var(--feedback-correct-base) / var(--feedback-gradient-solid)) 0%,
-    hsl(var(--feedback-correct-base) / var(--feedback-gradient-shine)) 30%,
+    hsl(var(--cymru-green-light) / var(--feedback-gradient-solid)) 0%,
+    hsl(var(--cymru-green-light) / var(--feedback-gradient-shine)) 30%,
     hsl(0 0% 100%) 70%,
     hsl(0 0% 100%) 100%
   );
@@ -145,8 +145,8 @@
   --feedback-gradient-shadow: 0.08;
   --gradient-correct: linear-gradient(
     180deg,
-    hsl(var(--feedback-correct-base) / var(--feedback-gradient-solid)) 0%,
-    hsl(var(--feedback-correct-base) / var(--feedback-gradient-shine)) 30%,
+    hsl(var(--cymru-green-light) / var(--feedback-gradient-solid)) 0%,
+    hsl(var(--cymru-green-light) / var(--feedback-gradient-shine)) 30%,
     hsl(0 0% 100%) 70%,
     hsl(0 0% 100%) 100%
   );
