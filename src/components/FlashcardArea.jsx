@@ -23,16 +23,12 @@ export default function FlashcardArea({
       <div className="space-y-4 rounded-[var(--radius)] border border-border bg-[hsl(var(--panel))] p-5 sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
-            <span className="text-xs sm:text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              {progressText}
-            </span>
+            <span className="mt-subtitle">{progressText}</span>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-2">
-              <span className="text-xs sm:text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                {t("mode")}
-              </span>
+              <span className="mt-subtitle">{t("mode")}</span>
               <ToggleGroup
                 type="single"
                 value={mode}
@@ -57,9 +53,7 @@ export default function FlashcardArea({
 
             {onAnswerModeChange && (
               <div className="flex items-center gap-2">
-                <span className="text-xs sm:text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                  {t("ateb") || "Answer"}
-                </span>
+                <span className="mt-subtitle">{t("ateb") || "Answer"}</span>
                 <ToggleGroup
                   type="single"
                   value={answerMode}
@@ -84,8 +78,6 @@ export default function FlashcardArea({
             )}
           </div>
         </div>
-
-        <p className="text-xs text-muted-foreground">{t("practiceHelper")}</p>
 
         <Separator />
 

@@ -101,6 +101,9 @@
   --text-label-size: 0.875rem;
   --text-label-line: 1.4;
   --text-label-tracking: 0.04em;
+  --text-subtitle-size: clamp(0.62rem, 0.5rem + 0.5vw, 0.82rem);
+  --text-subtitle-line: 1.4;
+  --text-subtitle-tracking: 0.08em;
   --text-display-size: clamp(1.75rem, 1.3rem + 1.2vw, 2.6rem);
   --text-display-line: 1.2;
   --text-display-tracking: -0.01em;
@@ -314,5 +317,15 @@
   }
   .mt-pill-on {
     @apply bg-primary text-primary-foreground hover:bg-primary/90;
+  }
+
+  .mt-subtitle {
+    font-family: var(--font-body);
+    font-size: var(--text-subtitle-size);
+    line-height: var(--text-subtitle-line);
+    letter-spacing: var(--text-subtitle-tracking);
+    text-transform: uppercase;
+    font-weight: 400;
+    @apply text-muted-foreground;
   }
 }
