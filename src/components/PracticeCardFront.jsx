@@ -4,7 +4,6 @@ import { Badge } from "./ui/badge";
 import HeroPill from "./HeroPill";
 import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";
-import { cn } from "../lib/cn";
 import {
   HoverCard,
   HoverCardContent,
@@ -65,32 +64,7 @@ export default function PracticeCardFront({
       <div className="flex justify-center w-full px-2">
         <div className="relative inline-flex max-w-full">
           {/* TODO: Map cardState or parent feedback state to HeroPill state (success/destructive/hint) */}
-          <div
-            className={cn(
-              "inline-flex items-center rounded-full",
-              "ring-1 ring-[hsl(var(--ring)/0.2)]",
-              "shadow-sm",
-              "relative",
-              "bg-[hsl(var(--hero-pill-bg))]",
-              "px-6 py-3 sm:px-12 sm:py-5 md:px-14 md:py-6",
-              "border-2 border-[hsl(var(--cymru-green-light))]",
-              "max-w-full"
-            )}
-          >
-            {/* Faint top highlight overlay */}
-            <div
-              className="absolute inset-0 rounded-full"
-              style={{
-                background:
-                  "linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 70%)",
-                pointerEvents: "none",
-              }}
-              aria-hidden="true"
-            />
-            <h1 className="relative z-10 text-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-[hsl(var(--cymru-green))] leading-none break-words max-w-full">
-              {baseword}
-            </h1>
-          </div>
+          <HeroPill text={baseword} showPin={false} />
 
           {tooltipLines.length > 0 ? (
             <HoverCard>
@@ -138,7 +112,7 @@ export default function PracticeCardFront({
         <div className="text-sm text-muted-foreground">{translate}</div>
       ) : null}
 
-      <div className="text-base sm:text-lg leading-relaxed text-foreground">
+      <div className="text-[clamp(1.05rem,0.6vw+0.95rem,1.45rem)] leading-relaxed text-foreground">
         <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
         <Input
           ref={inputRef}
@@ -146,7 +120,7 @@ export default function PracticeCardFront({
           onChange={(e) => setGuess(e.target.value)}
           disabled={disabledInput}
           placeholder={placeholder}
-          className="mx-2 inline-flex h-10 sm:h-11 min-w-[10ch] w-[12ch] sm:w-[15ch] lg:w-[16ch] max-w-full align-baseline rounded-lg border-0 bg-[hsl(var(--cymru-gold)/0.08)] px-3 text-base sm:text-lg text-foreground shadow-sm placeholder:text-xs sm:placeholder:text-sm placeholder:font-medium placeholder:text-muted-foreground/60 focus-visible:ring-2 focus-visible:ring-ring/50"
+          className="mx-2 inline-flex h-10 sm:h-11 min-w-[10ch] w-[12ch] sm:w-[15ch] lg:w-[16ch] max-w-full align-baseline rounded-lg border-0 bg-[hsl(var(--cymru-gold)/0.08)] px-3 text-[clamp(1.05rem,0.6vw+0.95rem,1.45rem)] text-foreground shadow-sm placeholder:text-xs sm:placeholder:text-sm placeholder:font-medium placeholder:text-muted-foreground/60 focus-visible:ring-2 focus-visible:ring-ring/50"
           onKeyDown={(e) => {
             if (e.key === "Enter") onCheck();
           }}

@@ -12,7 +12,6 @@ import {
   AccordionTrigger,
 } from "./ui/accordion";
 import { Badge, badgeVariants } from "./ui/badge";
-import { GlassPanel } from "./ui/glass-panel.jsx";
 
 const MUTATION_FILTERS = [
   { id: "aspirate", labelKey: "mutationFilterAspirate" },
@@ -124,7 +123,7 @@ export default function FiltersPanel({
             </Badge>
           </AccordionTrigger>
           <AccordionContent>
-            <GlassPanel className="p-4 space-y-3">
+            <div className="p-4 space-y-3">
               <p className="text-sm text-foreground font-semibold">
                 {t("startHereSubtitle")}
               </p>
@@ -136,7 +135,7 @@ export default function FiltersPanel({
                 <li>{t("startHereStepRefine")}</li>
                 <li>{t("startHereStepPractice")}</li>
               </ul>
-            </GlassPanel>
+            </div>
           </AccordionContent>
         </AccordionItem>
 
@@ -224,36 +223,34 @@ export default function FiltersPanel({
               <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
                 {t("mutationTypeHeading")}
               </h3>
-              <GlassPanel className="p-3">
-                <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2">
+                <FilterBadge
+                  active={isFamilyAll}
+                  onClick={() => onClearFilterType?.("families")}
+                  variant={isFamilyAll ? "cymru-dark" : "cymru-dark-wash"}
+                >
+                  {t("filtersAll")}
+                </FilterBadge>
+                {MUTATION_FILTERS.map((item) => (
                   <FilterBadge
-                    active={isFamilyAll}
-                    onClick={() => onClearFilterType?.("families")}
-                    variant={isFamilyAll ? "cymru-dark" : "cymru-dark-wash"}
+                    key={item.id}
+                    active={safeFilters.families.has(item.id)}
+                    onClick={() => onToggleFilter?.("families", item.id)}
+                    variant={
+                      safeFilters.families.has(item.id)
+                        ? "cymru-dark"
+                        : "cymru-dark-wash"
+                    }
                   >
-                    {t("filtersAll")}
+                    {labelFor(item)}
                   </FilterBadge>
-                  {MUTATION_FILTERS.map((item) => (
-                    <FilterBadge
-                      key={item.id}
-                      active={safeFilters.families.has(item.id)}
-                      onClick={() => onToggleFilter?.("families", item.id)}
-                      variant={
-                        safeFilters.families.has(item.id)
-                          ? "cymru-dark"
-                          : "cymru-dark-wash"
-                      }
-                    >
-                      {labelFor(item)}
-                    </FilterBadge>
-                  ))}
-                  {!isFamilyAll && (
-                    <ResetBadge onClick={() => onClearFilterType?.("families")}>
-                      {t("filtersReset")}
-                    </ResetBadge>
-                  )}
-                </div>
-              </GlassPanel>
+                ))}
+                {!isFamilyAll && (
+                  <ResetBadge onClick={() => onClearFilterType?.("families")}>
+                    {t("filtersReset")}
+                  </ResetBadge>
+                )}
+              </div>
             </div>
 
             {/* Categories */}
@@ -261,65 +258,63 @@ export default function FiltersPanel({
               <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
                 {t("categoriesHeading")}
               </h3>
-              <GlassPanel className="p-3">
-                <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2">
+                <FilterBadge
+                  active={isCategoryAll}
+                  onClick={() => onClearFilterType?.("categories")}
+                  variant={isCategoryAll ? "cymru-light" : "cymru-light-wash"}
+                >
+                  {t("filtersAll")}
+                </FilterBadge>
+                {visibleCategories.map((item) => (
                   <FilterBadge
-                    active={isCategoryAll}
-                    onClick={() => onClearFilterType?.("categories")}
-                    variant={isCategoryAll ? "cymru-light" : "cymru-light-wash"}
+                    key={item.id}
+                    active={safeFilters.categories.has(item.id)}
+                    onClick={() => onToggleFilter?.("categories", item.id)}
+                    variant={
+                      safeFilters.categories.has(item.id)
+                        ? "cymru-light"
+                        : "cymru-light-wash"
+                    }
                   >
-                    {t("filtersAll")}
+                    {labelFor(item)}
                   </FilterBadge>
-                  {visibleCategories.map((item) => (
-                    <FilterBadge
-                      key={item.id}
-                      active={safeFilters.categories.has(item.id)}
-                      onClick={() => onToggleFilter?.("categories", item.id)}
-                      variant={
-                        safeFilters.categories.has(item.id)
-                          ? "cymru-light"
-                          : "cymru-light-wash"
-                      }
-                    >
-                      {labelFor(item)}
-                    </FilterBadge>
-                  ))}
+                ))}
 
-                  {/* Expander */}
-                  {safeAvailable.categories.length > INITIAL_CAT_COUNT && (
-                    <button
-                      type="button"
-                      onClick={() => setExpandedCats(!expandedCats)}
-                      className={cn(
-                        badgeVariants({ variant: "outline" }),
-                        "cursor-pointer select-none rounded-full px-3 py-1 text-xs font-semibold border-dashed border-accent/40 text-foreground hover:bg-accent/10",
-                        "gap-1"
-                      )}
+                {/* Expander */}
+                {safeAvailable.categories.length > INITIAL_CAT_COUNT && (
+                  <button
+                    type="button"
+                    onClick={() => setExpandedCats(!expandedCats)}
+                    className={cn(
+                      badgeVariants({ variant: "outline" }),
+                      "cursor-pointer select-none rounded-full px-3 py-1 text-xs font-semibold border-dashed border-accent/40 text-foreground hover:bg-accent/10",
+                      "gap-1"
+                    )}
+                  >
+                    {t(expandedCats ? "filtersFewer" : "filtersMore")}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className={cn("transition-transform", expandedCats && "rotate-180")}
                     >
-                      {t(expandedCats ? "filtersFewer" : "filtersMore")}
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className={cn("transition-transform", expandedCats && "rotate-180")}
-                      >
-                        <path d="m6 9 6 6 6-6" />
-                      </svg>
-                    </button>
-                  )}
-                  {!isCategoryAll && (
-                    <ResetBadge onClick={() => onClearFilterType?.("categories")}>
-                      {t("filtersReset")}
-                    </ResetBadge>
-                  )}
-                </div>
-              </GlassPanel>
+                      <path d="m6 9 6 6 6-6" />
+                    </svg>
+                  </button>
+                )}
+                {!isCategoryAll && (
+                  <ResetBadge onClick={() => onClearFilterType?.("categories")}>
+                    {t("filtersReset")}
+                  </ResetBadge>
+                )}
+              </div>
             </div>
           </AccordionContent>
         </AccordionItem>
