@@ -62,6 +62,8 @@ export default function FiltersPanel({
   const { t } = useI18n();
 
   const [expandedCats, setExpandedCats] = useState(false);
+  const headerBase = "inline-flex items-center gap-2 font-semibold";
+  const headerIcon = "h-4 w-4 shrink-0";
 
   const safeAvailable = available || { families: [], categories: [] };
   const safeFilters = filters || { families: new Set(), categories: new Set() };
@@ -94,10 +96,15 @@ export default function FiltersPanel({
       <Accordion className="w-full" collapsible defaultValue="item-start" type="single">
         <AccordionItem value="item-start">
           <AccordionTrigger>
-            <Badge className="gap-2 rounded-full bg-[hsl(var(--cymru-green))] px-4 py-1.5 text-sm font-semibold text-white">
+            <Badge
+              className={cn(
+                headerBase,
+                "rounded-full bg-[hsl(var(--cymru-green))] px-4 py-2 text-base text-white shadow-sm"
+              )}
+            >
               <AppIcon
                 icon={HelpCircle}
-                className="h-5 w-5 text-white"
+                className={cn(headerIcon, "text-white")}
                 aria-hidden="true"
               />
               <span>{t("startHereTitle")}</span>
@@ -122,13 +129,13 @@ export default function FiltersPanel({
 
         <AccordionItem value="item-quick">
           <AccordionTrigger>
-            <div className="flex items-center gap-2 text-[hsl(var(--cymru-green))]">
+            <div className={cn(headerBase, "text-sm text-[hsl(var(--cymru-green))]")}>
               <AppIcon
                 icon={Zap}
-                className="h-4 w-4 text-[hsl(var(--cymru-green))]"
+                className={cn(headerIcon, "text-[hsl(var(--cymru-green))]")}
                 aria-hidden="true"
               />
-              <span className="text-xs font-semibold">{t("quickPacksTitle")}</span>
+              <span>{t("quickPacksTitle")}</span>
             </div>
           </AccordionTrigger>
           <AccordionContent>
@@ -183,13 +190,13 @@ export default function FiltersPanel({
 
         <AccordionItem value="item-core">
           <AccordionTrigger>
-            <div className="flex items-center gap-2 text-[hsl(var(--cymru-green))]">
+            <div className={cn(headerBase, "text-sm text-[hsl(var(--cymru-green))]")}>
               <AppIcon
                 icon={Filter}
-                className="h-4 w-4 text-[hsl(var(--cymru-green))]"
+                className={cn(headerIcon, "text-[hsl(var(--cymru-green))]")}
                 aria-hidden="true"
               />
-              <span className="text-xs font-semibold">{t("coreFiltersTitle")}</span>
+              <span>{t("coreFiltersTitle")}</span>
             </div>
           </AccordionTrigger>
           <AccordionContent>
