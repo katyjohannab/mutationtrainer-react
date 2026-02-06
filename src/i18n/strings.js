@@ -15,6 +15,8 @@ export const STRINGS = {
     reveal: "Datgelu",
     skip: "Hepgor",
     next: "Nesaf",
+    easy: "Hawdd",
+    again: "Eto",
     hear: "Clywed",
     loading: "Llwytho...",
 
@@ -97,6 +99,8 @@ export const STRINGS = {
     reveal: "Reveal",
     skip: "Skip",
     next: "Next",
+    easy: "Easy",
+    again: "Again",
     hear: "Hear",
     loading: "Loading...",
 

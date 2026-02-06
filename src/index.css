@@ -68,19 +68,21 @@
   --feedback-correct-base: var(--cymru-green-light);
   --feedback-incorrect-base: var(--cymru-red);
   --feedback-gradient-solid: 1;
-  --feedback-gradient-shine: 0.78;
-  --feedback-gradient-shadow: 0.58;
+  --feedback-gradient-shine: 0.28;
+  --feedback-gradient-shadow: 0.06;
   --gradient-correct: linear-gradient(
-    135deg,
+    180deg,
     hsl(var(--feedback-correct-base) / var(--feedback-gradient-solid)) 0%,
-    hsl(var(--feedback-correct-base) / var(--feedback-gradient-shine)) 55%,
-    hsl(var(--feedback-correct-base) / var(--feedback-gradient-shadow)) 100%
+    hsl(var(--feedback-correct-base) / var(--feedback-gradient-shine)) 30%,
+    hsl(0 0% 100%) 70%,
+    hsl(0 0% 100%) 100%
   );
   --gradient-incorrect: linear-gradient(
-    135deg,
+    180deg,
     hsl(var(--feedback-incorrect-base) / var(--feedback-gradient-solid)) 0%,
-    hsl(var(--feedback-incorrect-base) / var(--feedback-gradient-shine)) 55%,
-    hsl(var(--feedback-incorrect-base) / var(--feedback-gradient-shadow)) 100%
+    hsl(var(--feedback-incorrect-base) / var(--feedback-gradient-shine)) 30%,
+    hsl(0 0% 100%) 70%,
+    hsl(0 0% 100%) 100%
   );
 
   /* Typography */
@@ -139,19 +141,21 @@
   --feedback-correct-base: var(--cymru-green-light);
   --feedback-incorrect-base: var(--cymru-red);
   --feedback-gradient-solid: 1;
-  --feedback-gradient-shine: 0.68;
-  --feedback-gradient-shadow: 0.48;
+  --feedback-gradient-shine: 0.28;
+  --feedback-gradient-shadow: 0.08;
   --gradient-correct: linear-gradient(
-    135deg,
+    180deg,
     hsl(var(--feedback-correct-base) / var(--feedback-gradient-solid)) 0%,
-    hsl(var(--feedback-correct-base) / var(--feedback-gradient-shine)) 55%,
-    hsl(var(--feedback-correct-base) / var(--feedback-gradient-shadow)) 100%
+    hsl(var(--feedback-correct-base) / var(--feedback-gradient-shine)) 30%,
+    hsl(0 0% 100%) 70%,
+    hsl(0 0% 100%) 100%
   );
   --gradient-incorrect: linear-gradient(
-    135deg,
+    180deg,
     hsl(var(--feedback-incorrect-base) / var(--feedback-gradient-solid)) 0%,
-    hsl(var(--feedback-incorrect-base) / var(--feedback-gradient-shine)) 55%,
-    hsl(var(--feedback-incorrect-base) / var(--feedback-gradient-shadow)) 100%
+    hsl(var(--feedback-incorrect-base) / var(--feedback-gradient-shine)) 30%,
+    hsl(0 0% 100%) 70%,
+    hsl(0 0% 100%) 100%
   );
 
   /* Dark mode wash variants */

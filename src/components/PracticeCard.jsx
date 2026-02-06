@@ -211,6 +211,7 @@ export default function PracticeCard({
   onResult,
   answerMode = "type",
   deckRows = [],
+  mode = "random",
 }) {
   const { t, lang } = useI18n();
 
@@ -265,20 +266,12 @@ export default function PracticeCard({
     [answer, goNext, guess, isFeedback, onResult, row]
   );
 
-  const onReveal = () => {
+  const onRevealOrSkip = () => {
     if (isFeedback) return;
 
     setCardState(CARD_STATES.FEEDBACK);
     setLast("revealed");
     onResult?.({ result: "revealed", guess, expected: answer });
-  };
-
-  const onSkip = () => {
-    if (isFeedback) return;
-
-    setCardState(CARD_STATES.FEEDBACK);
-    setLast("skipped");
-    onResult?.({ result: "skipped", guess: "", expected: answer });
   };
 
   const onHear = async () => {
@@ -362,9 +355,7 @@ export default function PracticeCard({
                 onToggleHint={() => setShowHint((s) => !s)}
                 onPick={(option) => onCheck(option)}
                 onCheck={onCheck}
-                onReveal={onReveal}
-                onSkip={onSkip}
-                onNext={goNext}
+                onRevealOrSkip={onRevealOrSkip}
                 t={t}
                 tooltipTranslate={tooltipTranslate}
                 tooltipWordCategory={wordCategory}
@@ -385,9 +376,7 @@ export default function PracticeCard({
                 showHint={showHint}
                 onToggleHint={() => setShowHint((s) => !s)}
                 onCheck={onCheck}
-                onReveal={onReveal}
-                onSkip={onSkip}
-                onNext={goNext}
+                onRevealOrSkip={onRevealOrSkip}
                 t={t}
                 tooltipTranslate={tooltipTranslate}
                 tooltipWordCategory={wordCategory}
@@ -415,6 +404,8 @@ export default function PracticeCard({
                 whyCy={whyCy}
                 lang={lang}
                 onNext={goNext}
+                mode={mode}
+                onResult={onResult}
               />
             </div>
           </Card>
