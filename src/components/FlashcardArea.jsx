@@ -83,6 +83,8 @@ export default function FlashcardArea({
           </div>
         </div>
 
+        <p className="text-xs text-muted-foreground">{t("practiceHelper")}</p>
+
         <Separator />
 
         {!currentRow ? (

@@ -318,6 +318,18 @@ export default function PracticeCard({
     }
   };
 
+  const handleSmartResult = useCallback(
+    (result) => {
+      if (mode !== "smart" || !isFeedback || !onResult) return;
+      onResult({
+        result,
+        baseResult: pendingResult,
+        reviewId: pendingReviewId,
+      });
+    },
+    [isFeedback, mode, onResult, pendingResult, pendingReviewId]
+  );
+
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -325,6 +337,27 @@ export default function PracticeCard({
         e.target instanceof HTMLInputElement ||
         e.target instanceof HTMLTextAreaElement
       ) {
+        return;
+      }
+
+      const key = e.key.toLowerCase();
+
+      if (isFeedback && mode === "smart") {
+        if (key === "e") {
+          e.preventDefault();
+          handleSmartResult("easy");
+          return;
+        }
+        if (key === "a") {
+          e.preventDefault();
+          handleSmartResult("again");
+          return;
+        }
+      }
+
+      if (isFeedback && (key === "h" || key === "p")) {
+        e.preventDefault();
+        onHear();
         return;
       }
 
@@ -340,7 +373,7 @@ export default function PracticeCard({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [goNext, isFeedback, onCheck, row]);
+  }, [goNext, handleSmartResult, isFeedback, mode, onCheck, onHear]);
 
   const whyEn = row?.why ?? row?.Why ?? "";
   const whyCy = row?.whyCym ?? row?.["Why-Cym"] ?? row?.WhyCym ?? "";
@@ -398,6 +431,7 @@ export default function PracticeCard({
                 sent={sent}
                 answer={answer}
                 cardState={cardState}
+                cardId={cardId}
                 guess={guess}
                 setGuess={setGuess}
                 disabledInput={disabledInput}

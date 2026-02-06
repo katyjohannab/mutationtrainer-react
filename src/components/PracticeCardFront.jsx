@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import HeroPill from "./HeroPill";
@@ -16,6 +16,7 @@ import AppIcon from "./icons/AppIcon";
 export default function PracticeCardFront({
   sent,
   cardState,
+  cardId,
   guess,
   setGuess,
   disabledInput,
@@ -34,6 +35,7 @@ export default function PracticeCardFront({
 }) {
   const isFeedback = cardState === "feedback";
   const baseword = sent?.base || "_____";
+  const inputRef = useRef(null);
   const hoverCardContentClass =
     "w-64 max-w-[85vw] rounded-2xl border border-border bg-card/95 p-4 text-sm text-foreground shadow-xl backdrop-blur";
 
@@ -52,6 +54,11 @@ export default function PracticeCardFront({
   const hintLabel = t("hint") || "Hint";
   const revealLabel = t("reveal") || "Reveal";
   const skipLabel = t("skip") || "Skip";
+
+  useEffect(() => {
+    if (isFeedback) return;
+    inputRef.current?.focus();
+  }, [cardId, isFeedback]);
 
   return (
     <div className="space-y-6">
@@ -134,6 +141,7 @@ export default function PracticeCardFront({
       <div className="text-base sm:text-lg leading-relaxed text-foreground">
         <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
         <Input
+          ref={inputRef}
           value={guess}
           onChange={(e) => setGuess(e.target.value)}
           disabled={disabledInput}
