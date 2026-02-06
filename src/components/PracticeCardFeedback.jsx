@@ -65,6 +65,7 @@ export default function PracticeCardFeedback({
     return "";
   }, [last, t]);
   const isCorrect = last === "correct";
+  const isRevealed = last === "revealed";
   const hearButtonVariant = "cymru-light";
   const nextLabel = t("next") || "Next";
   const easyLabel = t("easy") || "Easy";
@@ -81,7 +82,9 @@ export default function PracticeCardFeedback({
     "rounded-2xl border border-border p-5 shadow-md",
     isCorrect
       ? "bg-[image:var(--gradient-correct)]"
-      : "bg-[image:var(--gradient-incorrect)]"
+      : isRevealed
+        ? "bg-[image:var(--gradient-revealed)]"
+        : "bg-[image:var(--gradient-incorrect)]"
   );
   const isSmartMode = mode === "smart";
   const [isSubmitting, setIsSubmitting] = useState(false);
