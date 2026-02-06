@@ -240,7 +240,7 @@ export default function App() {
         onOpenHelp={() => openFiltersSheet(["item-start"])}
       />
 
-      <PageContainer as="main" className="py-4">
+      <PageContainer as="main" className="pb-4 pt-6 sm:pt-7 lg:pt-8 2xl:pt-10">
         <div className="flex flex-col gap-6 md:flex-row">
           <div className="flex-1">
             <FlashcardArea
