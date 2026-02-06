@@ -8,6 +8,7 @@ import Header from "./components/Header";
 import FlashcardArea from "./components/FlashcardArea";
 import FiltersPanel from "./components/FiltersPanel";
 import FilterSheet from "./components/FilterSheet";
+import PageContainer from "./components/layout/PageContainer";
 
 import { loadLeitnerMap, updateLeitner } from "./utils/leitner";
 import { getCardKey, pickRandomIndex, pickSmartIndex } from "./utils/pickNext";
@@ -239,7 +240,7 @@ export default function App() {
         onOpenHelp={() => openFiltersSheet(["item-start"])}
       />
 
-      <main className="mx-auto w-full max-w-6xl px-4 py-4 sm:px-6">
+      <PageContainer as="main" className="py-4">
         <div className="flex flex-col gap-6 md:flex-row">
           <div className="flex-1">
             <FlashcardArea
@@ -267,7 +268,7 @@ export default function App() {
             />
           </aside>
         </div>
-      </main>
+      </PageContainer>
 
       <FilterSheet open={filtersOpen} onOpenChange={setFiltersOpen}>
         <FiltersPanel
