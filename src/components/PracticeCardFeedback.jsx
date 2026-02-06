@@ -26,8 +26,10 @@ export default function PracticeCardFeedback({
   whyCy,
   lang,
   onNext,
-  mode = "random",
   onResult,
+  mode,
+  pendingResult,
+  pendingReviewId,
 }) {
   const [autoplay, setAutoplay] = useState(() => {
     try {
@@ -80,6 +82,20 @@ export default function PracticeCardFeedback({
       ? "bg-[image:var(--gradient-correct)]"
       : "bg-[image:var(--gradient-incorrect)]"
   );
+  const isSmartMode = mode === "smart";
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const againLabel = t("again") || "Again";
+  const easyLabel = t("easy") || "Easy";
+
+  const handleSmartResult = (result) => {
+    if (!onResult || isSubmitting) return;
+    setIsSubmitting(true);
+    onResult({
+      result,
+      baseResult: pendingResult,
+      reviewId: pendingReviewId,
+    });
+  };
 
   return (
     <div className="space-y-5">
@@ -155,46 +171,38 @@ export default function PracticeCardFeedback({
           </div>
 
           <div className="flex flex-wrap justify-end gap-2">
-            {mode === "smart" ? (
+            {isSmartMode ? (
               <>
                 <Button
                   type="button"
-                  onClick={() => onResult?.({ result: "again" })}
+                  variant="outline-secondary"
+                  onClick={() => handleSmartResult("again")}
                   size="lg"
-                  variant="outline-destructive"
-                  className="min-w-[140px] justify-center"
+                  disabled={isSubmitting}
                 >
-                  <AppIcon icon={Undo2} className="h-4 w-4" aria-hidden="true" />
                   {againLabel}
                 </Button>
                 <Button
                   type="button"
-                  onClick={() => onResult?.({ result: "easy" })}
+                  onClick={() => handleSmartResult("next")}
                   size="lg"
-                  variant="outline-secondary"
-                  className="min-w-[140px] justify-center"
-                >
-                  <AppIcon icon={CheckCircle2} className="h-4 w-4" aria-hidden="true" />
-                  {easyLabel}
-                </Button>
-                <Button
-                  type="button"
-                  onClick={onNext}
-                  size="lg"
-                  variant="default"
-                  className="min-w-[140px] justify-center"
+                  disabled={isSubmitting}
                 >
                   {nextLabel}
                   <AppIcon icon={ArrowRight} className="h-5 w-5" aria-hidden="true" />
                 </Button>
+                <Button
+                  type="button"
+                  variant="success"
+                  onClick={() => handleSmartResult("easy")}
+                  size="lg"
+                  disabled={isSubmitting}
+                >
+                  {easyLabel}
+                </Button>
               </>
             ) : (
-              <Button
-                type="button"
-                onClick={onNext}
-                size="lg"
-                className="min-w-[140px] justify-center"
-              >
+              <Button type="button" onClick={onNext} size="lg">
                 {nextLabel}
                 <AppIcon icon={ArrowRight} className="h-5 w-5" aria-hidden="true" />
               </Button>

@@ -34,10 +34,15 @@ export default function App() {
   const recentRef = useRef([]);
   // always have the latest Leitner map available synchronously
   const leitnerRef = useRef(leitnerMap);
+  const handledReviewIdsRef = useRef(new Set());
 
   useEffect(() => {
     leitnerRef.current = leitnerMap;
   }, [leitnerMap]);
+
+  useEffect(() => {
+    handledReviewIdsRef.current.clear();
+  }, [currentIdx, mode]);
 
   const canon = (s) =>
     (s ?? "")
@@ -148,6 +153,38 @@ export default function App() {
 
   function onResult(payload) {
     const result = payload?.result;
+
+    if (mode === "smart") {
+      if (!currentRow) return;
+
+      const key = getCardKey(currentRow, currentIdx);
+      const baseResult = payload?.baseResult;
+      const reviewId = payload?.reviewId;
+      const currentEntry = leitnerRef.current[key];
+
+      if (reviewId) {
+        if (handledReviewIdsRef.current.has(reviewId)) {
+          return;
+        }
+        handledReviewIdsRef.current.add(reviewId);
+      }
+
+      if (reviewId && currentEntry?.lastReviewId === reviewId) {
+        return;
+      }
+
+      if (result === "easy" || result === "again" || result === "next") {
+        const normalizedBase = baseResult === "correct" ? "correct" : "wrong";
+        const nextMap = updateLeitner(leitnerRef.current, key, normalizedBase, {
+          baseResult: normalizedBase,
+          ease: result,
+          reviewId,
+        });
+        setLeitnerMap(nextMap);
+        pickNext(nextMap);
+      }
+      return;
+    }
 
     // Only "next" advances
     if (result === "next") {

@@ -209,6 +209,7 @@ function makeChoices(currentRow, deckRows, sent) {
 export default function PracticeCard({
   row,
   onResult,
+  mode,
   answerMode = "type",
   deckRows = [],
   mode = "random",
@@ -219,6 +220,8 @@ export default function PracticeCard({
   const [showHint, setShowHint] = useState(false);
   const [cardState, setCardState] = useState(CARD_STATES.FRONT);
   const [last, setLast] = useState(null);
+  const [pendingResult, setPendingResult] = useState(null);
+  const [pendingReviewId, setPendingReviewId] = useState(null);
 
   const [ttsLoading, setTtsLoading] = useState(false);
   const [ttsError, setTtsError] = useState("");
@@ -237,13 +240,23 @@ export default function PracticeCard({
     setShowHint(false);
     setCardState(CARD_STATES.FRONT);
     setLast(null);
+    setPendingResult(null);
+    setPendingReviewId(null);
     setTtsError("");
     setTtsLoading(false);
   }, [cardId]);
 
   const goNext = useCallback(() => {
+    if (mode === "smart") {
+      onResult?.({
+        result: "next",
+        baseResult: pendingResult,
+        reviewId: pendingReviewId,
+      });
+      return;
+    }
     onResult?.({ result: "next" });
-  }, [onResult]);
+  }, [mode, onResult, pendingResult, pendingReviewId]);
 
   const onCheck = useCallback(
     (forcedGuess) => {
@@ -261,9 +274,14 @@ export default function PracticeCard({
 
       setCardState(CARD_STATES.FEEDBACK);
       setLast(result);
+      if (mode === "smart") {
+        setPendingResult(result);
+        setPendingReviewId(`${cardId}-${Date.now()}`);
+        return;
+      }
       onResult?.({ result, guess: nextGuess, expected: answer });
     },
-    [answer, goNext, guess, isFeedback, onResult, row]
+    [answer, cardId, goNext, guess, isFeedback, mode, onResult, row]
   );
 
   const onRevealOrSkip = () => {
@@ -271,7 +289,25 @@ export default function PracticeCard({
 
     setCardState(CARD_STATES.FEEDBACK);
     setLast("revealed");
+    if (mode === "smart") {
+      setPendingResult("revealed");
+      setPendingReviewId(`${cardId}-${Date.now()}`);
+      return;
+    }
     onResult?.({ result: "revealed", guess, expected: answer });
+  };
+
+  const onSkip = () => {
+    if (isFeedback) return;
+
+    setCardState(CARD_STATES.FEEDBACK);
+    setLast("skipped");
+    if (mode === "smart") {
+      setPendingResult("skipped");
+      setPendingReviewId(`${cardId}-${Date.now()}`);
+      return;
+    }
+    onResult?.({ result: "skipped", guess: "", expected: answer });
   };
 
   const onHear = async () => {
@@ -404,8 +440,10 @@ export default function PracticeCard({
                 whyCy={whyCy}
                 lang={lang}
                 onNext={goNext}
-                mode={mode}
                 onResult={onResult}
+                mode={mode}
+                pendingResult={pendingResult}
+                pendingReviewId={pendingReviewId}
               />
             </div>
           </Card>

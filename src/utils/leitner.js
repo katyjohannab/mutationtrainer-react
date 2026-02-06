@@ -16,28 +16,40 @@ export function saveLeitnerMap(map) {
 }
 
 // Decide how to update a card based on result
-export function updateLeitner(map, cardKey, result) {
-  const now = Date.now();
+export function updateLeitner(map, cardKey, result, options = {}) {
+  const now = options.reviewedAt ?? Date.now();
   const current = map[cardKey] ?? { box: 0, dueAt: now };
 
   const maxBox = BOX_MINUTES.length - 1;
   let nextBox = current.box;
 
-  if (result === "easy") {
-    nextBox = Math.min(current.box + 2, maxBox);
-  } else if (result === "correct") {
-    nextBox = Math.min(current.box + 1, maxBox);
-  } else if (result === "again") {
-    nextBox = 0;
+  let baseResult = options.baseResult ?? result;
+  if (options.ease === "again") {
+    baseResult = "wrong";
+  }
+
+  if (baseResult === "correct") {
+    nextBox = Math.min(current.box + 1, BOX_MINUTES.length - 1);
   } else {
     // wrong, revealed, skipped => reset
     nextBox = 0;
   }
 
+  if (options.ease === "easy" && baseResult === "correct") {
+    nextBox = Math.min(nextBox + 1, BOX_MINUTES.length - 1);
+  }
+
   const minutes = BOX_MINUTES[nextBox] ?? 0;
   const dueAt = result === "again" ? now : now + minutes * 60 * 1000;
 
-  const next = { box: nextBox, dueAt };
+  const next = {
+    box: nextBox,
+    dueAt,
+    lastReviewedAt: now,
+    lastResult: baseResult,
+    lastEase: options.ease ?? null,
+    lastReviewId: options.reviewId ?? null,
+  };
   const out = { ...map, [cardKey]: next };
   saveLeitnerMap(out);
   return out;
