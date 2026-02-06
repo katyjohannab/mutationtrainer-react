@@ -23,6 +23,8 @@ export const STRINGS = {
     typeMode: "Teipio",
     tapMode: "Tapio",
     inputMode: "Dull ateb",
+    practiceHelper:
+      "Pwyswch Enter i wirio, yna defnyddiwch E/A i raddio yn y modd clyfar. Pwyswch H i glywed.",
 
     noCards: "Dim cardiau ar gael. Gwiriwch eich hidlwyr/pecyn.",
 
@@ -107,6 +109,8 @@ export const STRINGS = {
     typeMode: "Type",
     tapMode: "Tap",
     inputMode: "Answer mode",
+    practiceHelper:
+      "Press Enter to check, then use E/A to grade in smart mode. Press H to hear.",
 
     noCards: "No cards available. Check your filters/preset.",
 
