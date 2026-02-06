@@ -37,17 +37,18 @@ export default function FlashcardArea({
                 type="single"
                 value={mode}
                 onValueChange={(value) => value && onModeChange(value)}
+                size="sm"
                 className="flex items-center gap-1 rounded-lg border border-border bg-card p-1 sm:flex-nowrap"
               >
                 <ToggleGroupItem
                   value="random"
-                  className="rounded-md px-2.5 py-1 text-xs sm:text-sm font-semibold text-foreground transition-colors border border-transparent hover:bg-muted/50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
+                  className="rounded-md font-semibold text-foreground transition-colors border border-transparent hover:bg-muted/50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
                 >
                   {t("random")}
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="smart"
-                  className="rounded-md px-2.5 py-1 text-xs sm:text-sm font-semibold text-foreground transition-colors border border-transparent hover:bg-muted/50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
+                  className="rounded-md font-semibold text-foreground transition-colors border border-transparent hover:bg-muted/50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
                 >
                   {t("smart")}
                 </ToggleGroupItem>
@@ -63,17 +64,18 @@ export default function FlashcardArea({
                   type="single"
                   value={answerMode}
                   onValueChange={(value) => value && onAnswerModeChange(value)}
+                  size="sm"
                   className="flex items-center gap-1 rounded-lg border border-border bg-card p-1 sm:flex-nowrap"
                 >
                   <ToggleGroupItem
                     value="type"
-                    className="rounded-md px-2.5 py-1 text-xs sm:text-sm font-semibold text-foreground transition-colors border border-transparent hover:bg-muted/50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
+                    className="rounded-md font-semibold text-foreground transition-colors border border-transparent hover:bg-muted/50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
                   >
                     {t("typeMode") || "Type"}
                   </ToggleGroupItem>
                   <ToggleGroupItem
                     value="tap"
-                    className="rounded-md px-2.5 py-1 text-xs sm:text-sm font-semibold text-foreground transition-colors border border-transparent hover:bg-muted/50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
+                    className="rounded-md font-semibold text-foreground transition-colors border border-transparent hover:bg-muted/50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
                   >
                     {t("tapMode") || "Tap"}
                   </ToggleGroupItem>
