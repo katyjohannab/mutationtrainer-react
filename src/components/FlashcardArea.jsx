@@ -17,6 +17,7 @@ export default function FlashcardArea({
   onAnswerModeChange,
 }) {
   const { t } = useI18n();
+  const helperKey = mode === "smart" ? "practiceHelperSmart" : "practiceHelperRandom";
 
   return (
     <section className={cn("flex-1", className)}>
@@ -83,7 +84,7 @@ export default function FlashcardArea({
           </div>
         </div>
 
-        <p className="text-xs text-muted-foreground">{t("practiceHelper")}</p>
+        <p className="text-xs text-muted-foreground">{t(helperKey)}</p>
 
         <Separator />
 

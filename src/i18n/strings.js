@@ -19,12 +19,15 @@ export const STRINGS = {
     easy: "Hawdd",
     hear: "Clywed",
     loading: "Llwytho...",
+    autoplay: "Awtochwarae",
 
     typeMode: "Teipio",
     tapMode: "Tapio",
     inputMode: "Dull ateb",
-    practiceHelper:
-      "Pwyswch Enter i wirio, yna defnyddiwch E/A i raddio yn y modd clyfar. Pwyswch H i glywed.",
+    practiceHelperSmart:
+      "🔲⏎ = Gwirio · 🔲E = Hawdd · 🔲A = Eto (modd clyfar) · 🔲H = Clywed",
+    practiceHelperRandom:
+      "🔲⏎ = Gwirio · 🔲H = Clywed · 🔲E = Hawdd + 🔲A = Eto (dim ond yn y modd clyfar)",
 
     noCards: "Dim cardiau ar gael. Gwiriwch eich hidlwyr/pecyn.",
 
@@ -105,12 +108,15 @@ export const STRINGS = {
     easy: "Easy",
     hear: "Hear",
     loading: "Loading...",
+    autoplay: "Autoplay",
 
     typeMode: "Type",
     tapMode: "Tap",
     inputMode: "Answer mode",
-    practiceHelper:
-      "Press Enter to check, then use E/A to grade in smart mode. Press H to hear.",
+    practiceHelperSmart:
+      "🔲⏎ = Check · 🔲E = Easy · 🔲A = Again (smart mode) · 🔲H = Hear",
+    practiceHelperRandom:
+      "🔲⏎ = Check · 🔲H = Hear · 🔲E = Easy + 🔲A = Again (smart mode only)",
 
     noCards: "No cards available. Check your filters/preset.",
 

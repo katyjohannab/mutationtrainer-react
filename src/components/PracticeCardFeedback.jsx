@@ -70,6 +70,7 @@ export default function PracticeCardFeedback({
   const nextLabel = t("next") || "Next";
   const easyLabel = t("easy") || "Easy";
   const againLabel = t("again") || "Again";
+  const autoplayLabel = t("autoplay") || "Autoplay";
   const statusIcon = useMemo(() => {
     if (!last) return null;
     if (last === "correct") return CheckCircle2;
@@ -157,7 +158,7 @@ export default function PracticeCardFeedback({
                   }}
                   className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
                 />
-                Autoplay
+                {autoplayLabel}
               </label>
 
               {ttsError ? (

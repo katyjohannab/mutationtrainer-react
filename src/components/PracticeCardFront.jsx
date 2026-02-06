@@ -15,6 +15,7 @@ import AppIcon from "./icons/AppIcon";
 
 export default function PracticeCardFront({
   sent,
+  answer,
   cardState,
   cardId,
   guess,
@@ -54,11 +55,12 @@ export default function PracticeCardFront({
   const hintLabel = t("hint") || "Hint";
   const revealLabel = t("reveal") || "Reveal";
   const skipLabel = t("skip") || "Skip";
+  const focusKey = cardId ?? answer ?? sent?.after ?? sent?.before ?? "";
 
   useEffect(() => {
     if (isFeedback) return;
     inputRef.current?.focus();
-  }, [cardId, isFeedback]);
+  }, [focusKey, isFeedback]);
 
   return (
     <div className="space-y-6">
