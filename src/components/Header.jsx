@@ -1,6 +1,6 @@
 import React from "react";
 import { useI18n } from "../i18n/I18nContext";
-import { Check, Filter, Globe } from "lucide-react";
+import { Check, Filter, Globe, HelpCircle } from "lucide-react";
 import AppIcon from "./icons/AppIcon";
 import { Button } from "./ui/button";
 import {
@@ -20,6 +20,7 @@ import { cn } from "../lib/cn";
 
 export default function Header({
   onOpenFilters,
+  onOpenHelp,
 }) {
   const { lang, setLang, t } = useI18n();
   const isCy = lang === "cy";
@@ -58,7 +59,7 @@ export default function Header({
 
         {/* Control cluster: unified minimal surface */}
         <TooltipProvider>
-          <div className="flex items-center border border-border rounded-lg bg-[hsl(var(--rail))] px-2 py-1.5 sm:px-3 sm:py-2 gap-2 sm:gap-3 flex-shrink-0">
+          <div className="flex items-center self-center sm:border sm:border-border sm:rounded-lg sm:bg-[hsl(var(--rail))] px-0 py-0 sm:px-3 sm:py-2 gap-2 sm:gap-3 flex-shrink-0">
             
             {/* Language toggle: EN [switch] CY */}
             <DropdownMenu>
@@ -145,6 +146,28 @@ export default function Header({
               </TooltipTrigger>
               <TooltipContent side="bottom">
                 {t("headerFilters") || "Filters"}
+              </TooltipContent>
+            </Tooltip>
+
+            {/* Mobile help button */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="sm:hidden h-8 w-8 text-primary hover:bg-[hsl(var(--rail))]/70"
+                  onClick={onOpenHelp}
+                  aria-label={t("headerHelp") || "Help"}
+                >
+                  <AppIcon
+                    icon={HelpCircle}
+                    className="h-4 w-4"
+                    aria-hidden="true"
+                  />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                {t("headerHelp") || "Help"}
               </TooltipContent>
             </Tooltip>
           </div>

@@ -25,6 +25,7 @@ export default function App() {
   const [currentIdx, setCurrentIdx] = useState(-1);
   const [sessionCardCount, setSessionCardCount] = useState(1); // Track cards viewed in session
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [filtersOpenItems, setFiltersOpenItems] = useState(["item-core", "item-quick"]);
   const [filters, setFilters] = useState({
     families: new Set(),
     categories: new Set(),
@@ -226,10 +227,16 @@ export default function App() {
     setFilters((prev) => ({ ...prev, [kind]: new Set() }));
   };
 
+  const openFiltersSheet = (items) => {
+    setFiltersOpenItems(items);
+    setFiltersOpen(true);
+  };
+
   return (
     <div className="min-h-full">
       <Header
-        onOpenFilters={() => setFiltersOpen(true)}
+        onOpenFilters={() => openFiltersSheet(["item-core", "item-quick"])}
+        onOpenHelp={() => openFiltersSheet(["item-start"])}
       />
 
       <main className="mx-auto w-full max-w-6xl px-4 py-4 sm:px-6">
@@ -270,6 +277,9 @@ export default function App() {
           filters={filters}
           onToggleFilter={toggleFilter}
           onClearFilterType={clearFilterType}
+          openItems={filtersOpenItems}
+          onOpenItemsChange={setFiltersOpenItems}
+          accordionType="multiple"
         />
       </FilterSheet>
     </div>
