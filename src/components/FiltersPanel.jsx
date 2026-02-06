@@ -216,7 +216,7 @@ export default function FiltersPanel({
                   <FilterBadge
                     active={isFamilyAll}
                     onClick={() => onClearFilterType?.("families")}
-                    className="bg-[hsl(var(--cymru-green))] text-[hsl(var(--cymru-white))] hover:bg-[hsl(var(--cymru-green)/0.9)]"
+                    variant={isFamilyAll ? "cymru-dark" : "cymru-wash"}
                   >
                     {t("filtersAll")}
                   </FilterBadge>
@@ -225,7 +225,9 @@ export default function FiltersPanel({
                       key={item.id}
                       active={safeFilters.families.has(item.id)}
                       onClick={() => onToggleFilter?.("families", item.id)}
-                      className="border-[hsl(var(--cymru-green)/0.2)] bg-[hsl(var(--cymru-green-wash))] text-[hsl(var(--cymru-green))] hover:bg-[hsl(var(--cymru-green-wash)/0.85)]"
+                      variant={
+                        safeFilters.families.has(item.id) ? "cymru-dark" : "cymru-wash"
+                      }
                     >
                       {labelFor(item)}
                     </FilterBadge>
@@ -249,7 +251,7 @@ export default function FiltersPanel({
                   <FilterBadge
                     active={isCategoryAll}
                     onClick={() => onClearFilterType?.("categories")}
-                    variant="cymru-light"
+                    variant={isCategoryAll ? "cymru-light" : "cymru-wash"}
                   >
                     {t("filtersAll")}
                   </FilterBadge>
@@ -258,6 +260,11 @@ export default function FiltersPanel({
                       key={item.id}
                       active={safeFilters.categories.has(item.id)}
                       onClick={() => onToggleFilter?.("categories", item.id)}
+                      variant={
+                        safeFilters.categories.has(item.id)
+                          ? "cymru-light"
+                          : "cymru-wash"
+                      }
                     >
                       {labelFor(item)}
                     </FilterBadge>
