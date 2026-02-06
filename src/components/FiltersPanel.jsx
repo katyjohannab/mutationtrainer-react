@@ -94,16 +94,14 @@ export default function FiltersPanel({
       <Accordion className="w-full" collapsible defaultValue="item-start" type="single">
         <AccordionItem value="item-start">
           <AccordionTrigger>
-            <div className="flex items-center gap-3">
+            <Badge className="gap-2 rounded-full bg-[hsl(var(--cymru-green))] px-4 py-1.5 text-sm font-semibold text-white">
               <AppIcon
                 icon={HelpCircle}
-                className="h-5 w-5 text-primary"
+                className="h-5 w-5 text-white"
                 aria-hidden="true"
               />
-              <span className="text-base font-bold text-foreground">
-                {t("startHereTitle")}
-              </span>
-            </div>
+              <span>{t("startHereTitle")}</span>
+            </Badge>
           </AccordionTrigger>
           <AccordionContent>
             <GlassPanel className="p-4 space-y-3">
@@ -124,28 +122,26 @@ export default function FiltersPanel({
 
         <AccordionItem value="item-quick">
           <AccordionTrigger>
-            <div className="flex items-center gap-3">
+            <Badge className="gap-2 rounded-full border border-[hsl(var(--cymru-green-light))] bg-[hsl(var(--cymru-green-wash))] px-3 py-1 text-xs font-semibold text-[hsl(var(--cymru-green))]">
               <AppIcon
                 icon={Zap}
-                className="h-5 w-5 text-primary"
+                className="h-4 w-4 text-[hsl(var(--cymru-green))]"
                 aria-hidden="true"
               />
-              <span className="text-base font-bold text-foreground">
-                {t("quickPacksTitle")}
-              </span>
-            </div>
+              <span>{t("quickPacksTitle")}</span>
+            </Badge>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="mb-4">
-              <p className="text-sm text-muted-foreground">
+            <div className="mb-3">
+              <p className="text-xs text-muted-foreground">
                 {t("quickPacksSubtitle")}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-[0.7rem] text-muted-foreground mt-1">
                 {t("quickPacksHint")}
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {PRESET_ORDER.map((id) => {
                 const def = PRESET_DEFS[id];
                 const active = activePresetId === id;
@@ -187,20 +183,18 @@ export default function FiltersPanel({
 
         <AccordionItem value="item-core">
           <AccordionTrigger>
-            <div className="flex items-center gap-3">
+            <Badge className="gap-2 rounded-full border border-[hsl(var(--cymru-green-light))] bg-[hsl(var(--cymru-green-wash))] px-3 py-1 text-xs font-semibold text-[hsl(var(--cymru-green))]">
               <AppIcon
                 icon={Filter}
-                className="h-5 w-5 text-primary"
+                className="h-4 w-4 text-[hsl(var(--cymru-green))]"
                 aria-hidden="true"
               />
-              <span className="text-base font-bold text-foreground">
-                {t("coreFiltersTitle")}
-              </span>
-            </div>
+              <span>{t("coreFiltersTitle")}</span>
+            </Badge>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="mb-4">
-              <p className="text-sm text-muted-foreground">
+            <div className="mb-3">
+              <p className="text-xs text-muted-foreground">
                 {t("coreFiltersSubtitle")}
               </p>
             </div>
