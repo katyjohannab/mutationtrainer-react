@@ -320,7 +320,7 @@ export default function App() {
             />
           </div>
 
-          <aside className="hidden md:block md:w-1/3 space-y-4">
+          <aside className="hidden md:block md:w-1/3 max-w-sm space-y-4">
             <SessionStatsCard 
               stats={sessionStats} 
               onReset={resetSessionStats} 

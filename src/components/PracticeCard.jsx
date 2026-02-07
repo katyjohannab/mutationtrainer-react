@@ -397,11 +397,11 @@ export default function PracticeCard({
   if (!row) return null;
 
   const cardClassName = cn(
-    "w-full max-w-full rounded-[var(--radius)] shadow-md bg-card"
+    "w-full rounded-[var(--radius)] shadow-sm bg-card border border-border"
   );
 
   return (
-    <div className="relative w-full max-w-full">
+    <div className="relative w-full max-w-2xl mx-auto">
       {!isFeedback && (
         <Card className={cardClassName}>
           <div className="p-6 sm:p-8">

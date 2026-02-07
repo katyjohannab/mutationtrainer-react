@@ -14,6 +14,15 @@ import {
 import { Shuffle } from "lucide-react";
 import AppIcon from "./icons/AppIcon";
 
+const toggleItemClass = cn(
+  "h-8 px-3 rounded-md text-xs font-semibold",
+  "border border-transparent transition-colors",
+  "hover:bg-muted/50",
+  "data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
+);
+
+const toggleGroupClass = "flex items-center gap-0.5 rounded-lg border border-border bg-card p-0.5";
+
 export default function FlashcardArea({
   className,
   mode,
@@ -34,94 +43,89 @@ export default function FlashcardArea({
 
   return (
     <section className={cn("flex-1", className)}>
-      <div className="space-y-4 rounded-[var(--radius)] border border-border bg-[hsl(var(--panel))] p-5 sm:p-6">
-        <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <span className="mt-subtitle">{progressText}</span>
-            {/* Mobile inline stats */}
-            {sessionStats && (
-              <SessionStatsInline stats={sessionStats} className="md:hidden" />
-            )}
-          </div>
+      <div className="space-y-4 rounded-[var(--radius)] border border-border bg-[hsl(var(--panel))] p-4 sm:p-5">
+        {/* Header row - unified control bar */}
+        <TooltipProvider>
+          <div className="flex flex-wrap items-center gap-3 text-sm">
+            {/* Progress + Mobile Stats */}
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="text-xs font-medium text-muted-foreground truncate">
+                {progressText}
+              </span>
+              {sessionStats && (
+                <SessionStatsInline stats={sessionStats} className="md:hidden" />
+              )}
+            </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2">
-              <span className="mt-subtitle">{t("mode")}</span>
-              <div className="flex items-center gap-2">
+            {/* Controls - pushed right */}
+            <div className="flex flex-wrap items-center gap-2 ml-auto">
+              {/* Mode toggle */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-medium text-muted-foreground hidden sm:inline">
+                  {t("mode")}
+                </span>
                 <ToggleGroup
                   type="single"
                   value={mode}
                   onValueChange={(value) => value && onModeChange(value)}
                   size="sm"
-                  className="flex items-center gap-1 rounded-lg border border-border bg-card p-1 sm:flex-nowrap"
+                  className={toggleGroupClass}
                 >
-                  <ToggleGroupItem
-                    value="random"
-                    className="rounded-md font-semibold text-foreground transition-colors border border-transparent hover:bg-muted/50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
-                  >
+                  <ToggleGroupItem value="random" className={toggleItemClass}>
                     {t("random")}
                   </ToggleGroupItem>
-                  <ToggleGroupItem
-                    value="smart"
-                    className="rounded-md font-semibold text-foreground transition-colors border border-transparent hover:bg-muted/50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
-                  >
+                  <ToggleGroupItem value="smart" className={toggleItemClass}>
                     {t("smart")}
                   </ToggleGroupItem>
                 </ToggleGroup>
               </div>
+
+              {/* Answer mode toggle */}
+              {onAnswerModeChange && (
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-medium text-muted-foreground hidden sm:inline">
+                    {t("ateb") || "Answer"}
+                  </span>
+                  <ToggleGroup
+                    type="single"
+                    value={answerMode}
+                    onValueChange={(value) => value && onAnswerModeChange(value)}
+                    size="sm"
+                    className={toggleGroupClass}
+                  >
+                    <ToggleGroupItem value="type" className={toggleItemClass}>
+                      {t("typeMode") || "Type"}
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="tap" className={toggleItemClass}>
+                      {t("tapMode") || "Tap"}
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                </div>
+              )}
+
+              {/* Shuffle button - matches toggle height */}
+              {showShuffle && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={onShuffle}
+                      className="h-8 w-8 p-0 border-border"
+                      aria-label={shuffleLabel}
+                    >
+                      <AppIcon icon={Shuffle} className="h-3.5 w-3.5" aria-hidden="true" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">
+                    {shuffleLabel}
+                  </TooltipContent>
+                </Tooltip>
+              )}
             </div>
-
-            {onAnswerModeChange && (
-              <div className="flex items-center gap-2">
-                <span className="mt-subtitle">{t("ateb") || "Answer"}</span>
-                <ToggleGroup
-                  type="single"
-                  value={answerMode}
-                  onValueChange={(value) => value && onAnswerModeChange(value)}
-                  size="sm"
-                  className="flex items-center gap-1 rounded-lg border border-border bg-card p-1 sm:flex-nowrap"
-                >
-                  <ToggleGroupItem
-                    value="type"
-                    className="rounded-md font-semibold text-foreground transition-colors border border-transparent hover:bg-muted/50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
-                  >
-                    {t("typeMode") || "Type"}
-                  </ToggleGroupItem>
-                  <ToggleGroupItem
-                    value="tap"
-                    className="rounded-md font-semibold text-foreground transition-colors border border-transparent hover:bg-muted/50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
-                  >
-                    {t("tapMode") || "Tap"}
-                  </ToggleGroupItem>
-                </ToggleGroup>
-              </div>
-            )}
-
-            {showShuffle ? (
-              <div className="flex items-center ml-auto">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={onShuffle}
-                        className="h-10 w-10 bg-[hsl(var(--cymru-green-light-wash))] text-[hsl(var(--cymru-green-light))] hover:bg-[hsl(var(--cymru-green-light-wash))]"
-                        aria-label={shuffleLabel}
-                      >
-                        <AppIcon icon={Shuffle} className="h-4 w-4" aria-hidden="true" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent className="bg-[hsl(var(--cymru-green))] text-white text-xs">
-                      {shuffleLabel}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-            ) : null}
           </div>
-        </div>
+        </TooltipProvider>
 
         <Separator />
 
