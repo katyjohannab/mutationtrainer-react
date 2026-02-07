@@ -1,15 +1,29 @@
 import { useEffect, useMemo, useRef } from "react";
 import { Button } from "./ui/button";
+import { ButtonGroup } from "./ui/button-group";
 import { Badge } from "./ui/badge";
 import HeroPill from "./HeroPill";
 import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";
+import { cn } from "../lib/cn";
+import LanguagesIcon from "./icons/LanguagesIcon";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "./ui/hover-card";
-import { CheckCircle2, Lightbulb, MonitorPlay, SkipForward } from "lucide-react";
+import {
+  CheckCircle2,
+  Lightbulb,
+  MonitorPlay,
+  SkipForward,
+} from "lucide-react";
 import AppIcon from "./icons/AppIcon";
 
 export default function PracticeCardFront({
@@ -29,6 +43,7 @@ export default function PracticeCardFront({
   onReveal,
   onSkip,
   t,
+  mode = "random",
   tooltipTranslate,
   tooltipWordCategory,
 }) {
@@ -53,6 +68,18 @@ export default function PracticeCardFront({
   const hintLabel = t("hint") || "Hint";
   const revealLabel = t("reveal") || "Reveal";
   const skipLabel = t("skip") || "Skip";
+  const utilityBaseClass =
+    "h-10 w-10 shadow-none border border-transparent hover:border-border/60";
+  const hintClass =
+    "bg-[hsl(var(--cymru-green-light-wash))] text-[hsl(var(--cymru-green-light))] hover:bg-[hsl(var(--cymru-green-light-wash))]";
+  const revealClass =
+    "bg-[hsl(var(--cymru-red-wash))] text-[hsl(var(--cymru-red))] hover:bg-[hsl(var(--cymru-red-wash))]";
+  const skipClass =
+    "bg-[hsl(var(--cymru-gold-wash))] text-[hsl(var(--cymru-gold))] hover:bg-[hsl(var(--cymru-gold-wash))]";
+  const tooltipBaseClass = "text-white";
+  const tooltipGreenClass = "bg-[hsl(var(--cymru-green))] text-white";
+  const tooltipRedClass = "bg-[hsl(var(--cymru-red))] text-white";
+  const tooltipGoldClass = "bg-[hsl(var(--cymru-gold))] text-white";
 
   useEffect(() => {
     if (isFeedback) return;
@@ -72,9 +99,9 @@ export default function PracticeCardFront({
                 <button
                   type="button"
                   aria-label="Translation and category"
-                  className="absolute -right-1 -top-1 inline-flex h-6 w-6 items-center justify-center rounded-full border border-destructive bg-card text-xs font-extrabold text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive hover:bg-destructive/10 hover:shadow-sm transition-colors"
+                  className="absolute -right-3 -top-3 inline-flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-primary text-primary-foreground shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--cymru-green-light))] hover:bg-primary/90 transition-colors"
                 >
-                  ?
+                  <LanguagesIcon size={16} color="currentColor" strokeWidth={2} />
                 </button>
               </HoverCardTrigger>
               <HoverCardContent
@@ -130,53 +157,84 @@ export default function PracticeCardFront({
 
       <Separator />
 
-      <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
-        <Button
-          type="button"
-          variant="default"
-          onClick={onCheck}
-          size="action"
-          className="flex-1 sm:flex-none min-w-[120px]"
-        >
-          <AppIcon icon={CheckCircle2} className="h-4 w-4" aria-hidden="true" />
-          {checkLabel}
-        </Button>
+      <TooltipProvider>
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:justify-between">
+          <div className="flex flex-wrap items-center gap-2">
+            <ButtonGroup>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="default"
+                    onClick={onToggleHint}
+                    size="icon"
+                    className={cn(utilityBaseClass, hintClass)}
+                    aria-label={hintLabel}
+                  >
+                    <AppIcon icon={Lightbulb} className="h-4 w-4" aria-hidden="true" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent className={cn(tooltipGreenClass, tooltipBaseClass)}>
+                  {hintLabel}
+                </TooltipContent>
+              </Tooltip>
+            </ButtonGroup>
 
-        <Button
-          type="button"
-          variant="outline-secondary"
-          onClick={onToggleHint}
-          size="action"
-          className="flex-1 sm:flex-none min-w-[120px]"
-        >
-          <AppIcon icon={Lightbulb} className="h-4 w-4" aria-hidden="true" />
-          {hintLabel}
-        </Button>
+            <ButtonGroup className="flex-wrap">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="default"
+                    onClick={onReveal}
+                    disabled={isFeedback}
+                    size="icon"
+                    className={cn(utilityBaseClass, revealClass)}
+                    aria-label={revealLabel}
+                  >
+                    <AppIcon icon={MonitorPlay} className="h-4 w-4" aria-hidden="true" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent className={cn(tooltipRedClass, tooltipBaseClass)}>
+                  {revealLabel}
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="default"
+                    onClick={onSkip}
+                    disabled={isFeedback}
+                    size="icon"
+                    className={cn(utilityBaseClass, skipClass)}
+                    aria-label={skipLabel}
+                  >
+                    <AppIcon icon={SkipForward} className="h-4 w-4" aria-hidden="true" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent className={cn(tooltipGoldClass, tooltipBaseClass)}>
+                  {skipLabel}
+                </TooltipContent>
+              </Tooltip>
+            </ButtonGroup>
 
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={onReveal}
-          disabled={isFeedback}
-          size="action"
-          className="flex-1 sm:flex-none min-w-[120px]"
-        >
-          <AppIcon icon={MonitorPlay} className="h-4 w-4" aria-hidden="true" />
-          {revealLabel}
-        </Button>
+          </div>
 
-        <Button
-          type="button"
-          variant="outline-accent"
-          onClick={onSkip}
-          disabled={isFeedback}
-          size="action"
-          className="flex-1 sm:flex-none min-w-[120px]"
-        >
-          <AppIcon icon={SkipForward} className="h-4 w-4" aria-hidden="true" />
-          {skipLabel}
-        </Button>
-      </div>
+          <ButtonGroup>
+            <Button
+              type="button"
+              variant="default"
+              onClick={onCheck}
+              size="action"
+              className="w-full sm:w-auto bg-[hsl(var(--cymru-green))] text-white hover:bg-[hsl(var(--cymru-green)/0.9)] whitespace-nowrap shadow-sm font-semibold"
+            >
+              <AppIcon icon={CheckCircle2} className="h-5 w-5" aria-hidden="true" />
+              {checkLabel}
+            </Button>
+          </ButtonGroup>
+        </div>
+      </TooltipProvider>
 
       {showHint && hintText ? (
         <div className="rounded-2xl border border-border bg-muted px-4 py-3 text-sm text-foreground">

@@ -45,15 +45,11 @@ export default function Header({
                 "'BBH Bogle', 'bbh-bogle-regular', 'Bogle', 'Poppins', 'Inter', sans-serif",
             }}
           >
-            <span className="brandWordmark" aria-label="HYFFORDDWR TREIGLAD">
+            <span className="brandWordmark" aria-label="TREIGLAP">
               <span className="brandPrimary text-[hsl(var(--cymru-green))]">
-                <span className="brandWordPart">HYFFORDD</span>
-                <span className="brandWordPart brandWordPart--kern">WR</span>
+                TREIGL
               </span>
-              <span className="brandGap" aria-hidden="true" />
-              <span className="brandSecondary text-destructive">
-                TREIGLAD
-              </span>
+              <span className="brandSecondary text-destructive">AP</span>
             </span>
           </h1>
         </div>

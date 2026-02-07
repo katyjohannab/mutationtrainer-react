@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "./ui/button";
+import { ButtonGroup } from "./ui/button-group";
 import { Card, CardContent } from "./ui/card";
 import { badgeVariants } from "./ui/badge";
 import { cn } from "../lib/cn";
@@ -69,7 +70,11 @@ export default function PracticeCardFeedback({
   const hearButtonVariant = "cymru-light";
   const nextLabel = t("next") || "Next";
   const easyLabel = t("easy") || "Easy";
-  const againLabel = t("again") || "Again";
+  const hardLabel = t("hard") || "Hard";
+  const greenOutlineClass =
+    "border-[hsl(var(--cymru-green))] text-[hsl(var(--cymru-green))] hover:bg-[hsl(var(--cymru-green-wash))] hover:text-[hsl(var(--cymru-green))] hover:shadow-sm";
+  const redOutlineClass =
+    "border-[hsl(var(--cymru-red))] text-[hsl(var(--cymru-red))] hover:bg-[hsl(var(--cymru-red-wash))] hover:text-[hsl(var(--cymru-red))] hover:shadow-sm";
   const statusIcon = useMemo(() => {
     if (!last) return null;
     if (last === "correct") return CheckCircle2;
@@ -178,35 +183,41 @@ export default function PracticeCardFeedback({
           <div className="flex flex-wrap justify-end gap-2">
             {isSmartMode ? (
               <>
-                <Button
-                  type="button"
-                  variant="outline-secondary"
-                  onClick={() => handleSmartResult("again")}
-                  size="action"
-                  disabled={isSubmitting}
-                >
-                  <AppIcon icon={Undo2} className="h-4 w-4" aria-hidden="true" />
-                  {againLabel}
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => handleSmartResult("next")}
-                  size="action"
-                  disabled={isSubmitting}
-                >
-                  {nextLabel}
-                  <AppIcon icon={ArrowRight} className="h-5 w-5" aria-hidden="true" />
-                </Button>
-                <Button
-                  type="button"
-                  variant="success"
-                  onClick={() => handleSmartResult("easy")}
-                  size="action"
-                  disabled={isSubmitting}
-                >
-                  <AppIcon icon={CheckCircle2} className="h-4 w-4" aria-hidden="true" />
-                  {easyLabel}
-                </Button>
+                <ButtonGroup className="flex-wrap">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => handleSmartResult("again")}
+                    size="action"
+                    disabled={isSubmitting}
+                    className={redOutlineClass}
+                  >
+                    <AppIcon icon={X} className="h-4 w-4" aria-hidden="true" />
+                    {hardLabel}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => handleSmartResult("easy")}
+                    size="action"
+                    disabled={isSubmitting}
+                    className={greenOutlineClass}
+                  >
+                    <AppIcon icon={CheckCircle2} className="h-4 w-4" aria-hidden="true" />
+                    {easyLabel}
+                  </Button>
+                </ButtonGroup>
+                <ButtonGroup>
+                  <Button
+                    type="button"
+                    onClick={() => handleSmartResult("next")}
+                    size="action"
+                    disabled={isSubmitting}
+                  >
+                    {nextLabel}
+                    <AppIcon icon={ArrowRight} className="h-5 w-5" aria-hidden="true" />
+                  </Button>
+                </ButtonGroup>
               </>
             ) : (
               <Button type="button" onClick={onNext} size="action">

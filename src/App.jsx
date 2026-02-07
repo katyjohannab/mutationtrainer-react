@@ -194,6 +194,14 @@ export default function App() {
       return;
     }
 
+    if (result === "shuffle") {
+      if (!currentRow) return;
+      const key = getCardKey(currentRow, currentIdx);
+      pushRecent(key);
+      pickNext(leitnerRef.current);
+      return;
+    }
+
     // grading only: update Leitner but do NOT navigate
     if (!currentRow) return;
 
@@ -210,6 +218,11 @@ export default function App() {
 
     // IMPORTANT: no pickNext() here for standard grading
   }
+
+  const handleShuffle = () => {
+    if (mode !== "random") return;
+    onResult({ result: "shuffle" });
+  };
 
   function handleTogglePreset(id) {
     setActivePresetId((prev) => (prev === id ? null : id));
@@ -251,6 +264,7 @@ export default function App() {
               deckLabel={presetLabel}
               currentRow={currentRow}
               onResult={onResult}
+              onShuffle={handleShuffle}
               answerMode={answerMode}
               onAnswerModeChange={setAnswerMode}
               deckRows={filtered}
