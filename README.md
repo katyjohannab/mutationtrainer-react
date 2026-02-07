@@ -1,4 +1,35 @@
-# React + Vite
+# mutationtrainer-react
+
+A React-based mutation trainer app.
+
+## GitHub Pages Deployment
+
+This app is automatically deployed to GitHub Pages when changes are pushed to the `main` branch.
+
+**Live URL:** https://katyjohannab.github.io/mutationtrainer-react/
+
+### Deployment Setup
+
+1. **GitHub Pages Source**: In the repository settings, GitHub Pages should be configured to deploy from **GitHub Actions** (not from a branch).
+
+2. **Workflow**: The deployment is handled by `.github/workflows/deploy.yml` which:
+   - Builds the Vite app
+   - Uploads the `dist/` folder to GitHub Pages
+
+3. **Important Configuration**:
+   - `vite.config.js` sets `base: '/mutationtrainer-react/'` for correct asset paths
+   - `public/.nojekyll` prevents Jekyll processing on GitHub Pages
+
+### Troubleshooting Deployment
+
+If the site doesn't update after a successful workflow run:
+- Try hard-refreshing your browser (Ctrl+Shift+R or Cmd+Shift+R)
+- Open the site in an incognito/private window
+- Check that GitHub Pages is enabled in Settings > Pages with source set to "GitHub Actions"
+
+---
+
+## Development
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
