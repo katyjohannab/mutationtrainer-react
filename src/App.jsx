@@ -8,6 +8,7 @@ import Header from "./components/Header";
 import FlashcardArea from "./components/FlashcardArea";
 import FiltersPanel from "./components/FiltersPanel";
 import FilterSheet from "./components/FilterSheet";
+import SessionStatsCard from "./components/SessionStatsCard";
 import PageContainer from "./components/layout/PageContainer";
 
 import { loadLeitnerMap, updateLeitner } from "./utils/leitner";
@@ -25,8 +26,21 @@ export default function App() {
   const [answerMode, setAnswerMode] = useState("type"); // "type" | "tap"
   const [currentIdx, setCurrentIdx] = useState(-1);
   const [sessionCardCount, setSessionCardCount] = useState(1); // Track cards viewed in session
-  const [filtersOpen, setFiltersOpen] = useState(false);
-  const [filtersOpenItems, setFiltersOpenItems] = useState(["item-core", "item-quick"]);
+  
+  // Centralized session stats
+  const [sessionStats, setSessionStats] = useState({
+    attempted: 0,
+    correct: 0,
+    streak: 0,
+    bestStreak: 0,
+  });
+
+  // Centralized drawer state with intent
+  const [drawer, setDrawer] = useState({
+    open: false,
+    intent: "filters", // "help" | "filters"
+  });
+
   const [filters, setFilters] = useState({
     families: new Set(),
     categories: new Set(),
@@ -155,12 +169,17 @@ export default function App() {
 
   function onResult(payload) {
     const result = payload?.result;
+    const baseResult = payload?.baseResult;
+
+    // Track session stats on graded outcomes (not navigation-only actions)
+    if (baseResult === "correct" || baseResult === "wrong") {
+      recordResult(baseResult === "correct");
+    }
 
     if (mode === "smart") {
       if (!currentRow) return;
 
       const key = getCardKey(currentRow, currentIdx);
-      const baseResult = payload?.baseResult;
       const reviewId = payload?.reviewId;
       const currentEntry = leitnerRef.current[key];
 
@@ -241,16 +260,45 @@ export default function App() {
     setFilters((prev) => ({ ...prev, [kind]: new Set() }));
   };
 
-  const openFiltersSheet = (items) => {
-    setFiltersOpenItems(items);
-    setFiltersOpen(true);
+  // Session stats helpers
+  const recordResult = (isCorrect) => {
+    setSessionStats((prev) => {
+      const newAttempted = prev.attempted + 1;
+      const newCorrect = prev.correct + (isCorrect ? 1 : 0);
+      const newStreak = isCorrect ? prev.streak + 1 : 0;
+      const newBestStreak = Math.max(prev.bestStreak, newStreak);
+      return {
+        attempted: newAttempted,
+        correct: newCorrect,
+        streak: newStreak,
+        bestStreak: newBestStreak,
+      };
+    });
   };
+
+  const resetSessionStats = () => {
+    setSessionStats({ attempted: 0, correct: 0, streak: 0, bestStreak: 0 });
+  };
+
+  // Drawer helpers
+  const openDrawer = (intent) => {
+    setDrawer({ open: true, intent });
+  };
+
+  const closeDrawer = () => {
+    setDrawer((prev) => ({ ...prev, open: false }));
+  };
+
+  // Derive accordion open items from drawer intent
+  const drawerAccordionItems = drawer.intent === "help" 
+    ? ["item-start"] 
+    : ["item-quick", "item-core"];
 
   return (
     <div className="min-h-full">
       <Header
-        onOpenFilters={() => openFiltersSheet(["item-core", "item-quick"])}
-        onOpenHelp={() => openFiltersSheet(["item-start"])}
+        onOpenFilters={() => openDrawer("filters")}
+        onOpenHelp={() => openDrawer("help")}
       />
 
       <PageContainer as="main" className="pb-4 pt-6 sm:pt-7 lg:pt-8 2xl:pt-10">
@@ -268,10 +316,15 @@ export default function App() {
               answerMode={answerMode}
               onAnswerModeChange={setAnswerMode}
               deckRows={filtered}
+              sessionStats={sessionStats}
             />
           </div>
 
-          <aside className="hidden md:block md:w-1/3">
+          <aside className="hidden md:block md:w-1/3 space-y-4">
+            <SessionStatsCard 
+              stats={sessionStats} 
+              onReset={resetSessionStats} 
+            />
             <FiltersPanel
               activePresetId={activePresetId}
               onTogglePreset={handleTogglePreset}
@@ -284,7 +337,11 @@ export default function App() {
         </div>
       </PageContainer>
 
-      <FilterSheet open={filtersOpen} onOpenChange={setFiltersOpen}>
+      <FilterSheet 
+        open={drawer.open} 
+        onOpenChange={(open) => setDrawer((prev) => ({ ...prev, open }))}
+        title={drawer.intent === "help" ? t("startHereTitle") : t("headerFilters")}
+      >
         <FiltersPanel
           activePresetId={activePresetId}
           onTogglePreset={handleTogglePreset}
@@ -292,8 +349,7 @@ export default function App() {
           filters={filters}
           onToggleFilter={toggleFilter}
           onClearFilterType={clearFilterType}
-          openItems={filtersOpenItems}
-          onOpenItemsChange={setFiltersOpenItems}
+          openItems={drawerAccordionItems}
           accordionType="multiple"
         />
       </FilterSheet>

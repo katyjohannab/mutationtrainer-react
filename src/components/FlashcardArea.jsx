@@ -1,4 +1,5 @@
 import PracticeCard from "./PracticeCard";
+import SessionStatsInline from "./SessionStatsInline";
 import { useI18n } from "../i18n/I18nContext";
 import { cn } from "../lib/cn";
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
@@ -25,6 +26,7 @@ export default function FlashcardArea({
   deckRows,
   onAnswerModeChange,
   onShuffle,
+  sessionStats,
 }) {
   const { t } = useI18n();
   const shuffleLabel = t("shuffle") || "Shuffle";
@@ -36,6 +38,10 @@ export default function FlashcardArea({
         <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <span className="mt-subtitle">{progressText}</span>
+            {/* Mobile inline stats */}
+            {sessionStats && (
+              <SessionStatsInline stats={sessionStats} className="md:hidden" />
+            )}
           </div>
 
           <div className="flex flex-wrap items-center gap-3">

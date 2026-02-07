@@ -4,19 +4,20 @@ import { useI18n } from "../i18n/I18nContext";
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle } from "./ui/sheet";
 import { Button } from "./ui/button";
 
-export default function FilterSheet({ open, onOpenChange, children }) {
+export default function FilterSheet({ open, onOpenChange, title, children }) {
   const { t } = useI18n();
+  const displayTitle = title || t("headerFilters");
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent position="right" className="flex h-full max-w-sm flex-col overflow-hidden">
         <SheetHeader>
-          <SheetTitle>{t("headerFilters")}</SheetTitle>
+          <SheetTitle>{displayTitle}</SheetTitle>
           <SheetClose asChild>
             <Button
               variant="ghost"
               size="icon"
-              aria-label={t("headerFilters")}
+              aria-label={t("close") || "Close"}
             >
               <AppIcon icon={X} className="h-5 w-5" aria-hidden="true" />
             </Button>

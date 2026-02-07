@@ -108,19 +108,14 @@ export default function FiltersPanel({
       >
         <AccordionItem value="item-start">
           <AccordionTrigger>
-            <Badge
-              className={cn(
-                headerBase,
-                "rounded-full bg-[hsl(var(--cymru-green))] px-4 py-2 text-base text-white shadow-sm"
-              )}
-            >
+            <div className={cn(headerBase, "text-sm text-[hsl(var(--cymru-green))]")}>
               <AppIcon
                 icon={HelpCircle}
-                className={cn(headerIcon, "text-white")}
+                className={cn(headerIcon, "text-[hsl(var(--cymru-green))]")}
                 aria-hidden="true"
               />
               <span>{t("startHereTitle")}</span>
-            </Badge>
+            </div>
           </AccordionTrigger>
           <AccordionContent>
             <div className="p-4 space-y-3">
