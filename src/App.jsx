@@ -174,6 +174,11 @@ export default function App() {
     // Track session stats on graded outcomes (not navigation-only actions)
     if (baseResult === "correct" || baseResult === "wrong") {
       recordResult(baseResult === "correct");
+    } else if (
+      mode === "random" &&
+      (result === "correct" || result === "wrong")
+    ) {
+      recordResult(result === "correct");
     }
 
     if (mode === "smart") {
