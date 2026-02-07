@@ -52,6 +52,11 @@ export const STRINGS = {
     headerNoFocus: "Dim ffocws",
     headerClearFocus: "Clirio ffocws",
     headerSwitchLang: "Newid iaith",
+    sessionStatsTitle: "Ystadegau sesiwn",
+    streakLabel: "Rhediad",
+    accuracyLabel: "Cywirdeb",
+    resetStats: "Ailosod sesiwn",
+    resetStatsHint: "Ailosod rhediad a chywirdeb i sero",
 
     startHereTitle: "Dechrau yma",
     startHereSubtitle: "Canllaw cyflym i ddechrau.",
@@ -140,6 +145,11 @@ export const STRINGS = {
     headerNoFocus: "No focus",
     headerClearFocus: "Clear focus",
     headerSwitchLang: "Switch language",  
+    sessionStatsTitle: "Session stats",
+    streakLabel: "Streak",
+    accuracyLabel: "Accuracy",
+    resetStats: "Reset session",
+    resetStatsHint: "Reset streak and accuracy to zero",
 
     startHereTitle: "Start here",
     startHereSubtitle: "A quick guide to get going.",

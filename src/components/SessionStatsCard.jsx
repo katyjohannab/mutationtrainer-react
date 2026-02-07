@@ -92,7 +92,7 @@ export default function SessionStatsCard({ stats, onReset, className }) {
               <TooltipTrigger asChild>
                 <Button
                   variant="outline"
-                  size="sm"
+                  size="xs"
                   onClick={onReset}
                   className="w-full text-muted-foreground hover:text-foreground"
                 >
