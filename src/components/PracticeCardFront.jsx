@@ -99,9 +99,9 @@ export default function PracticeCardFront({
                 <button
                   type="button"
                   aria-label="Translation and category"
-                  className="absolute -right-1 -top-1 inline-flex h-7 w-7 items-center justify-center rounded-full border-2 border-[hsl(var(--cymru-green-light))] bg-card text-[hsl(var(--cymru-green-light))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--cymru-green-light))] hover:bg-[hsl(var(--cymru-green-light-wash))] hover:shadow-sm transition-colors"
+                  className="absolute -right-3 -top-3 inline-flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-primary text-primary-foreground shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--cymru-green-light))] hover:bg-primary/90 transition-colors"
                 >
-                  <LanguagesIcon size={14} color="currentColor" strokeWidth={2} />
+                  <LanguagesIcon size={16} color="currentColor" strokeWidth={2} />
                 </button>
               </HoverCardTrigger>
               <HoverCardContent
