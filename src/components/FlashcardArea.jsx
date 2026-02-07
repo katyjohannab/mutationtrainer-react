@@ -15,7 +15,7 @@ import { Shuffle } from "lucide-react";
 import AppIcon from "./icons/AppIcon";
 
 const toggleItemClass = cn(
-  "h-8 px-3 rounded-md text-xs font-semibold",
+  "h-8 min-w-12 px-3 py-0 rounded-md text-xs font-semibold leading-none",
   "border border-transparent transition-colors",
   "hover:bg-muted/50",
   "data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
@@ -46,10 +46,10 @@ export default function FlashcardArea({
       <div className="space-y-4 rounded-[var(--radius)] border border-border bg-[hsl(var(--panel))] p-4 sm:p-5">
         {/* Header row - unified control bar */}
         <TooltipProvider>
-          <div className="flex flex-wrap items-center gap-3 text-sm">
+          <div className="flex items-start gap-3 text-sm">
             {/* Progress + Mobile Stats */}
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="text-xs font-medium text-muted-foreground truncate">
+            <div className="flex flex-col-reverse items-center gap-1 min-w-0">
+              <span className="text-xs font-medium text-muted-foreground truncate text-center">
                 {progressText}
               </span>
               {sessionStats && (
@@ -58,12 +58,9 @@ export default function FlashcardArea({
             </div>
 
             {/* Controls - pushed right */}
-            <div className="flex flex-wrap items-center gap-2 ml-auto">
+            <div className="flex items-start gap-3 ml-auto">
               {/* Mode toggle */}
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs font-medium text-muted-foreground hidden sm:inline">
-                  {t("mode")}
-                </span>
+              <div className="flex flex-col-reverse items-center gap-1">
                 <ToggleGroup
                   type="single"
                   value={mode}
@@ -82,10 +79,7 @@ export default function FlashcardArea({
 
               {/* Answer mode toggle */}
               {onAnswerModeChange && (
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-medium text-muted-foreground hidden sm:inline">
-                    {t("ateb") || "Answer"}
-                  </span>
+                <div className="flex flex-col-reverse items-center gap-1">
                   <ToggleGroup
                     type="single"
                     value={answerMode}
@@ -105,23 +99,30 @@ export default function FlashcardArea({
 
               {/* Shuffle button - matches toggle height */}
               {showShuffle && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={onShuffle}
-                      className="h-8 w-8 p-0 border-border"
-                      aria-label={shuffleLabel}
-                    >
-                      <AppIcon icon={Shuffle} className="h-3.5 w-3.5" aria-hidden="true" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom">
+                <div className="flex flex-col-reverse items-center gap-1">
+                  <span className="text-xs font-medium text-muted-foreground hidden sm:inline invisible select-none text-center">
                     {shuffleLabel}
-                  </TooltipContent>
-                </Tooltip>
+                  </span>
+                  <div className={toggleGroupClass}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={onShuffle}
+                          className={toggleItemClass}
+                          aria-label={shuffleLabel}
+                        >
+                          <AppIcon icon={Shuffle} className="h-3.5 w-3.5" aria-hidden="true" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom">
+                        {shuffleLabel}
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                </div>
               )}
             </div>
           </div>
