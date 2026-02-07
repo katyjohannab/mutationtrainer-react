@@ -3,6 +3,15 @@ import { useI18n } from "../i18n/I18nContext";
 import { cn } from "../lib/cn";
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 import { Separator } from "./ui/separator";
+import { Button } from "./ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
+import { Shuffle } from "lucide-react";
+import AppIcon from "./icons/AppIcon";
 
 export default function FlashcardArea({
   className,
@@ -15,8 +24,11 @@ export default function FlashcardArea({
   answerMode,
   deckRows,
   onAnswerModeChange,
+  onShuffle,
 }) {
   const { t } = useI18n();
+  const shuffleLabel = t("shuffle") || "Shuffle";
+  const showShuffle = mode === "random";
 
   return (
     <section className={cn("flex-1", className)}>
@@ -29,26 +41,28 @@ export default function FlashcardArea({
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-2">
               <span className="mt-subtitle">{t("mode")}</span>
-              <ToggleGroup
-                type="single"
-                value={mode}
-                onValueChange={(value) => value && onModeChange(value)}
-                size="sm"
-                className="flex items-center gap-1 rounded-lg border border-border bg-card p-1 sm:flex-nowrap"
-              >
-                <ToggleGroupItem
-                  value="random"
-                  className="rounded-md font-semibold text-foreground transition-colors border border-transparent hover:bg-muted/50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
+              <div className="flex items-center gap-2">
+                <ToggleGroup
+                  type="single"
+                  value={mode}
+                  onValueChange={(value) => value && onModeChange(value)}
+                  size="sm"
+                  className="flex items-center gap-1 rounded-lg border border-border bg-card p-1 sm:flex-nowrap"
                 >
-                  {t("random")}
-                </ToggleGroupItem>
-                <ToggleGroupItem
-                  value="smart"
-                  className="rounded-md font-semibold text-foreground transition-colors border border-transparent hover:bg-muted/50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
-                >
-                  {t("smart")}
-                </ToggleGroupItem>
-              </ToggleGroup>
+                  <ToggleGroupItem
+                    value="random"
+                    className="rounded-md font-semibold text-foreground transition-colors border border-transparent hover:bg-muted/50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
+                  >
+                    {t("random")}
+                  </ToggleGroupItem>
+                  <ToggleGroupItem
+                    value="smart"
+                    className="rounded-md font-semibold text-foreground transition-colors border border-transparent hover:bg-muted/50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
+                  >
+                    {t("smart")}
+                  </ToggleGroupItem>
+                </ToggleGroup>
+              </div>
             </div>
 
             {onAnswerModeChange && (
@@ -76,6 +90,30 @@ export default function FlashcardArea({
                 </ToggleGroup>
               </div>
             )}
+
+            {showShuffle ? (
+              <div className="flex items-center ml-auto">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={onShuffle}
+                        className="h-10 w-10 bg-[hsl(var(--cymru-green-light-wash))] text-[hsl(var(--cymru-green-light))] hover:bg-[hsl(var(--cymru-green-light-wash))]"
+                        aria-label={shuffleLabel}
+                      >
+                        <AppIcon icon={Shuffle} className="h-4 w-4" aria-hidden="true" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="bg-[hsl(var(--cymru-green))] text-white text-xs">
+                      {shuffleLabel}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            ) : null}
           </div>
         </div>
 

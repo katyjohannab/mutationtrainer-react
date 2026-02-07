@@ -14,9 +14,11 @@ export const STRINGS = {
     hint: "Awgrym",
     reveal: "Datgelu",
     skip: "Hepgor",
+    shuffle: "Cymysgu",
     next: "Nesaf",
     again: "Eto",
     easy: "Hawdd",
+    hard: "Anodd",
     hear: "Clywed",
     loading: "Llwytho...",
 
@@ -100,9 +102,11 @@ export const STRINGS = {
     hint: "Hint",
     reveal: "Reveal",
     skip: "Skip",
+    shuffle: "Shuffle",
     next: "Next",
     again: "Again",
     easy: "Easy",
+    hard: "Hard",
     hear: "Hear",
     loading: "Loading...",
 
