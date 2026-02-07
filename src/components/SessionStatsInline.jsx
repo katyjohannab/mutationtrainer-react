@@ -10,15 +10,19 @@ function InlineStat({ icon: Icon, value, label, variant = "default" }) {
   };
 
   return (
-    <div
-      className={cn(
-        "flex items-center gap-1 text-xs font-medium",
-        variantStyles[variant]
-      )}
-      title={label}
-    >
-      <Icon className="h-3 w-3" />
-      <span>{value}</span>
+    <div className="inline-flex items-center gap-1.5" title={label}>
+      <span
+        className={cn(
+          "inline-flex items-center gap-1 text-xs font-semibold",
+          variantStyles[variant]
+        )}
+      >
+        <Icon className="h-3 w-3" />
+        <span>{value}</span>
+      </span>
+      <span className="text-[10px] font-medium text-muted-foreground">
+        {label}
+      </span>
     </div>
   );
 }
