@@ -422,6 +422,7 @@ export default function PracticeCard({
                 onReveal={onReveal}
                 onSkip={onSkip}
                 t={t}
+                mode={mode}
                 tooltipTranslate={tooltipTranslate}
                 tooltipWordCategory={wordCategory}
                 guess={guess}
@@ -445,6 +446,7 @@ export default function PracticeCard({
                 onReveal={onReveal}
                 onSkip={onSkip}
                 t={t}
+                mode={mode}
                 tooltipTranslate={tooltipTranslate}
                 tooltipWordCategory={wordCategory}
               />
