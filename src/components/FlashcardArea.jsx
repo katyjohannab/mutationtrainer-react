@@ -15,7 +15,7 @@ import { Shuffle } from "lucide-react";
 import AppIcon from "./icons/AppIcon";
 
 const toggleItemClass = cn(
-  "h-8 min-w-12 px-3 py-0 rounded-md text-xs font-semibold leading-none",
+  "h-8 min-w-[2.75rem] px-2.5 sm:px-3 py-0 rounded-md text-xs font-semibold leading-none",
   "border border-transparent transition-colors",
   "hover:bg-muted/50",
   "data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
@@ -46,9 +46,9 @@ export default function FlashcardArea({
       <div className="space-y-4 rounded-[var(--radius)] border border-border bg-[hsl(var(--panel))] p-4 sm:p-5 lg:p-6">
         {/* Header row - unified control bar */}
         <TooltipProvider>
-          <div className="flex items-start gap-3 text-sm">
+          <div className="flex flex-wrap items-start gap-2 sm:gap-3 text-sm">
             {/* Progress + Mobile Stats */}
-            <div className="flex flex-col-reverse items-center gap-1 min-w-0">
+            <div className="flex flex-col-reverse items-center gap-1 min-w-0 shrink-0">
               <span className="text-xs font-medium text-muted-foreground truncate text-center">
                 {progressText}
               </span>
@@ -57,71 +57,62 @@ export default function FlashcardArea({
               )}
             </div>
 
-            {/* Controls - pushed right */}
-            <div className="flex items-start gap-3 ml-auto">
+            {/* Controls - pushed right, wrap-safe */}
+            <div className="flex flex-wrap items-start gap-2 ml-auto">
               {/* Mode toggle */}
-              <div className="flex flex-col-reverse items-center gap-1">
-                <ToggleGroup
-                  type="single"
-                  value={mode}
-                  onValueChange={(value) => value && onModeChange(value)}
-                  size="sm"
-                  className={toggleGroupClass}
-                >
-                  <ToggleGroupItem value="random" className={toggleItemClass}>
-                    {t("random")}
-                  </ToggleGroupItem>
-                  <ToggleGroupItem value="smart" className={toggleItemClass}>
-                    {t("smart")}
-                  </ToggleGroupItem>
-                </ToggleGroup>
-              </div>
+              <ToggleGroup
+                type="single"
+                value={mode}
+                onValueChange={(value) => value && onModeChange(value)}
+                size="sm"
+                className={toggleGroupClass}
+              >
+                <ToggleGroupItem value="random" className={toggleItemClass}>
+                  {t("random")}
+                </ToggleGroupItem>
+                <ToggleGroupItem value="smart" className={toggleItemClass}>
+                  {t("smart")}
+                </ToggleGroupItem>
+              </ToggleGroup>
 
               {/* Answer mode toggle */}
               {onAnswerModeChange && (
-                <div className="flex flex-col-reverse items-center gap-1">
-                  <ToggleGroup
-                    type="single"
-                    value={answerMode}
-                    onValueChange={(value) => value && onAnswerModeChange(value)}
-                    size="sm"
-                    className={toggleGroupClass}
-                  >
-                    <ToggleGroupItem value="type" className={toggleItemClass}>
-                      {t("typeMode") || "Type"}
-                    </ToggleGroupItem>
-                    <ToggleGroupItem value="tap" className={toggleItemClass}>
-                      {t("tapMode") || "Tap"}
-                    </ToggleGroupItem>
-                  </ToggleGroup>
-                </div>
+                <ToggleGroup
+                  type="single"
+                  value={answerMode}
+                  onValueChange={(value) => value && onAnswerModeChange(value)}
+                  size="sm"
+                  className={toggleGroupClass}
+                >
+                  <ToggleGroupItem value="type" className={toggleItemClass}>
+                    {t("typeMode") || "Type"}
+                  </ToggleGroupItem>
+                  <ToggleGroupItem value="tap" className={toggleItemClass}>
+                    {t("tapMode") || "Tap"}
+                  </ToggleGroupItem>
+                </ToggleGroup>
               )}
 
               {/* Shuffle button - matches toggle height */}
               {showShuffle && (
-                <div className="flex flex-col-reverse items-center gap-1">
-                  <span className="text-xs font-medium text-muted-foreground hidden sm:inline invisible select-none text-center">
-                    {shuffleLabel}
-                  </span>
-                  <div className={toggleGroupClass}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={onShuffle}
-                          className={toggleItemClass}
-                          aria-label={shuffleLabel}
-                        >
-                          <AppIcon icon={Shuffle} className="h-3.5 w-3.5" aria-hidden="true" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent side="bottom">
-                        {shuffleLabel}
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
+                <div className={toggleGroupClass}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={onShuffle}
+                        className={toggleItemClass}
+                        aria-label={shuffleLabel}
+                      >
+                        <AppIcon icon={Shuffle} className="h-3.5 w-3.5" aria-hidden="true" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                      {shuffleLabel}
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
               )}
             </div>

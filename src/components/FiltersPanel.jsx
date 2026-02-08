@@ -98,12 +98,15 @@ export default function FiltersPanel({
       ? { value: openItems, onValueChange: onOpenItemsChange }
       : { defaultValue: "item-start" };
 
+  // Only pass collapsible for single-type accordions (Radix requirement)
+  const collapsibleProp = accordionType === "single" ? { collapsible: true } : {};
+
   return (
     <div className={cn("space-y-8 py-2 px-1", className)}>
       <Accordion
         className="w-full"
-        collapsible={accordionType === "single"}
         type={accordionType}
+        {...collapsibleProp}
         {...accordionProps}
       >
         <AccordionItem value="item-start">

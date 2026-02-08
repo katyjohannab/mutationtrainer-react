@@ -6,9 +6,8 @@ import { applyFilters } from "./utils/applyFilters";
 
 import Header from "./components/Header";
 import FlashcardArea from "./components/FlashcardArea";
-import FiltersPanel from "./components/FiltersPanel";
 import FilterSheet from "./components/FilterSheet";
-import SessionStatsCard from "./components/SessionStatsCard";
+import RailContent from "./components/rail/RailContent";
 import PageContainer from "./components/layout/PageContainer";
 
 import { loadLeitnerMap, updateLeitner } from "./utils/leitner";
@@ -307,10 +306,11 @@ export default function App() {
       />
 
       <PageContainer as="main" className="pb-4 pt-6 sm:pt-7 lg:pt-8 2xl:pt-10">
-        <div className="flex flex-col gap-6 md:flex-row">
-          <div className="flex-1">
+        {/* Responsive grid: stack on mobile/tablet, two-column from lg up */}
+        <div className="grid grid-cols-1 gap-6 mt-4 lg:grid-cols-[minmax(0,1fr)_360px] xl:grid-cols-[minmax(0,1fr)_400px] 2xl:grid-cols-[minmax(0,1fr)_440px]">
+          {/* Main practice area */}
+          <div className="min-w-0">
             <FlashcardArea
-              className="mt-4"
               mode={mode}
               onModeChange={setMode}
               progressText={progressText}
@@ -325,37 +325,43 @@ export default function App() {
             />
           </div>
 
-          <aside className="hidden md:block md:w-1/3 lg:w-[320px] xl:w-[360px] 2xl:w-[400px] shrink-0 space-y-4">
-            <SessionStatsCard 
-              stats={sessionStats} 
-              onReset={resetSessionStats} 
-            />
-            <FiltersPanel
-              activePresetId={activePresetId}
-              onTogglePreset={handleTogglePreset}
-              available={available}
-              filters={filters}
-              onToggleFilter={toggleFilter}
-              onClearFilterType={clearFilterType}
+          {/* Right rail - hidden on mobile/tablet, sticky sidebar on lg+ */}
+          <aside className="hidden lg:block lg:sticky lg:top-6 lg:self-start space-y-4">
+            <RailContent
+              variant="sidebar"
+              stats={sessionStats}
+              onResetStats={resetSessionStats}
+              filterProps={{
+                activePresetId,
+                onTogglePreset: handleTogglePreset,
+                available,
+                filters,
+                onToggleFilter: toggleFilter,
+                onClearFilterType: clearFilterType,
+              }}
             />
           </aside>
         </div>
       </PageContainer>
 
-      <FilterSheet 
-        open={drawer.open} 
+      {/* Mobile drawer */}
+      <FilterSheet
+        open={drawer.open}
         onOpenChange={(open) => setDrawer((prev) => ({ ...prev, open }))}
         title={drawer.intent === "help" ? t("startHereTitle") : t("headerFilters")}
       >
-        <FiltersPanel
-          activePresetId={activePresetId}
-          onTogglePreset={handleTogglePreset}
-          available={available}
-          filters={filters}
-          onToggleFilter={toggleFilter}
-          onClearFilterType={clearFilterType}
-          openItems={drawerAccordionItems}
-          accordionType="multiple"
+        <RailContent
+          variant="drawer"
+          filterProps={{
+            activePresetId,
+            onTogglePreset: handleTogglePreset,
+            available,
+            filters,
+            onToggleFilter: toggleFilter,
+            onClearFilterType: clearFilterType,
+            openItems: drawerAccordionItems,
+            accordionType: "multiple",
+          }}
         />
       </FilterSheet>
     </div>
