@@ -35,21 +35,21 @@ export default function HeroPill({
   return (
     <div
       className={cn(
-        "inline-flex rounded-full p-[2px]",
+        "inline-flex rounded-full p-[2px] sm:p-[2.5px]",
         "bg-gradient-to-r from-[hsl(var(--cymru-green))] to-[hsl(var(--cymru-green-light))]",
-        "shadow-sm",
-        "relative max-w-[92vw]",
+        "shadow-md sm:shadow-sm",
+        "relative w-full max-w-[min(94vw,40rem)]",
         className
       )}
     >
       <div
         className={cn(
-          "relative inline-flex items-center gap-2 rounded-full",
-          "px-[clamp(2.25rem,6vw,4.75rem)] py-[clamp(1.25rem,3.5vw,2.25rem)]",
+          "relative inline-flex items-center justify-center rounded-full",
+          "px-[clamp(2rem,6vw,4rem)] py-[clamp(1.5rem,4vw,2rem)]",
           styles.fill,
           styles.text,
           "font-extrabold tracking-tight leading-none",
-          "max-w-full"
+          "w-full"
         )}
       >
         {/* Faint top highlight overlay */}
@@ -64,17 +64,17 @@ export default function HeroPill({
         />
 
         {/* Content */}
-        <div className="relative z-10 flex items-center gap-2 max-w-full">
+        <div className="relative z-10 flex items-center justify-center gap-2 sm:gap-2.5 w-full min-w-0">
           {showPin && (
             <div
               className={cn(
-                "h-2 w-2 rounded-full flex-shrink-0",
+                "h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full flex-shrink-0",
                 "ring-1 ring-[hsl(var(--card))]",
                 styles.pin
               )}
             />
           )}
-          <span className="text-[clamp(2.75rem,7vw,5.75rem)] break-words">
+          <span className="text-[clamp(3rem,8vw,5rem)] break-words hyphens-auto min-w-0 flex-1 text-center">
             {text}
           </span>
         </div>
