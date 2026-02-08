@@ -43,7 +43,7 @@ export default function FlashcardArea({
 
   return (
     <section className={cn("flex-1", className)}>
-      <div className="space-y-4 rounded-[var(--radius)] border border-border bg-[hsl(var(--panel))] p-4 sm:p-5">
+      <div className="space-y-4 rounded-[var(--radius)] border border-border bg-[hsl(var(--panel))] p-4 sm:p-5 lg:p-6">
         {/* Header row - unified control bar */}
         <TooltipProvider>
           <div className="flex items-start gap-3 text-sm">
