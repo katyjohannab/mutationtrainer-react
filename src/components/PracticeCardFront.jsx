@@ -43,7 +43,6 @@ export default function PracticeCardFront({
   onReveal,
   onSkip,
   t,
-  mode = "random",
   tooltipTranslate,
   tooltipWordCategory,
 }) {

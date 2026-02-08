@@ -31,6 +31,7 @@ export default function SessionStatsInline({ stats, className }) {
         icon={Target}
         value={`${accuracy}%`}
         label={t("accuracyLabel") || "Accuracy"}
+        variant="default"
         size="compact"
       />
     </div>

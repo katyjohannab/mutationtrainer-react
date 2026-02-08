@@ -89,7 +89,16 @@ export default function FiltersPanel({
 
   const labelFor = (item) => {
     if (!item) return "";
+    // Check for explicit labelKey (e.g. mutation filters)
     if (item.labelKey) return t(item.labelKey);
+    // Check for category translation key (e.g. "Article" → "categoryArticle")
+    if (item.label) {
+      const categoryKey = `category${item.label.replace(/\s+/g, "")}`;
+      const translated = t(categoryKey);
+      // If translation exists and is different from key, use it
+      if (translated && translated !== categoryKey) return translated;
+    }
+    // Fallback to raw label
     return item.label ?? "";
   };
 

@@ -78,6 +78,7 @@ export default function SessionStatsCard({ stats, onReset, className }) {
               icon={Target}
               value={`${accuracy}%`}
               label={accuracyLabel}
+              variant="default"
             />
           </div>
         </CardContent>

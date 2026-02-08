@@ -289,10 +289,6 @@ export default function App() {
     setDrawer({ open: true, intent });
   };
 
-  const closeDrawer = () => {
-    setDrawer((prev) => ({ ...prev, open: false }));
-  };
-
   // Derive accordion open items from drawer intent
   const drawerAccordionItems = drawer.intent === "help" 
     ? ["item-start"] 

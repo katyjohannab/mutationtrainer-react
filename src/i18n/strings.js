@@ -82,6 +82,19 @@ export const STRINGS = {
     mutationFilterAspirate: "Treiglad llaes",
     mutationFilterNone: "Dim treiglad",
 
+    // Category filter translations
+    categoryArticle: "Bannod",
+    categoryConjunction: "Cysylltair",
+    categoryPreposition: "Arddodiad",
+    categoryPronoun: "Rhagenw",
+    categoryVerb: "Berf",
+    categoryAdjective: "Ansoddair",
+    categoryAdverb: "Adferf",
+    categoryNoun: "Enw",
+    categoryNumber: "Rhif",
+    categoryPlaceName: "Enw lle",
+    categoryPlaceNameCards: "Cardiau enwau lleoedd",
+
 
     // Preset pack titles + descriptions
     "preset.starterPreps.title": "Pecynnau dechrau",
@@ -189,6 +202,19 @@ export const STRINGS = {
     mutationFilterNasal: "Nasal",
     mutationFilterAspirate: "Aspirate",
     mutationFilterNone: "None",
+
+    // Category filter translations
+    categoryArticle: "Article",
+    categoryConjunction: "Conjunction",
+    categoryPreposition: "Preposition",
+    categoryPronoun: "Pronoun",
+    categoryVerb: "Verb",
+    categoryAdjective: "Adjective",
+    categoryAdverb: "Adverb",
+    categoryNoun: "Noun",
+    categoryNumber: "Number",
+    categoryPlaceName: "Place name",
+    categoryPlaceNameCards: "Place name cards",
 
     // Preset pack titles + descriptions
     "preset.starterPreps.title": "Starter preps",

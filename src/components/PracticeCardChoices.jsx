@@ -50,7 +50,6 @@ export default function PracticeCardChoices({
   tooltipTranslate,
   tooltipWordCategory,
   guess,
-  mode = "random",
 }) {
   const isFeedback = cardState === "feedback";
   const baseword = sent?.base || "_____";

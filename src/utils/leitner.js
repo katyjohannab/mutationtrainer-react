@@ -20,7 +20,6 @@ export function updateLeitner(map, cardKey, result, options = {}) {
   const now = options.reviewedAt ?? Date.now();
   const current = map[cardKey] ?? { box: 0, dueAt: now };
 
-  const maxBox = BOX_MINUTES.length - 1;
   let nextBox = current.box;
 
   let baseResult = options.baseResult ?? result;
