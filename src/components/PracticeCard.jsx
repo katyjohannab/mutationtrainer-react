@@ -401,7 +401,7 @@ export default function PracticeCard({
   );
 
   return (
-    <div className="relative w-full max-w-xl lg:max-w-2xl mx-auto">
+    <div className="relative w-full max-w-2xl lg:max-w-3xl mx-auto">
       {!isFeedback && (
         <Card className={cardClassName}>
           <div className="p-5 sm:p-7 md:p-8 lg:p-10">

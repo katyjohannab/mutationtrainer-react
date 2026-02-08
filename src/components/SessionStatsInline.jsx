@@ -17,14 +17,14 @@ export default function SessionStatsInline({ stats, className }) {
         icon={Flame}
         value={stats.streak}
         label={t("streakLabel") || "Streak"}
-        variant="red"
+        variant="orange"
         size="compact"
       />
       <StatItem
         icon={Trophy}
         value={stats.bestStreak}
         label={t("bestStreakLabel") || "Longest streak"}
-        variant="accent"
+        variant="lightGreen"
         size="compact"
       />
       <StatItem

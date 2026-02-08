@@ -92,6 +92,20 @@ export const STRINGS = {
     "preset.articles.desc": "Ffocws ar y fannod (Sylfaen).",
     "preset.placeNames.title": "Enwau lleoedd",
     "preset.placeNames.desc": "Cardiau enwau lleoedd ar draws pob CSV.",
+
+    // Report mistake
+    reportMistake: "Sylwi ar gamgymeriad?",
+    reportTitle: "Adrodd camgymeriad",
+    reportFriendlyMessage: "Mae'n ddrwg gen i am hynny! Dwi'n ddysgwr Cymraeg fy hun ac mae'r ap hwn mewn cyfnod datblygu felly alla i ddim gwarantu bod popeth yn berffaith eto… Bydd cefnogi fi drwy adrodd unrhyw gamgymeriadau rydych chi'n dod ar eu traws yn helpu'r ap hwn dyfu'n fwy, yn well ac yn cyrraedd mwy o bobl felly diolch yn fawr iawn!",
+    reportCardId: "ID Cerdyn",
+    reportWhereLabel: "Ble mae'r camgymeriad?",
+    reportCurrentCard: "Y cerdyn hwn",
+    reportSomethingElse: "Rhywbeth arall",
+    reportDescLabel: "Disgrifiwch y broblem",
+    reportDescPlaceholder: "e.e. Mae'r ateb disgwyliedig yn anghywir…",
+    reportNotifyLabel: "Hysbysu drwy",
+    reportEmail: "E-bost",
+    reportSubmit: "Anfon adroddiad",
   },
 
   en: {
@@ -185,5 +199,19 @@ export const STRINGS = {
     "preset.articles.desc": "Article focus (Sylfaen).",
     "preset.placeNames.title": "Place names",
     "preset.placeNames.desc": "Place name cards across all CSVs.",
+
+    // Report mistake
+    reportMistake: "Noticed a mistake?",
+    reportTitle: "Report a mistake",
+    reportFriendlyMessage: "Sorry about that! I am a Welsh learner myself and this app is in a development phase so I can't guarantee everything is perfect yet… Supporting me by reporting any mistakes you come across will help this app get bigger, better and reach more people so thank you very much!",
+    reportCardId: "Card ID",
+    reportWhereLabel: "Where is the mistake?",
+    reportCurrentCard: "This card",
+    reportSomethingElse: "Something else",
+    reportDescLabel: "Describe the issue",
+    reportDescPlaceholder: "e.g. The expected answer seems wrong…",
+    reportNotifyLabel: "Notify via",
+    reportEmail: "Email",
+    reportSubmit: "Send report",
   },
 };

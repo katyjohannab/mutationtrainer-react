@@ -1,5 +1,6 @@
 import PracticeCard from "./PracticeCard";
 import SessionStatsInline from "./SessionStatsInline";
+import ReportMistake from "./ReportMistake";
 import { useI18n } from "../i18n/I18nContext";
 import { cn } from "../lib/cn";
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
@@ -40,6 +41,7 @@ export default function FlashcardArea({
   const { t } = useI18n();
   const shuffleLabel = t("shuffle") || "Shuffle";
   const showShuffle = mode === "random";
+  const cardId = currentRow?.cardId ?? currentRow?.CardId ?? "";
 
   return (
     <section className={cn("flex-1", className)}>
@@ -47,11 +49,18 @@ export default function FlashcardArea({
         {/* Header row - unified control bar */}
         <TooltipProvider>
           <div className="flex flex-wrap items-start gap-2 sm:gap-3 text-sm">
-            {/* Progress + Mobile Stats */}
-            <div className="flex flex-col-reverse items-center gap-1 min-w-0 shrink-0">
-              <span className="text-xs font-medium text-muted-foreground truncate text-center">
-                {progressText}
-              </span>
+            {/* Progress + Card ID + Mobile Stats */}
+            <div className="flex flex-col-reverse items-start gap-1 min-w-0 shrink-0">
+              <div className="flex flex-col items-start gap-0.5">
+                <span className="text-xs font-medium text-muted-foreground truncate">
+                  {progressText}
+                </span>
+                {cardId && (
+                  <span className="text-xs font-medium text-muted-foreground/60 truncate">
+                    {t("reportCardId") || "Card ID"}: {cardId.toUpperCase()}
+                  </span>
+                )}
+              </div>
               {sessionStats && (
                 <SessionStatsInline stats={sessionStats} className="md:hidden" />
               )}
@@ -137,6 +146,13 @@ export default function FlashcardArea({
             progressText={progressText}
             deckLabel={deckLabel}
           />
+        )}
+
+        {/* Card footer — report button aligned right */}
+        {currentRow && (
+          <div className="flex items-center justify-end pt-3">
+            <ReportMistake cardId={cardId} />
+          </div>
         )}
       </div>
     </section>

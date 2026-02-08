@@ -6,9 +6,13 @@ const colorMap = {
     text: "text-[hsl(var(--cymru-green))]",
     bg: "bg-[hsl(var(--cymru-green-wash))]",
   },
-  accent: {
+  orange: {
     text: "text-[hsl(var(--cymru-gold))]",
     bg: "bg-[hsl(var(--cymru-gold-wash))]",
+  },
+  lightGreen: {
+    text: "text-[hsl(var(--cymru-green-light))]",
+    bg: "bg-[hsl(var(--cymru-green-light-wash))]",
   },
   red: {
     text: "text-[hsl(var(--cymru-red))]",
@@ -27,7 +31,7 @@ const colorMap = {
  * @param {import("lucide-react").LucideIcon} props.icon
  * @param {string|number} props.value
  * @param {string} props.label
- * @param {"default"|"accent"|"red"} [props.variant="default"]
+ * @param {"default"|"orange"|"lightGreen"|"red"} [props.variant="default"]
  * @param {"card"|"compact"} [props.size="card"]
  */
 export default function StatItem({

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { MessageSquareWarning, Github, Mail, Send } from "lucide-react";
+import { MessageSquareWarning, Github, Mail, Send, ExternalLink } from "lucide-react";
+import { Badge } from "./ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -31,15 +32,14 @@ export default function ReportMistake({ cardId }) {
   const [open, setOpen] = useState(false);
   const [mistakeType, setMistakeType] = useState("current"); // "current" | "other"
   const [description, setDescription] = useState("");
-  const [notifyVia, setNotifyVia] = useState("github"); // "github" | "email"
+  const [notifyVia, setNotifyVia] = useState("email"); // "email" | "github"
 
   function handleOpen(isOpen) {
     setOpen(isOpen);
     if (isOpen) {
-      // Reset form on open
       setMistakeType("current");
       setDescription("");
-      setNotifyVia("github");
+      setNotifyVia("email");
     }
   }
 
@@ -87,17 +87,10 @@ export default function ReportMistake({ cardId }) {
   return (
     <Dialog open={open} onOpenChange={handleOpen}>
       <DialogTrigger asChild>
-        <button
-          type="button"
-          className="inline-flex items-center gap-1 text-[11px] text-muted-foreground/70 hover:text-muted-foreground transition-colors"
-        >
-          <AppIcon
-            icon={MessageSquareWarning}
-            className="h-3 w-3"
-            aria-hidden="true"
-          />
-          <span>{reportLabel}</span>
-        </button>
+        <Badge variant="warning" className="cursor-pointer gap-1.5">
+          <ExternalLink className="h-3 w-3" />
+          {reportLabel}
+        </Badge>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-md">
@@ -106,9 +99,9 @@ export default function ReportMistake({ cardId }) {
             <DialogTitle className="text-base">
               {t("reportTitle") || "Report a mistake"}
             </DialogTitle>
-            <DialogDescription>
-              {t("reportDescription") ||
-                "Help us improve by flagging errors in cards."}
+            <DialogDescription className="text-sm leading-relaxed">
+              {t("reportFriendlyMessage") ||
+                "Sorry about that! I am a Welsh learner myself and this app is in a development phase so I can't guarantee everything is perfect yet… Supporting me by reporting any mistakes you come across will help this app get bigger, better and reach more people so thank you very much!"}
             </DialogDescription>
           </DialogHeader>
 
@@ -174,13 +167,13 @@ export default function ReportMistake({ cardId }) {
                 onValueChange={(v) => v && setNotifyVia(v)}
                 className={toggleGroupClass}
               >
-                <ToggleGroupItem value="github" className={toggleItemClass}>
-                  <AppIcon icon={Github} className="h-3 w-3 mr-1.5" aria-hidden="true" />
-                  GitHub
-                </ToggleGroupItem>
                 <ToggleGroupItem value="email" className={toggleItemClass}>
                   <AppIcon icon={Mail} className="h-3 w-3 mr-1.5" aria-hidden="true" />
                   {t("reportEmail") || "Email"}
+                </ToggleGroupItem>
+                <ToggleGroupItem value="github" className={toggleItemClass}>
+                  <AppIcon icon={Github} className="h-3 w-3 mr-1.5" aria-hidden="true" />
+                  GitHub
                 </ToggleGroupItem>
               </ToggleGroup>
             </div>
