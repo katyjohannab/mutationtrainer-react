@@ -1,31 +1,11 @@
 import { useEffect, useMemo, useRef } from "react";
-import { Button } from "./ui/button";
-import { ButtonGroup } from "./ui/button-group";
 import { Badge } from "./ui/badge";
 import HeroPill from "./HeroPill";
 import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";
-import { cn } from "../lib/cn";
-import LanguagesIcon from "./icons/LanguagesIcon";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./ui/tooltip";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "./ui/hover-card";
-import {
-  CheckCircle2,
-  Lightbulb,
-  MonitorPlay,
-  SkipForward,
-} from "lucide-react";
-import AppIcon from "./icons/AppIcon";
 import { deriveDysguBadges } from "../utils/dysguBadges";
+import CardTranslationPopover from "./card/CardTranslationPopover";
+import CardUtilityCluster from "./card/CardUtilityCluster";
 
 export default function PracticeCardFront({
   sent,
@@ -34,8 +14,6 @@ export default function PracticeCardFront({
   guess,
   setGuess,
   disabledInput,
-  showTranslate,
-  translate,
   placeholder,
   hintText,
   showHint,
@@ -43,54 +21,30 @@ export default function PracticeCardFront({
   onCheck,
   onReveal,
   onSkip,
+  onShuffle,
   t,
-  tooltipTranslate,
-  tooltipWordCategory,
+  mode,
+  translationWord,
+  translationCategory,
   unit,
   course,
   level,
   sourceFile,
+  showDysguBadges = false,
 }) {
   const isFeedback = cardState === "feedback";
   const baseword = sent?.base || "_____";
 
   const dysguBadges = useMemo(
-    () => deriveDysguBadges({ course, level, unit, sourceFile, t }),
-    [course, level, unit, sourceFile, t]
+    () =>
+      showDysguBadges
+        ? deriveDysguBadges({ course, level, unit, sourceFile, t })
+        : null,
+    [course, level, unit, sourceFile, t, showDysguBadges]
   );
 
   const inputRef = useRef(null);
-  const hoverCardContentClass =
-    "w-64 max-w-[85vw] rounded-2xl border border-border bg-card/95 p-4 text-sm text-foreground shadow-xl backdrop-blur";
 
-  const tooltipLines = useMemo(() => {
-    const lines = [];
-    if (tooltipTranslate) {
-      lines.push({ label: "English", value: tooltipTranslate });
-    }
-    if (tooltipWordCategory) {
-      lines.push({ label: "Category", value: tooltipWordCategory });
-    }
-    return lines;
-  }, [tooltipTranslate, tooltipWordCategory]);
-
-  const checkLabel = isFeedback ? (t("next") || "Next") : (t("check") || "Check");
-  const hintLabel = t("hint") || "Hint";
-  const revealLabel = t("reveal") || "Reveal";
-  const skipLabel = t("skip") || "Skip";
-  const utilityBaseClass =
-    "h-10 w-10 shadow-none border border-transparent hover:border-border/60";
-  const hintClass =
-    "bg-[hsl(var(--cymru-green-light-wash))] text-[hsl(var(--cymru-green-light))] hover:bg-[hsl(var(--cymru-green-light-wash))]";
-  const revealClass =
-    "bg-[hsl(var(--cymru-red-wash))] text-[hsl(var(--cymru-red))] hover:bg-[hsl(var(--cymru-red-wash))]";
-  const skipClass =
-    "bg-[hsl(var(--cymru-gold-wash))] text-[hsl(var(--cymru-gold))] hover:bg-[hsl(var(--cymru-gold-wash))]";
-  const tooltipBaseClass = "text-white";
-  const tooltipGreenClass = "bg-[hsl(var(--cymru-green))] text-white";
-  const tooltipRedClass = "bg-[hsl(var(--cymru-red))] text-white";
-  const tooltipGoldClass = "bg-[hsl(var(--cymru-gold))] text-white";
-  
   useEffect(() => {
     if (isFeedback) return;
     inputRef.current?.focus();
@@ -98,16 +52,21 @@ export default function PracticeCardFront({
 
   return (
     <div className="space-y-6">
-      {/* Dysgu course/unit badges */}
       {dysguBadges && (
         <div className="flex w-full justify-start gap-2 px-2">
           {dysguBadges.courseLabel && (
-            <Badge variant="cymru-dark" className="rounded-full px-3 py-1 text-xs font-semibold">
+            <Badge
+              variant="cymru-dark"
+              className="rounded-full px-3 py-1 text-xs font-semibold pointer-events-none"
+            >
               {dysguBadges.courseLabel}
             </Badge>
           )}
           {dysguBadges.unitLabel && (
-            <Badge variant="cymru-light" className="rounded-full px-3 py-1 text-xs font-semibold">
+            <Badge
+              variant="cymru-light"
+              className="rounded-full px-3 py-1 text-xs font-semibold pointer-events-none"
+            >
               {dysguBadges.unitLabel}
             </Badge>
           )}
@@ -115,59 +74,20 @@ export default function PracticeCardFront({
       )}
 
       <div className="flex flex-col items-center gap-2 w-full px-2">
-        {/* CONTEXT TRIGGER REMOVED - User found it confusing/duplicate */}
-        
-        <div className="relative inline-flex max-w-full">
-          {/* TODO: Map cardState or parent feedback state to HeroPill state (success/destructive/hint) */}
-          <HeroPill text={baseword} showPin={false} />
-
-          {tooltipLines.length > 0 ? (
-            <HoverCard>
-              <HoverCardTrigger asChild>
-                <button
-                  type="button"
-                  aria-label="Translation and category"
-                  className="absolute -right-3 -top-3 inline-flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-primary text-primary-foreground shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--cymru-green-light))] hover:bg-primary/90 transition-colors"
-                >
-                  <LanguagesIcon size={16} color="currentColor" strokeWidth={2} />
-                </button>
-              </HoverCardTrigger>
-              <HoverCardContent
-                side="top"
-                align="center"
-                sideOffset={12}
-                collisionPadding={12}
-                className={hoverCardContentClass}
-              >
-                <div className="space-y-2">
-                  {tooltipLines.map(({ label, value }, idx) => (
-                    <div key={idx}>
-                      <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                        {label}
-                      </div>
-                      {label === "Category" ? (
-                        <Badge
-                          className="mt-1 bg-[#60A561] text-white hover:bg-[#60A561]/90 border-0 rounded-full px-3 py-1 text-xs font-semibold"
-                        >
-                          {value}
-                        </Badge>
-                      ) : (
-                        <div className="text-sm text-foreground">{value}</div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </HoverCardContent>
-            </HoverCard>
-          ) : null}
-        </div>
+        <HeroPill
+          text={baseword}
+          showPin={false}
+          cornerAction={
+            <CardTranslationPopover
+              word={translationWord}
+              category={translationCategory}
+              t={t}
+            />
+          }
+        />
       </div>
 
-      {showTranslate ? (
-        <div className="text-sm text-muted-foreground">{translate}</div>
-      ) : null}
-
-      <div className="text-[clamp(1.05rem,0.6vw+0.95rem,1.45rem)] leading-relaxed text-foreground flex flex-wrap justify-center items-baseline gap-1">
+      <div className="text-[clamp(1.05rem,0.6vw+0.95rem,1.45rem)] leading-relaxed text-foreground flex flex-wrap justify-center items-baseline gap-x-2.5 gap-y-2">
         <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
         <Input
           ref={inputRef}
@@ -185,84 +105,16 @@ export default function PracticeCardFront({
 
       <Separator />
 
-      <TooltipProvider>
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:justify-between">
-          <div className="flex flex-wrap items-center gap-2">
-            <ButtonGroup>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="default"
-                    onClick={onToggleHint}
-                    size="icon"
-                    className={cn(utilityBaseClass, hintClass)}
-                    aria-label={hintLabel}
-                  >
-                    <AppIcon icon={Lightbulb} className="h-4 w-4" aria-hidden="true" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent className={cn(tooltipGreenClass, tooltipBaseClass)}>
-                  {hintLabel}
-                </TooltipContent>
-              </Tooltip>
-            </ButtonGroup>
-
-            <ButtonGroup className="flex-wrap">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="default"
-                    onClick={onReveal}
-                    disabled={isFeedback}
-                    size="icon"
-                    className={cn(utilityBaseClass, revealClass)}
-                    aria-label={revealLabel}
-                  >
-                    <AppIcon icon={MonitorPlay} className="h-4 w-4" aria-hidden="true" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent className={cn(tooltipRedClass, tooltipBaseClass)}>
-                  {revealLabel}
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="default"
-                    onClick={onSkip}
-                    disabled={isFeedback}
-                    size="icon"
-                    className={cn(utilityBaseClass, skipClass)}
-                    aria-label={skipLabel}
-                  >
-                    <AppIcon icon={SkipForward} className="h-4 w-4" aria-hidden="true" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent className={cn(tooltipGoldClass, tooltipBaseClass)}>
-                  {skipLabel}
-                </TooltipContent>
-              </Tooltip>
-            </ButtonGroup>
-
-          </div>
-
-          <ButtonGroup>
-            <Button
-              type="button"
-              variant="default"
-              onClick={onCheck}
-              size="action"
-              className="w-full sm:w-auto bg-[hsl(var(--cymru-green))] text-white hover:bg-[hsl(var(--cymru-green)/0.9)] whitespace-nowrap shadow-sm font-semibold"
-            >
-              <AppIcon icon={CheckCircle2} className="h-5 w-5" aria-hidden="true" />
-              {checkLabel}
-            </Button>
-          </ButtonGroup>
-        </div>
-      </TooltipProvider>
+      <CardUtilityCluster
+        t={t}
+        isFeedback={isFeedback}
+        mode={mode}
+        onToggleHint={onToggleHint}
+        onReveal={onReveal}
+        onSkip={onSkip}
+        onShuffle={onShuffle}
+        onCheck={onCheck}
+      />
 
       {showHint && hintText ? (
         <div className="rounded-2xl border border-border bg-muted px-4 py-3 text-sm text-foreground">
@@ -272,5 +124,3 @@ export default function PracticeCardFront({
     </div>
   );
 }
-
-

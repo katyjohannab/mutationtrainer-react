@@ -12,6 +12,7 @@ export default function FilterSheet({ open, onOpenChange, title, children }) {
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent 
         side="right" 
+        showClose={false}
         className="flex h-full w-[92vw] max-w-md flex-col overflow-hidden p-0"
       >
         {/* Fixed header */}

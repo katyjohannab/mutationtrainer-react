@@ -81,10 +81,9 @@ const ComboboxTrigger = React.forwardRef(
         aria-label={label}
         disabled={disabled}
         className={cn(
-          "h-11 w-full justify-between rounded-xl border-[hsl(var(--cymru-green-light)/0.35)]",
-          "bg-background px-3 text-sm font-medium shadow-sm",
-          "hover:bg-[hsl(var(--cymru-green-wash))] hover:text-[hsl(var(--cymru-green))]",
-          "focus-visible:ring-[hsl(var(--cymru-green-light))]"
+          "h-11 w-full justify-between rounded-xl border-border bg-card px-3 text-sm font-medium shadow-sm",
+          "hover:bg-muted/60 hover:text-foreground",
+          "focus-visible:ring-2 focus-visible:ring-ring/40"
         )}
         {...props}
       >
@@ -211,8 +210,7 @@ export default function DysguCourseUnitPicker({
   return (
     <Card
       className={cn(
-        "rounded-2xl border border-[hsl(var(--cymru-green-light)/0.35)] p-4 shadow-sm",
-        "bg-[linear-gradient(180deg,hsl(var(--cymru-green-wash)/0.55)_0%,hsl(var(--card))_56%)]",
+        "rounded-2xl border border-border bg-card p-4 shadow-sm",
         className
       )}
     >
@@ -242,7 +240,7 @@ export default function DysguCourseUnitPicker({
             </PopoverTrigger>
             <PopoverContent
               align="start"
-              className="w-[var(--radix-popover-trigger-width)] border-[hsl(var(--cymru-green-light)/0.3)] p-0"
+              className="w-[var(--radix-popover-trigger-width)] border-border p-0"
             >
               <Command>
                 <CommandInput
@@ -313,7 +311,7 @@ export default function DysguCourseUnitPicker({
             </PopoverTrigger>
             <PopoverContent
               align="start"
-              className="w-[var(--radix-popover-trigger-width)] border-[hsl(var(--cymru-green-light)/0.3)] p-0"
+              className="w-[var(--radix-popover-trigger-width)] border-border p-0"
             >
               <Command>
                 <CommandList>
@@ -387,7 +385,7 @@ export default function DysguCourseUnitPicker({
             </PopoverTrigger>
             <PopoverContent
               align="start"
-              className="w-[var(--radix-popover-trigger-width)] border-[hsl(var(--cymru-green-light)/0.3)] p-0"
+              className="w-[var(--radix-popover-trigger-width)] border-border p-0"
             >
               <Command>
                 <CommandInput
@@ -436,12 +434,12 @@ export default function DysguCourseUnitPicker({
           </Popover>
         </div>
 
-        <Separator className="bg-[hsl(var(--cymru-green-light)/0.25)]" />
+        <Separator />
 
-        <div className="rounded-xl border border-[hsl(var(--cymru-green-light)/0.35)] bg-background/80 p-3">
+        <div className="rounded-xl border border-border bg-muted/30 p-3">
           <div className="flex flex-wrap items-center gap-2">
             <Badge
-              variant={activeUnit ? "cymru-dark" : "cymru-light-wash"}
+              variant={activeUnit ? "cymru-dark" : "soft"}
               className="rounded-full"
             >
               {activeUnit ? t("deck") : t("practice")}

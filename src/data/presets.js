@@ -66,4 +66,12 @@ export const PRESET_ORDER = [
   "place-names",
 ];
 
+// Curated user-facing starter packs (keeps compatibility with PRESET_DEFS/PRESET_ORDER).
+export const STARTER_PACK_ORDER = [
+  "starter-preps",
+  "numbers-1-10",
+  "articles",
+  "place-names",
+];
+
 

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { HelpCircle, Zap, Filter, BookOpen } from "lucide-react";
+import { HelpCircle, Zap, Filter, BookOpen, Check } from "lucide-react";
 import AppIcon from "./icons/AppIcon";
 import { useI18n } from "../i18n/I18nContext";
 import { cn } from "../lib/cn";
-import { PRESET_DEFS, PRESET_ORDER } from "../data/presets";
+import { PRESET_DEFS, STARTER_PACK_ORDER } from "../data/presets";
 import DysguCourseUnitPicker from "./filters/DysguCourseUnitPicker";
 
 import {
@@ -221,7 +221,7 @@ export default function FiltersPanel({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {PRESET_ORDER.map((id) => {
+              {STARTER_PACK_ORDER.map((id) => {
                 const def = PRESET_DEFS[id];
                 const active = activePresetId === id;
                 const label = def?.titleKey ? t(def.titleKey) : def?.title ?? id;
@@ -236,20 +236,25 @@ export default function FiltersPanel({
                     variant="ghost"
                     onClick={() => onTogglePreset?.(active ? null : id)}
                     className={cn(
-                      "relative h-auto w-full justify-start rounded-xl border p-4 text-left transition-all hover:shadow-md",
+                      "group relative h-auto w-full items-start justify-start rounded-xl border p-4 text-left whitespace-normal break-words overflow-visible transition-all hover:shadow-md",
                       active
                         ? "border-2 border-[hsl(var(--cymru-green-light))] bg-primary/10"
                         : "border-border bg-card hover:border-primary/30"
                     )}
                   >
-                    <span className="flex flex-col items-start gap-1 pr-4">
-                      <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+                    <span className="flex min-w-0 flex-col items-start gap-1 pr-4">
+                      <span className="w-full text-sm font-semibold leading-snug text-foreground transition-colors group-hover:text-primary whitespace-normal break-words">
                         {label}
                       </span>
-                      <span className="text-xs text-muted-foreground leading-snug">
+                      <span className="w-full text-xs text-muted-foreground leading-snug whitespace-normal break-words">
                         {desc}
                       </span>
                     </span>
+                    {active ? (
+                      <span className="absolute -right-1.5 -top-1.5 sm:-right-2 sm:-top-2 inline-flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full border-2 border-card bg-[hsl(var(--cymru-green))] text-white shadow-sm">
+                        <AppIcon icon={Check} className="h-3 w-3 sm:h-3.5 sm:w-3.5" aria-hidden="true" />
+                      </span>
+                    ) : null}
                   </Button>
                 );
               })}
@@ -283,7 +288,7 @@ export default function FiltersPanel({
                 <FilterBadge
                   active={isLevelAll}
                   onClick={() => onClearFilterType?.("levels")}
-                  variant={isLevelAll ? "cymru-dark" : "cymru-dark-wash"}
+                  variant={isLevelAll ? "cymru-gold" : "cymru-gold-wash"}
                 >
                   {t("filtersAll")}
                 </FilterBadge>
@@ -294,8 +299,8 @@ export default function FiltersPanel({
                     onClick={() => onToggleFilter?.("levels", item.id)}
                     variant={
                       safeFilters.levels.has(item.id)
-                        ? "cymru-dark"
-                        : "cymru-dark-wash"
+                        ? "cymru-gold"
+                        : "cymru-gold-wash"
                     }
                   >
                     {levelLabelFor(item)}

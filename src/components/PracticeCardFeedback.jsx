@@ -17,6 +17,7 @@ import AppIcon from "./icons/AppIcon";
 export default function PracticeCardFeedback({
   sent,
   answer,
+  sentenceTranslation,
   onHear,
   t,
   hearLabel,
@@ -57,6 +58,8 @@ export default function PracticeCardFeedback({
 
 
   const whyLabel = t("why") || "Why";
+  const sentenceTranslationLabel =
+    t("feedbackSentenceTranslation") || "Sentence translation";
   const statusLabel = useMemo(() => {
     if (!last) return "";
     if (last === "correct") return t("correct") || "Correct";
@@ -132,6 +135,17 @@ export default function PracticeCardFeedback({
               </span>
               <span className="whitespace-pre-wrap break-words">{sent?.after}</span>
             </p>
+
+            {sentenceTranslation ? (
+              <div className="rounded-lg border border-border/70 bg-muted/35 px-4 py-3">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                  {sentenceTranslationLabel}
+                </p>
+                <p className="mt-1 text-sm sm:text-base leading-relaxed text-foreground">
+                  {sentenceTranslation}
+                </p>
+              </div>
+            ) : null}
 
             <div className="flex flex-wrap items-center gap-3">
               <button

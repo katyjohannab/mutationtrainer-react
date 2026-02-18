@@ -74,6 +74,9 @@ export default function App() {
   }, []);
 
   const preset = activePresetId ? PRESET_DEFS[activePresetId] : null;
+  const showDysguBadges = Boolean(
+    preset?.course && preset?.dialect && preset?.unit
+  );
 
   const available = useMemo(() => {
     const famMap = new Map();
@@ -331,6 +334,7 @@ export default function App() {
               currentRow={currentRow}
               onResult={onResult}
               onShuffle={handleShuffle}
+              showDysguBadges={showDysguBadges}
               answerMode={answerMode}
               onAnswerModeChange={setAnswerMode}
               deckRows={filtered}

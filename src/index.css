@@ -245,6 +245,28 @@
 }
 
 @layer components {
+  @keyframes mt-lift-pulse {
+    0% {
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+    }
+    50% {
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.22);
+    }
+    100% {
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+    }
+  }
+
+  .mt-hover-lift-pulse {
+    transition: box-shadow 160ms ease;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .mt-hover-lift-pulse:hover {
+      animation: mt-lift-pulse 950ms ease-in-out infinite;
+    }
+  }
+
   .surface-card {
     @apply bg-card rounded-[var(--radius)] border border-border shadow-none;
   }

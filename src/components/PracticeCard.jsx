@@ -28,6 +28,8 @@ export default function PracticeCard({
   mode = "random",
   answerMode = "type",
   deckRows = [],
+  onShuffle,
+  showDysguBadges = false,
 }) {
   const { t, lang } = useI18n();
 
@@ -193,10 +195,9 @@ export default function PracticeCard({
 
   const whyEn = row?.why ?? row?.Why ?? "";
   const whyCy = row?.whyCym ?? row?.["Why-Cym"] ?? row?.WhyCym ?? "";
-  const translateSent = row?.translateSent ?? row?.TranslateSent ?? "";
-  const showTranslate = lang === "en" && Boolean(translateSent);
-  const tooltipTranslate = row?.translate ?? row?.Translate ?? "";
-  const wordCategory = row?.wordCategory ?? row?.WordCategory ?? "";
+  const translationSentence = row?.translateSent ?? row?.TranslateSent ?? "";
+  const translationWord = row?.translate ?? row?.Translate ?? "";
+  const translationCategory = row?.wordCategory ?? row?.WordCategory ?? "";
   const firstLetter = (String(answer).trim()[0] || "").toUpperCase();
   const hintText = firstLetter ? `${t("hint") || "Hint"}: ${firstLetter}...` : "";
   const disabledInput = isFeedback;
@@ -228,8 +229,6 @@ export default function PracticeCard({
                 cardState={cardState}
                 choices={choices}
                 disabled={disabledInput}
-                showTranslate={showTranslate}
-                translate={translateSent}
                 hintText={hintText}
                 showHint={showHint}
                 onToggleHint={() => setShowHint((s) => !s)}
@@ -237,29 +236,27 @@ export default function PracticeCard({
                 onCheck={onCheck}
                 onReveal={onReveal}
                 onSkip={onSkip}
+                onShuffle={onShuffle}
                 t={t}
                 mode={mode}
-                tooltipTranslate={tooltipTranslate}
-                tooltipWordCategory={wordCategory}
+                translationWord={translationWord}
+                translationCategory={translationCategory}
                 guess={guess}
                 // New metadata props
                 unit={row.unit}
                 course={row.course || row.Course}
                 level={row.level || row.Level}
                 sourceFile={row.__source}
+                showDysguBadges={showDysguBadges}
               />
             ) : (
               <PracticeCardFront
                 sent={sent}
-                row={row} // Pass full row object so front can access trigger
-                answer={answer}
                 cardState={cardState}
                 cardId={cardId}
                 guess={guess}
                 setGuess={setGuess}
                 disabledInput={disabledInput}
-                showTranslate={showTranslate}
-                translate={translateSent}
                 placeholder={placeholder}
                 hintText={hintText}
                 showHint={showHint}
@@ -267,15 +264,17 @@ export default function PracticeCard({
                 onCheck={onCheck}
                 onReveal={onReveal}
                 onSkip={onSkip}
+                onShuffle={onShuffle}
                 t={t}
                 mode={mode}
-                tooltipTranslate={tooltipTranslate}
-                tooltipWordCategory={wordCategory}
+                translationWord={translationWord}
+                translationCategory={translationCategory}
                 // New metadata props
                 unit={row.unit}
                 course={row.course || row.Course}
                 level={row.level || row.Level}
                 sourceFile={row.__source}
+                showDysguBadges={showDysguBadges}
               />
             )}
           </div>
@@ -289,6 +288,7 @@ export default function PracticeCard({
               <PracticeCardFeedback
                 sent={sent}
                 answer={answer}
+                sentenceTranslation={translationSentence}
                 onHear={onHear}
                 t={t}
                 hearLabel={hearLabel}
