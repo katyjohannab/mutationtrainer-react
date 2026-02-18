@@ -242,6 +242,9 @@ export default function PracticeCard({
                 tooltipTranslate={tooltipTranslate}
                 tooltipWordCategory={wordCategory}
                 guess={guess}
+                // New metadata props
+                unit={row.unit}
+                sourceFile={row.__source}
               />
             ) : (
               <PracticeCardFront
@@ -265,6 +268,9 @@ export default function PracticeCard({
                 mode={mode}
                 tooltipTranslate={tooltipTranslate}
                 tooltipWordCategory={wordCategory}
+                // New metadata props
+                unit={row.unit}
+                sourceFile={row.__source}
               />
             )}
           </div>

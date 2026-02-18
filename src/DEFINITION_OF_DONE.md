@@ -97,11 +97,13 @@ Cards outside procured scope never leak into that procured pack.
 Pack definitions are data-driven (JSON/config), not hard-coded in components.
  Migration Plan_ Welsh Mutation …
 
+
 F) Random vs Smart mode (spaced repetition)
 Aligned with plan Step 7 and the current site behaviour.
 Migration Plan_ Welsh Mutation …
 Random mode shuffles through the deck normally.
 Smart mode:
+Each card is “rated” by the user on whether it was easy or hard - easy cards are shown less often hard cards are repeated again 
 Brings back mistakes sooner.
 Lets mastered cards appear less frequently.
 Does not get stuck or loop weirdly on small decks.
@@ -192,3 +194,9 @@ Others
 Onboarding/help modal and mechanism and is re-openable
 An attractive header/tool bar
 “Translate” feature for the base sentences
+
+Rules:
+Categories must be normalised to one of the following: "Article", "Conjunction", "Preposition", "Pronoun", "SubjectBoundary", "Interrogative", "Negation", "Adjective", "Adverb", "Noun", "Number", "PlaceName", "Bod"
+"Verb" is a confusing category and should generally be avoided unless it refers to a specific Verbal construction not covered by other auxiliary triggers.
+Ideally map "Verb" to "SubjectBoundary" or "Interrogative" depending on context.
+

@@ -175,7 +175,18 @@ export default function PracticeCardFeedback({
                 <div className="text-xs font-semibold uppercase tracking-wide text-foreground/70">
                   {whyLabel}
                 </div>
-                <div className="mt-2 text-foreground/90">{explanation}</div>
+                <div className="mt-2 text-foreground/90">
+                  {(() => {
+                    // Simple bold parser for **text**
+                    const parts = explanation.split(/(\*\*[^*]+\*\*)/g);
+                    return parts.map((part, i) => {
+                      if (part.startsWith("**") && part.endsWith("**")) {
+                        return <strong key={i}>{part.slice(2, -2)}</strong>;
+                      }
+                      return <span key={i}>{part}</span>;
+                    });
+                  })()}
+                </div>
               </div>
             ) : null}
           </div>

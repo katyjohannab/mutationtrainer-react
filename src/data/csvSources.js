@@ -5,4 +5,6 @@ export const ALL_CSV_FILES = [
   "cards.csv",
   "prep.csv",
   "article-sylfaen.csv",
+  "test-lazy.csv",
+  "mynediad-master.csv",
 ];

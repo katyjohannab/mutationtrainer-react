@@ -1,10 +1,13 @@
 // src/services/loadCsv.js
 import Papa from "papaparse";
+import { GRAMMAR_RULES } from "../data/rules";
+import { mutateWord } from "../utils/grammar";
 
 // Map normalized lower-case alpha-only headers to internal keys
 const CANON_MAP = {
   "cardid": "cardId",
   "id": "cardId",
+  "ruleid": "ruleId",
   
   "rulefamily": "family",
   "family": "family",
@@ -21,6 +24,8 @@ const CANON_MAP = {
   
   "wordcategory": "wordCategory",
   "pos": "wordCategory",
+
+  "unit": "unit",
   
   "before": "before",
   "after": "after",
@@ -62,8 +67,61 @@ function normaliseRow(row, filename) {
      out.category = out.rulecategory || row.RuleCategory || row.rulecategory || row.Category || "";
   }
 
+  // Handle outcome shortcodes
+  if (out.outcome) {
+    const raw = out.outcome.trim().toLowerCase();
+    if (raw === "sm") out.outcome = "soft";
+    else if (raw === "nm") out.outcome = "nasal";
+    else if (raw === "am") out.outcome = "aspirate";
+  }
+
+  // Lazy generation: answer
+  if (!out.answer && out.base && out.outcome) {
+    out.answer = mutateWord(out.base, out.outcome);
+  }
+
+  // Lazy generation: sentences from template
+  if (out.template && (!out.before || !out.after)) {
+    let t = out.template;
+    if (out.trigger) {
+      // Create a regex to replace trigger case-insensitively
+      const triggerRegex = new RegExp(`{trigger}`, "gi");
+      t = t.replace(triggerRegex, out.trigger);
+    }
+    
+    // Split by {answer} case-insensitively using regex split with capturing group to be safe
+    // but simplified: split by the literal token we expect the user to write
+    const parts = t.split(/\{answer\}/i);
+    
+    // e.g. "Dw i'n {answer} rwan" -> before="Dw i'n ", after=" rwan"
+    if (parts.length >= 1) out.before = parts[0].trim();
+    if (parts.length >= 2) out.after = parts[1].trim();
+  }
+
   // Safety Defaults
   if (!out.cardId) out.cardId = `gen-${Math.random().toString(36).slice(2)}`;
+  
+  // Normalise specific categories based on rules
+  if (out.category && out.category.trim().toLowerCase() === "verb") {
+      // "Verb" is too generic. Refine based on rule ID if possible.
+      const rid = (out.ruleId || "").toLowerCase();
+      if (rid.includes("interrog")) {
+          out.category = "Interrogative";
+      } else {
+          // Default fallback for "Verb" in Mynediad (Gwnes i...) is Subject Boundary
+          out.category = "SubjectBoundary";
+      }
+  }
+
+  if (out.ruleId) {
+    const rid = out.ruleId.trim();
+    const rule = GRAMMAR_RULES[rid] || GRAMMAR_RULES[rid.toLowerCase()];
+    if (rule) {
+      if (!out.why && rule.en) out.why = rule.en;
+      if (!out.whyCym && rule.cy) out.whyCym = rule.cy;
+    }
+  }
+
   
   return out;
 }

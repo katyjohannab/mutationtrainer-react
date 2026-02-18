@@ -15,7 +15,7 @@ import { getCardKey, pickRandomIndex, pickSmartIndex } from "./utils/pickNext";
 import { useI18n } from "./i18n/I18nContext";
 
 export default function App() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [rows, setRows] = useState([]);
   const [activePresetId, setActivePresetId] = useState(null);
 
@@ -103,11 +103,15 @@ export default function App() {
     return applyFilters(rows, { preset, filters });
   }, [rows, preset, filters]);
 
-  const presetLabel = preset
-    ? preset.titleKey
-      ? t(preset.titleKey)
-      : preset.title || activePresetId
-    : t("practice");
+  const presetLabel = useMemo(() => {
+    if (!preset) return t("practice");
+    if (preset.titleKey) return t(preset.titleKey);
+    if (preset.title && typeof preset.title === 'object') {
+       // Handle {en, cy} objects
+       return preset.title[lang] || preset.title.en || "Preset";
+    }
+    return preset.title || activePresetId;
+  }, [preset, t, lang, activePresetId]);
 
   // Calculate progress text based on mode
   let progressText = "";
@@ -292,7 +296,7 @@ export default function App() {
   // Derive accordion open items from drawer intent
   const drawerAccordionItems = drawer.intent === "help" 
     ? ["item-start"] 
-    : ["item-quick", "item-core"];
+    : ["item-courses", "item-quick", "item-core"];
 
   return (
     <div className="min-h-full">

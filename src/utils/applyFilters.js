@@ -27,24 +27,39 @@ function matchesToken(cellValue, allowedSet) {
 
 function matchesCategory(cellValue, presetCategory) {
   const c = canon(cellValue);
+  
+  // Normalise specific edge cases
+  let normalizedCell = c;
+  if (c === "verb") normalizedCell = "phrase";
 
   // Allow a couple of common variants/synonyms
   const preset = canon(presetCategory);
 
   // e.g. preset "PlaceName" should also match "placenames", "place-names", "place names"
   if (preset === "placename") {
-    return c === "placename" || c === "placenames" || c === "placenamecards";
+    return normalizedCell === "placename" || normalizedCell === "placenames" || normalizedCell === "placenamecards";
   }
   if (preset === "article") {
-    return c === "article" || c === "articles";
+    return normalizedCell === "article" || normalizedCell === "articles";
   }
-
-  return c === preset;
+  
+  // Also handle if the preset filter itself was "Verb", though user wants to avoid it.
+  // If the user selected "Phrase" in the UI (if we add it), it should match "Verb" in the data if we consider them same.
+  // For now, let's just make sure if we have a "Verb" category in data, it is treated as "Phrase" if filtered by "Phrase"? 
+  // OR vice versa.
+  
+  return normalizedCell === preset;
 }
+
 
 function mutationKeyFromOutcome(value) {
   const raw = (value ?? "").toString().trim().toLowerCase();
   if (!raw) return "none";
+  
+  if (raw === "soft") return "soft";
+  if (raw === "nasal") return "nasal";
+  if (raw === "aspirate") return "aspirate";
+  
   const letters = raw.replace(/[^a-z]/g, "");
   if (letters.startsWith("sm")) return "soft";
   if (letters.startsWith("nm")) return "nasal";
@@ -76,6 +91,20 @@ export function applyFilters(rows, state) {
     if (preset.triggers?.length) {
       const allowedTriggers = new Set(preset.triggers.map(canon));
       out = out.filter((r) => matchesToken(r.trigger, allowedTriggers));
+    }
+
+    // D) Unit Filtering (Exact match or Range)
+    // Supports explicit unit: "1" OR list: ["1", "2"]
+    if (preset.unit) {
+      const targetUnits = Array.isArray(preset.unit)
+        ? new Set(preset.unit.map(String))
+        : new Set([String(preset.unit)]);
+      
+      out = out.filter((r) => {
+        // defined in CSV as 'Unit' or 'unit'
+        const u = String(r.unit || r.Unit || "").trim();
+        return targetUnits.has(u);
+      });
     }
   }
 

@@ -1,0 +1,5 @@
+CardId,Trigger,Base,Outcome,Template,RuleId,Translate,WordCategory
+lazy-1,dy,ci,soft,"Mae {trigger} {answer} yma.",poss-dy-soft,dog,noun-masc
+lazy-2,fy,pen,nasal,"Ble mae {trigger} {answer}?",poss-fy-nasal,head,noun-masc
+lazy-3,dwy,cath,soft,"Oes {trigger} {answer} gyda ti?",num-fem-soft,cat,noun-fem
+lazy-4,yn,Cymru,nasal,"Dw i'n byw {trigger} {answer}.",prep-nasal,Wales,placename

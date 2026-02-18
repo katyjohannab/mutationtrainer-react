@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { HelpCircle, Zap, Filter } from "lucide-react";
+import { HelpCircle, Zap, Filter, BookOpen } from "lucide-react";
 import AppIcon from "./icons/AppIcon";
 import { useI18n } from "../i18n/I18nContext";
 import { cn } from "../lib/cn";
 import { PRESET_DEFS, PRESET_ORDER } from "../data/presets";
+import { COURSES } from "../data/courses";
 
 import {
   Accordion,
@@ -61,7 +62,7 @@ export default function FiltersPanel({
   onOpenItemsChange,
   accordionType = "single",
 }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
 
   const [expandedCats, setExpandedCats] = useState(false);
   const headerBase = "inline-flex items-center gap-2 font-semibold";
@@ -142,6 +143,132 @@ export default function FiltersPanel({
                 <li>{t("startHereStepRefine")}</li>
                 <li>{t("startHereStepPractice")}</li>
               </ul>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="item-courses">
+          <AccordionTrigger>
+            <div className={cn(headerBase, "text-sm text-[hsl(var(--cymru-green))]")}>
+              <AppIcon
+                icon={BookOpen}
+                className={cn(headerIcon, "text-[hsl(var(--cymru-green))]")}
+                aria-hidden="true"
+              />
+              <span>{t("coursesTitle") || "Courses"}</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="mb-3">
+              <p className="text-xs text-muted-foreground">
+                {t("coursesSubtitle") || "Structured learning paths."}
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              {COURSES.map((course) => {
+                // Group units by section key to create visual breaks
+                const bySection = course.units.reduce((acc, unit) => {
+                  const s = unit.section || "default";
+                  if (!acc[s]) acc[s] = [];
+                  acc[s].push(unit);
+                  return acc;
+                }, {});
+                
+                // Order: block1, block2, block3, block4, then anything else
+                const orderedKeys = ["block1", "block2", "block3", "block4", "default"].filter(k => bySection[k]);
+                // If specific keys aren't found, just use whatever keys exist
+                Object.keys(bySection).forEach(k => {
+                  if (!orderedKeys.includes(k)) orderedKeys.push(k);
+                });
+
+                return (
+                <div key={course.id} className="space-y-3 mb-6">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground border-b pb-1 mb-2">
+                    {course.title[lang] || course.title.en}
+                  </h4>
+                  
+                  <Accordion type="multiple" className="w-full space-y-2">
+                  {orderedKeys.map(sectKey => {
+                    const units = bySection[sectKey];
+                    let label = sectKey;
+                    if (sectKey.startsWith("block")) {
+                      const n = sectKey.replace("block", "");
+                      label = lang === "cy" ? `Bloc ${n}` : `Block ${n}`;
+                    } else if (sectKey === "default") {
+                      label = lang === "cy" ? "Eraill" : "Other";
+                    }
+
+                    return (
+                      <AccordionItem key={sectKey} value={sectKey} className="border-none">
+                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg bg-secondary/20 px-4 py-2 text-sm font-medium hover:bg-secondary/30 hover:no-underline [&[data-state=open]>svg]:rotate-180">
+                          <span>{label}</span>
+                        </AccordionTrigger>
+                        <AccordionContent className="pt-3 px-1">
+                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                              {units.map((unit) => {
+                                const active = activePresetId === unit.id;
+                                const label = unit.title[lang] || unit.title.en;
+                                const isCumul = unit.isCumulative;
+
+                                return (
+                                  <div
+                                    key={unit.id}
+                                    onClick={() => onTogglePreset?.(active ? null : unit.id)}
+                                    className={cn(
+                                      "relative cursor-pointer rounded-xl border p-3 transition-all hover:shadow-md text-left select-none group",
+                                      active
+                                        ? "bg-primary/10 border-2 border-[hsl(var(--cymru-green-light))]"
+                                        : "bg-card border-border hover:border-primary/30",
+                                      isCumul && "sm:col-span-2 bg-stone-50/50 dark:bg-stone-900/20 border-dashed"
+                                    )}
+                                  >
+                                    {active && (
+                                      <div className="absolute -top-2 -right-2 bg-card rounded-full p-0.5 shadow-sm border border-border">
+                                        <div className="bg-primary rounded-full p-0.5 text-primary-foreground">
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="10"
+                                            height="10"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="3"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                          >
+                                            <path d="M20 6 9 17l-5-5" />
+                                          </svg>
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    <div className="flex flex-col gap-0.5">
+                                      <span
+                                        className={cn(
+                                          "font-semibold text-sm",
+                                          active ? "text-[hsl(var(--cymru-green))]" : "text-foreground group-hover:text-primary transition-colors"
+                                        )}
+                                      >
+                                        {label}
+                                      </span>
+                                      {isCumul && (
+                                        <span className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">
+                                          {lang === "cy" ? "Adolygiad Cronnus" : "Cumulative Review"}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                           </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    );
+                  })}
+                  </Accordion>
+                </div>
+              )})}
             </div>
           </AccordionContent>
         </AccordionItem>

@@ -50,9 +50,30 @@ export default function PracticeCardChoices({
   tooltipTranslate,
   tooltipWordCategory,
   guess,
+  unit,
+  sourceFile,
 }) {
   const isFeedback = cardState === "feedback";
   const baseword = sent?.base || "_____";
+  const courseBadge = useMemo(() => {
+    if (!unit) return null;
+    let course = "";
+
+    // Heuristic for course name from filename
+    const src = (sourceFile || "").toLowerCase();
+    if (src.includes("mynediad")) {
+       course = "Mynediad";
+    } else if (src.includes("sylfaen")) {
+       course = "Sylfaen";
+    }
+    
+    const prefix = t("unitPrefix") || "Unit";
+    const unitPart = `${prefix} ${unit}`;
+
+    if (course) return `${course} • ${unitPart}`;
+    return unitPart;
+  }, [unit, sourceFile, t]);
+
   const blankSlot = "_____";
   const hoverCardContentClass =
     "w-64 max-w-[85vw] rounded-2xl border border-border bg-card/95 p-4 text-sm text-foreground shadow-xl backdrop-blur";
@@ -110,7 +131,16 @@ export default function PracticeCardChoices({
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-center w-full px-2">
+      {/* Course Badge - Top Left */}
+      {courseBadge && (
+        <div className="flex w-full px-2 justify-start">
+           <Badge className="bg-[hsl(var(--cymru-green-light))] text-white hover:bg-[hsl(var(--cymru-green-light))] border-0 text-[10px] uppercase tracking-wider font-semibold opacity-90">
+             {courseBadge}
+           </Badge>
+        </div>
+      )}
+      
+      <div className="flex flex-col items-center gap-2 w-full px-2">
         <div className="relative inline-flex max-w-full">
           <Badge
             variant="secondary"

@@ -1,5 +1,7 @@
 // src/data/presets.js
-export const PRESET_DEFS = {
+import { COURSES } from "./courses";
+
+const BASE_PRESETS = {
   "starter-preps": {
     id: "starter-preps",
     titleKey: "preset.starterPreps.title",
@@ -25,7 +27,33 @@ export const PRESET_DEFS = {
     descriptionKey: "preset.placeNames.desc",
     category: "PlaceName",
   },
+  "lazy-test": {
+    id: "lazy-test",
+    title: "Lazy CSV Test",
+    description: "Testing auto-generated answers and rule lookups.",
+    sourceScope: ["test-lazy.csv"],
+  },
 };
 
-export const PRESET_ORDER = ["starter-preps", "numbers-1-10", "articles", "place-names"];
+// Generate presets from Courses
+const COURSE_PRESETS = {};
+for (const course of COURSES) {
+  for (const unit of course.units) {
+    // Preserve the structure required by applyFilters
+    COURSE_PRESETS[unit.id] = {
+      id: unit.id,
+      title: unit.title, // { en, cy } object
+      description: null, // or derive from unit
+      ...unit.criteria
+    };
+  }
+}
+
+export const PRESET_DEFS = {
+  ...BASE_PRESETS,
+  ...COURSE_PRESETS,
+};
+
+export const PRESET_ORDER = ["starter-preps", "numbers-1-10", "articles", "place-names", "lazy-test"];
+
 

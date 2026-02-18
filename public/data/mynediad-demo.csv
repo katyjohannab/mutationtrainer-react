@@ -1,0 +1,16 @@
+CardId,RuleId,Trigger,Base,Outcome,Translate,Category,Template
+m-soft-prep-1,soft-prep,i,Caerdydd,sm,Cardiff,Preposition,Dw i'n mynd {trigger} {answer} yfory.
+m-soft-quest-1,soft-quest-direct,,Gweld,sm,To see,Question,{answer} ti'r gêm neithiwr?
+m-soft-neg-1,soft-neg,,Bydd,sm,Will be,Negative,D{answer} hi ddim yn oer yfory.
+m-soft-qword-1,soft-quest-word,Pwy,Gweld,sm,To see,Question,{trigger} {answer}odd y gêm?
+m-soft-art-1,soft-art-fem,y,cath,sm,cat,Noun,Dyna'r {trigger} {answer} ddu.
+m-soft-adj-1,soft-adj-fem,cegin,bach,sm,small,Adjective,Mae {trigger} {answer} yn y tŷ.
+m-soft-yn-1,soft-yn-pred,yn,hapus,sm,happy,Adjective,Mae o'n {answer} iawn.
+m-soft-num-1,soft-num,dau,ci,sm,dog,Number,Mae {trigger} {answer} gyda hi.
+m-soft-poss-1,soft-poss,dy,brawd,sm,brother,Possessive,Ble mae {trigger} {answer}?
+m-nasal-yn-1,nasal-yn,yn,Caerdydd,nm,Cardiff,PlaceName,Dw i'n byw {trigger} {answer}.
+m-nasal-fy-1,nasal-fy,fy,pen,nm,head,Possessive,O, {trigger} {answer}!
+m-asp-num-1,asp-num,tri,ceffyl,am,horse,Number,Mae {trigger} {answer} yn y cae.
+m-asp-neu-1,asp-neu,neu,coffi,am,coffee,Conjunction,Te {trigger} {answer}?
+m-asp-cmd-1,asp-cmd-neg,Paid â,poeni,am,worry,Verb,{trigger} {answer}!
+m-asp-poss-1,asp-ei-fem,ei,cath,am,cat,Possessive,Dyna {trigger} {answer} (hi).

@@ -66,6 +66,9 @@ export const STRINGS = {
     startHereStepRefine: "Addaswch y math o dreiglad a’r categorïau isod.",
     startHereStepPractice: "Ymarferwch, gwrandewch, a defnyddiwch awgrymiadau wrth i chi fynd.",
 
+    coursesTitle: "Cyrsiau",
+    coursesSubtitle: "Llwybrau dysgu strwythuredig.",
+            
     quickPacksTitle: "Pecynnau cyflym",
     quickPacksSubtitle: "Dechreuwch gyda phecyn neu addaswch isod.",
     quickPacksHint: "Setiau dan arweiniad i neidio i bwnc.",
@@ -87,13 +90,26 @@ export const STRINGS = {
     categoryConjunction: "Cysylltair",
     categoryPreposition: "Arddodiad",
     categoryPronoun: "Rhagenw",
-    categoryVerb: "Berf",
+    categoryVerb: "Berf", // Kept for legacy if needed, but UI might hide it
+    categoryPhrase: "Ymadrodd", // "Phrase"
     categoryAdjective: "Ansoddair",
     categoryAdverb: "Adferf",
     categoryNoun: "Enw",
     categoryNumber: "Rhif",
     categoryPlaceName: "Enw lle",
     categoryPlaceNameCards: "Cardiau enwau lleoedd",
+    
+    // Additional categories from screenshot/user request
+    categorySubjectBoundary: "Ffin y goddrych",
+    categoryInterrogative: "Cwestiynau",
+    categoryNegation: "Gwadu",
+    categoryTimeExpressions: "Ymadroddion amser",
+    categoryPossessive: "Meddiannol",
+
+    // Badge / Course labels
+    unitPrefix: "Uned",
+    courseMynediad: "Mynediad",
+    courseSylfaen: "Sylfaen",
 
 
     // Preset pack titles + descriptions
@@ -187,6 +203,9 @@ export const STRINGS = {
     startHereStepRefine: "Refine mutation type and categories below.",
     startHereStepPractice: "Practice, listen, and use hints as you go.",
 
+    coursesTitle: "Courses",
+    coursesSubtitle: "Structured learning paths.",
+
     quickPacksTitle: "Quick packs",
     quickPacksSubtitle: "Start with a pack or fine-tune below.",
     quickPacksHint: "Curated guided sets to jump into a topic.",
@@ -208,13 +227,26 @@ export const STRINGS = {
     categoryConjunction: "Conjunction",
     categoryPreposition: "Preposition",
     categoryPronoun: "Pronoun",
-    categoryVerb: "Verb",
+    categoryVerb: "Verb", // Kept for legacy
+    categoryPhrase: "Phrase", 
     categoryAdjective: "Adjective",
     categoryAdverb: "Adverb",
     categoryNoun: "Noun",
     categoryNumber: "Number",
     categoryPlaceName: "Place name",
     categoryPlaceNameCards: "Place name cards",
+
+    // Additional categories
+    categorySubjectBoundary: "Subject boundary",
+    categoryInterrogative: "Interrogative",
+    categoryNegation: "Negation",
+    categoryTimeExpressions: "Time expressions",
+    categoryPossessive: "Possessive",
+
+    // Badge / Course labels
+    unitPrefix: "Unit",
+    courseMynediad: "Mynediad",
+    courseSylfaen: "Sylfaen",
 
     // Preset pack titles + descriptions
     "preset.starterPreps.title": "Starter preps",
