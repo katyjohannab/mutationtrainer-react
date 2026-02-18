@@ -37,7 +37,7 @@ export default function HeroPill({
       className={cn(
         "inline-flex rounded-full p-[2px] sm:p-[2.5px]",
         "bg-gradient-to-r from-[hsl(var(--cymru-green))] to-[hsl(var(--cymru-green-light))]",
-        "shadow-md sm:shadow-sm",
+        "shadow-[0_6px_18px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.08)] sm:shadow-[0_4px_14px_rgba(0,0,0,0.10),0_1px_2px_rgba(0,0,0,0.06)]",
         "relative w-full max-w-[min(96vw,40rem)]",
         className
       )}
@@ -82,3 +82,5 @@ export default function HeroPill({
     </div>
   );
 }
+
+

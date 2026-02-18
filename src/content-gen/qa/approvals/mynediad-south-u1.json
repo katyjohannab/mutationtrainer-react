@@ -1,0 +1,10 @@
+{
+  "status": "pending",
+  "reviewer": "",
+  "reviewedAt": "",
+  "approvedCardIds": [],
+  "rejectedCardIds": [],
+  "notes": [
+    "Fill approvedCardIds after human QA of generated/review/mynediad/south/unit1 artifacts."
+  ]
+}

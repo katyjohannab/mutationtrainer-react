@@ -1,0 +1,12 @@
+{
+  "level": "mynediad",
+  "dialect": "south",
+  "unit": 1,
+  "sourceFile": "C:\\Users\\katyj\\mutationtrainer-react\\src\\content-gen\\unit-data\\mynediad\\south\\unit1.js",
+  "evidencePath": "C:\\Users\\katyj\\mutationtrainer-react\\src\\content-gen\\unit-data\\mynediad\\south\\unit1.evidence.json",
+  "approvalPath": "C:\\Users\\katyj\\mutationtrainer-react\\src\\content-gen\\qa\\approvals\\mynediad-south-u1.json",
+  "generatedAt": "2026-02-14T22:03:20.880Z",
+  "cardCount": 11,
+  "ruleCount": 3,
+  "rulesLogPath": "C:\\Users\\katyj\\mutationtrainer-react\\generated\\review\\mynediad\\south\\unit1\\rules-log.json"
+}

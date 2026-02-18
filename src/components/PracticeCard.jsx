@@ -121,7 +121,7 @@ export default function PracticeCard({
     onResult?.({ result: "skipped", guess: "", expected: answer });
   };
 
-  const onHear = async () => {
+  const onHear = useCallback(async () => {
     if (!isFeedback || ttsLoading) return;
     setTtsError("");
     setTtsLoading(true);
@@ -132,7 +132,7 @@ export default function PracticeCard({
     } finally {
       setTtsLoading(false);
     }
-  };
+  }, [isFeedback, row, ttsLoading]);
 
   const handleSmartResult = useCallback(
     (result) => {
@@ -244,11 +244,14 @@ export default function PracticeCard({
                 guess={guess}
                 // New metadata props
                 unit={row.unit}
+                course={row.course || row.Course}
+                level={row.level || row.Level}
                 sourceFile={row.__source}
               />
             ) : (
               <PracticeCardFront
                 sent={sent}
+                row={row} // Pass full row object so front can access trigger
                 answer={answer}
                 cardState={cardState}
                 cardId={cardId}
@@ -270,6 +273,8 @@ export default function PracticeCard({
                 tooltipWordCategory={wordCategory}
                 // New metadata props
                 unit={row.unit}
+                course={row.course || row.Course}
+                level={row.level || row.Level}
                 sourceFile={row.__source}
               />
             )}

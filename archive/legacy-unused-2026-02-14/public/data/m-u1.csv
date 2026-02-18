@@ -1,0 +1,6 @@
+"cardId","unit","family","category","trigger","base","before","after","answer","outcome","translate","translateSent","why","whyCym"
+"m-u1-phrase-boreda","1","Phrases","Greetings","","Bore da","","","Bore da","none","Good morning","Good morning","Fixed phrase. No mutation required.","Ymadrodd sefydlog."
+"m-u1-phrase-prynhawnda","1","Phrases","Greetings","","Prynhawn da","","","Prynhawn da","none","Good afternoon","Good afternoon","Fixed phrase. No mutation required.","Ymadrodd sefydlog."
+"m-u1-phrase-nosda","1","Phrases","Greetings","","Nos da","","","Nos da","none","Good night","Good night","Fixed phrase. No mutation required.","Ymadrodd sefydlog."
+"m-u1-phrase-sutdychchi","1","Phrases","Greetings","","Sut dych chi?","","","Sut dych chi?","none","How are you?","How are you?","Fixed phrase. No mutation required.","Ymadrodd sefydlog."
+"m-u1-phrase-diolch","1","Phrases","Greetings","","Diolch","","","Diolch","none","Thank you","Thank you","Fixed phrase. No mutation required.","Ymadrodd sefydlog."

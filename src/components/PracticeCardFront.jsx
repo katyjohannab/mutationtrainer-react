@@ -25,6 +25,7 @@ import {
   SkipForward,
 } from "lucide-react";
 import AppIcon from "./icons/AppIcon";
+import { deriveDysguBadges } from "../utils/dysguBadges";
 
 export default function PracticeCardFront({
   sent,
@@ -46,30 +47,17 @@ export default function PracticeCardFront({
   tooltipTranslate,
   tooltipWordCategory,
   unit,
+  course,
+  level,
   sourceFile,
 }) {
   const isFeedback = cardState === "feedback";
   const baseword = sent?.base || "_____";
 
-  const courseBadge = useMemo(() => {
-    if (!unit) return null;
-    let course = "";
-
-    // Heuristic for course name from filename
-    const src = (sourceFile || "").toLowerCase();
-    if (src.includes("mynediad")) {
-       course = "Mynediad";
-    } else if (src.includes("sylfaen")) {
-       course = "Sylfaen";
-    }
-    
-    // Label: "Mynediad • Unit 1"
-    const prefix = t("unitPrefix") || "Unit";
-    const unitPart = `${prefix} ${unit}`;
-    
-    if (course) return `${course} • ${unitPart}`;
-    return unitPart;
-  }, [unit, sourceFile, t]);
+  const dysguBadges = useMemo(
+    () => deriveDysguBadges({ course, level, unit, sourceFile, t }),
+    [course, level, unit, sourceFile, t]
+  );
 
   const inputRef = useRef(null);
   const hoverCardContentClass =
@@ -102,7 +90,7 @@ export default function PracticeCardFront({
   const tooltipGreenClass = "bg-[hsl(var(--cymru-green))] text-white";
   const tooltipRedClass = "bg-[hsl(var(--cymru-red))] text-white";
   const tooltipGoldClass = "bg-[hsl(var(--cymru-gold))] text-white";
-
+  
   useEffect(() => {
     if (isFeedback) return;
     inputRef.current?.focus();
@@ -110,16 +98,25 @@ export default function PracticeCardFront({
 
   return (
     <div className="space-y-6">
-      {/* Course Badge - Top Left */}
-      {courseBadge && (
-        <div className="flex w-full px-2 justify-start">
-           <Badge className="bg-[hsl(var(--cymru-green-light))] text-white hover:bg-[hsl(var(--cymru-green-light))] border-0 text-[10px] uppercase tracking-wider font-semibold opacity-90">
-             {courseBadge}
-           </Badge>
+      {/* Dysgu course/unit badges */}
+      {dysguBadges && (
+        <div className="flex w-full justify-start gap-2 px-2">
+          {dysguBadges.courseLabel && (
+            <Badge variant="cymru-dark" className="rounded-full px-3 py-1 text-xs font-semibold">
+              {dysguBadges.courseLabel}
+            </Badge>
+          )}
+          {dysguBadges.unitLabel && (
+            <Badge variant="cymru-light" className="rounded-full px-3 py-1 text-xs font-semibold">
+              {dysguBadges.unitLabel}
+            </Badge>
+          )}
         </div>
       )}
 
       <div className="flex flex-col items-center gap-2 w-full px-2">
+        {/* CONTEXT TRIGGER REMOVED - User found it confusing/duplicate */}
+        
         <div className="relative inline-flex max-w-full">
           {/* TODO: Map cardState or parent feedback state to HeroPill state (success/destructive/hint) */}
           <HeroPill text={baseword} showPin={false} />
@@ -170,7 +167,7 @@ export default function PracticeCardFront({
         <div className="text-sm text-muted-foreground">{translate}</div>
       ) : null}
 
-      <div className="text-[clamp(1.05rem,0.6vw+0.95rem,1.45rem)] leading-relaxed text-foreground">
+      <div className="text-[clamp(1.05rem,0.6vw+0.95rem,1.45rem)] leading-relaxed text-foreground flex flex-wrap justify-center items-baseline gap-1">
         <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
         <Input
           ref={inputRef}
@@ -178,7 +175,7 @@ export default function PracticeCardFront({
           onChange={(e) => setGuess(e.target.value)}
           disabled={disabledInput}
           placeholder={placeholder}
-          className="mx-2 inline-flex h-10 sm:h-11 min-w-[10ch] w-[12ch] sm:w-[15ch] lg:w-[16ch] max-w-full align-baseline rounded-lg border-0 bg-[hsl(var(--cymru-gold)/0.08)] px-3 text-[clamp(1.05rem,0.6vw+0.95rem,1.45rem)] text-foreground shadow-sm placeholder:text-xs sm:placeholder:text-sm placeholder:font-medium placeholder:text-muted-foreground/60 focus-visible:ring-2 focus-visible:ring-ring/50"
+          className="mx-0 inline-flex h-10 sm:h-11 min-w-[10ch] w-[12ch] sm:w-[15ch] lg:w-[16ch] max-w-full align-baseline rounded-lg border-0 bg-[hsl(var(--cymru-gold)/0.08)] px-3 text-[clamp(1.05rem,0.6vw+0.95rem,1.45rem)] text-foreground shadow-sm placeholder:text-xs sm:placeholder:text-sm placeholder:font-medium placeholder:text-muted-foreground/60 focus-visible:ring-2 focus-visible:ring-ring/50"
           onKeyDown={(e) => {
             if (e.key === "Enter") onCheck();
           }}
@@ -275,3 +272,5 @@ export default function PracticeCardFront({
     </div>
   );
 }
+
+

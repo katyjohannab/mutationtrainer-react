@@ -1,0 +1,47 @@
+[
+  {
+    "ruleId": "none-bod-yn-verbnoun",
+    "cardCount": 6,
+    "mutationFamilies": [
+      "none"
+    ],
+    "focuses": [
+      "contrast-none"
+    ],
+    "patternIds": [
+      "pat-u1-dw-in-verbnoun"
+    ],
+    "whyEn": "After **bod + yn**, a verbnoun stays in base form (no mutation).",
+    "whyCy": "Ar ôl **bod + yn**, mae berfenw'n aros yn y ffurf sylfaenol (dim treiglad)."
+  },
+  {
+    "ruleId": "none-misc-general",
+    "cardCount": 1,
+    "mutationFamilies": [
+      "none"
+    ],
+    "focuses": [
+      "contrast-none"
+    ],
+    "patternIds": [
+      "pat-u1-dw-in-byw-yn-place"
+    ],
+    "whyEn": "In this starter frame, use the place name as listed in vocab; no mutation is being drilled here.",
+    "whyCy": "Yn y ffram gychwynnol hon, defnyddiwch enw'r lle fel yn y eirfa; nid yw treiglad yn cael ei ddrilio yma."
+  },
+  {
+    "ruleId": "soft-bod-yn-adj",
+    "cardCount": 4,
+    "mutationFamilies": [
+      "soft"
+    ],
+    "focuses": [
+      "mutation"
+    ],
+    "patternIds": [
+      "pat-u1-dw-in-adj"
+    ],
+    "whyEn": "After **bod + yn**, adjectives take a **Soft Mutation** (e.g. *da -> dda*).",
+    "whyCy": "Ar ôl **bod + yn**, mae ansoddeiriau'n cymryd **Treiglad Meddal** (e.e. *da -> dda*)."
+  }
+]

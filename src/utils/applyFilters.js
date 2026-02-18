@@ -106,6 +106,58 @@ export function applyFilters(rows, state) {
         return targetUnits.has(u);
       });
     }
+
+    // E) Course / Level / Dialect
+    if (preset.course) {
+      const target = canon(preset.course);
+      out = out.filter((r) => {
+        const course = r.course || r.Course || "";
+        return canon(course) === target;
+      });
+    }
+
+    if (preset.level) {
+      const target = canon(preset.level);
+      out = out.filter((r) => {
+        const level = r.level || r.Level || "";
+        return canon(level) === target;
+      });
+    }
+
+    if (preset.dialect) {
+      const target = canon(preset.dialect);
+      out = out.filter((r) => {
+        const dialect = r.dialect || r.Dialect || "";
+        return canon(dialect) === target;
+      });
+    }
+
+    // F) Rule IDs
+    if (preset.ruleIds?.length) {
+      const allowedRuleIds = new Set(preset.ruleIds.map(canon));
+      out = out.filter((r) => {
+        const rid = r.ruleId || r.RuleId || "";
+        return allowedRuleIds.has(canon(rid));
+      });
+    }
+
+    // G) Preset mutation families
+    if (preset.mutationFamilies?.length) {
+      const allowed = new Set(preset.mutationFamilies.map(canon));
+      out = out.filter((r) => {
+        const key = mutationKeyFromOutcome(r.outcome || r.Outcome);
+        return allowed.has(canon(key));
+      });
+    }
+
+    // H) Focus (for generated course decks)
+    if (preset.focus?.length) {
+      const allowedFocus = new Set(preset.focus.map(canon));
+      out = out.filter((r) => {
+        const focus = r.focus || r.Focus || "";
+        return allowedFocus.has(canon(focus));
+      });
+    }
   }
 
   // 2) Manual Families (User toggles)
@@ -117,7 +169,16 @@ export function applyFilters(rows, state) {
     });
   }
 
-  // 3) Manual Categories (User toggles)
+  // 3) Manual Levels (User toggles)
+  if (filters?.levels && filters.levels.size > 0) {
+    const allowedLevels = filters.levels;
+    out = out.filter((r) => {
+      const level = r.level || r.Level || r.course || r.Course || "";
+      return allowedLevels.has(canon(level));
+    });
+  }
+
+  // 4) Manual Categories (User toggles)
   if (filters?.categories && filters.categories.size > 0) {
     const catSet = filters.categories;
     out = out.filter((r) => {

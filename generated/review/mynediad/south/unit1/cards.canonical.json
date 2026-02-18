@@ -1,0 +1,398 @@
+[
+  {
+    "cardId": "gen-59b2199a1460",
+    "level": "mynediad",
+    "dialect": "south",
+    "course": "mynediad",
+    "unit": 1,
+    "patternId": "pat-u1-dw-in-verbnoun",
+    "ruleId": "none-bod-yn-verbnoun",
+    "mutation": "none",
+    "focus": "contrast-none",
+    "family": "none",
+    "category": "Phrase",
+    "trigger": "Dw i'n",
+    "base": "darllen",
+    "before": "Dw i'n ",
+    "after": ".",
+    "answer": "darllen",
+    "translateSent": "I read.",
+    "why": "After **bod + yn**, a verbnoun stays in base form (no mutation).",
+    "whyCym": "Ar ôl **bod + yn**, mae berfenw'n aros yn y ffurf sylfaenol (dim treiglad).",
+    "sourceRefs": [
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 13,
+        "boxLabel": "unit-1-pattern-box",
+        "note": "Sentence patterns introduced in Unit 1."
+      },
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 12,
+        "boxLabel": "unit-1-vocab-box",
+        "note": "Vocabulary box at start of unit."
+      }
+    ],
+    "qaStatus": "pending"
+  },
+  {
+    "cardId": "gen-610017f6f7be",
+    "level": "mynediad",
+    "dialect": "south",
+    "course": "mynediad",
+    "unit": 1,
+    "patternId": "pat-u1-dw-in-byw-yn-place",
+    "ruleId": "none-misc-general",
+    "mutation": "none",
+    "focus": "contrast-none",
+    "family": "none",
+    "category": "PlaceName",
+    "trigger": "Dw i'n byw yn",
+    "base": "Abertawe",
+    "before": "Dw i'n byw yn ",
+    "after": ".",
+    "answer": "Abertawe",
+    "translateSent": "I live in Swansea.",
+    "why": "In this starter frame, use the place name as listed in vocab; no mutation is being drilled here.",
+    "whyCym": "Yn y ffram gychwynnol hon, defnyddiwch enw'r lle fel yn y eirfa; nid yw treiglad yn cael ei ddrilio yma.",
+    "sourceRefs": [
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 13,
+        "boxLabel": "unit-1-pattern-box",
+        "note": "Sentence patterns introduced in Unit 1."
+      },
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 12,
+        "boxLabel": "unit-1-vocab-box",
+        "note": "Vocabulary box at start of unit."
+      }
+    ],
+    "qaStatus": "pending"
+  },
+  {
+    "cardId": "gen-824167d3e27a",
+    "level": "mynediad",
+    "dialect": "south",
+    "course": "mynediad",
+    "unit": 1,
+    "patternId": "pat-u1-dw-in-adj",
+    "ruleId": "soft-bod-yn-adj",
+    "mutation": "soft",
+    "focus": "mutation",
+    "family": "soft",
+    "category": "Adjective",
+    "trigger": "Dw i'n",
+    "base": "ofnadwy",
+    "before": "Dw i'n ",
+    "after": ".",
+    "answer": "ofnadwy",
+    "translateSent": "I am terrible.",
+    "why": "After **bod + yn**, adjectives take a **Soft Mutation** (e.g. *da -> dda*).",
+    "whyCym": "Ar ôl **bod + yn**, mae ansoddeiriau'n cymryd **Treiglad Meddal** (e.e. *da -> dda*).",
+    "sourceRefs": [
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 13,
+        "boxLabel": "unit-1-pattern-box",
+        "note": "Sentence patterns introduced in Unit 1."
+      },
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 12,
+        "boxLabel": "unit-1-vocab-box",
+        "note": "Vocabulary box at start of unit."
+      }
+    ],
+    "qaStatus": "pending"
+  },
+  {
+    "cardId": "gen-825ac927d96d",
+    "level": "mynediad",
+    "dialect": "south",
+    "course": "mynediad",
+    "unit": 1,
+    "patternId": "pat-u1-dw-in-adj",
+    "ruleId": "soft-bod-yn-adj",
+    "mutation": "soft",
+    "focus": "mutation",
+    "family": "soft",
+    "category": "Adjective",
+    "trigger": "Dw i'n",
+    "base": "wedi blino",
+    "before": "Dw i'n ",
+    "after": ".",
+    "answer": "wedi blino",
+    "translateSent": "I am tired.",
+    "why": "After **bod + yn**, adjectives take a **Soft Mutation** (e.g. *da -> dda*).",
+    "whyCym": "Ar ôl **bod + yn**, mae ansoddeiriau'n cymryd **Treiglad Meddal** (e.e. *da -> dda*).",
+    "sourceRefs": [
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 13,
+        "boxLabel": "unit-1-pattern-box",
+        "note": "Sentence patterns introduced in Unit 1."
+      },
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 12,
+        "boxLabel": "unit-1-vocab-box",
+        "note": "Vocabulary box at start of unit."
+      }
+    ],
+    "qaStatus": "pending"
+  },
+  {
+    "cardId": "gen-9510039964f4",
+    "level": "mynediad",
+    "dialect": "south",
+    "course": "mynediad",
+    "unit": 1,
+    "patternId": "pat-u1-dw-in-adj",
+    "ruleId": "soft-bod-yn-adj",
+    "mutation": "soft",
+    "focus": "mutation",
+    "family": "soft",
+    "category": "Adjective",
+    "trigger": "Dw i'n",
+    "base": "pinc",
+    "before": "Dw i'n ",
+    "after": ".",
+    "answer": "binc",
+    "translateSent": "I am pink.",
+    "why": "After **bod + yn**, adjectives take a **Soft Mutation** (e.g. *da -> dda*).",
+    "whyCym": "Ar ôl **bod + yn**, mae ansoddeiriau'n cymryd **Treiglad Meddal** (e.e. *da -> dda*).",
+    "sourceRefs": [
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 13,
+        "boxLabel": "unit-1-pattern-box",
+        "note": "Sentence patterns introduced in Unit 1."
+      },
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 12,
+        "boxLabel": "unit-1-vocab-box",
+        "note": "Vocabulary box at start of unit."
+      }
+    ],
+    "qaStatus": "pending"
+  },
+  {
+    "cardId": "gen-9c15fe55832e",
+    "level": "mynediad",
+    "dialect": "south",
+    "course": "mynediad",
+    "unit": 1,
+    "patternId": "pat-u1-dw-in-verbnoun",
+    "ruleId": "none-bod-yn-verbnoun",
+    "mutation": "none",
+    "focus": "contrast-none",
+    "family": "none",
+    "category": "Phrase",
+    "trigger": "Dw i'n",
+    "base": "byw",
+    "before": "Dw i'n ",
+    "after": ".",
+    "answer": "byw",
+    "translateSent": "I live.",
+    "why": "After **bod + yn**, a verbnoun stays in base form (no mutation).",
+    "whyCym": "Ar ôl **bod + yn**, mae berfenw'n aros yn y ffurf sylfaenol (dim treiglad).",
+    "sourceRefs": [
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 13,
+        "boxLabel": "unit-1-pattern-box",
+        "note": "Sentence patterns introduced in Unit 1."
+      },
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 12,
+        "boxLabel": "unit-1-vocab-box",
+        "note": "Vocabulary box at start of unit."
+      }
+    ],
+    "qaStatus": "pending"
+  },
+  {
+    "cardId": "gen-a3eba449e8bc",
+    "level": "mynediad",
+    "dialect": "south",
+    "course": "mynediad",
+    "unit": 1,
+    "patternId": "pat-u1-dw-in-verbnoun",
+    "ruleId": "none-bod-yn-verbnoun",
+    "mutation": "none",
+    "focus": "contrast-none",
+    "family": "none",
+    "category": "Phrase",
+    "trigger": "Dw i'n",
+    "base": "stopio",
+    "before": "Dw i'n ",
+    "after": ".",
+    "answer": "stopio",
+    "translateSent": "I stop.",
+    "why": "After **bod + yn**, a verbnoun stays in base form (no mutation).",
+    "whyCym": "Ar ôl **bod + yn**, mae berfenw'n aros yn y ffurf sylfaenol (dim treiglad).",
+    "sourceRefs": [
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 13,
+        "boxLabel": "unit-1-pattern-box",
+        "note": "Sentence patterns introduced in Unit 1."
+      },
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 12,
+        "boxLabel": "unit-1-vocab-box",
+        "note": "Vocabulary box at start of unit."
+      }
+    ],
+    "qaStatus": "pending"
+  },
+  {
+    "cardId": "gen-a8bfb738d2f7",
+    "level": "mynediad",
+    "dialect": "south",
+    "course": "mynediad",
+    "unit": 1,
+    "patternId": "pat-u1-dw-in-adj",
+    "ruleId": "soft-bod-yn-adj",
+    "mutation": "soft",
+    "focus": "mutation",
+    "family": "soft",
+    "category": "Adjective",
+    "trigger": "Dw i'n",
+    "base": "da",
+    "before": "Dw i'n ",
+    "after": ".",
+    "answer": "dda",
+    "translateSent": "I am good.",
+    "why": "After **bod + yn**, adjectives take a **Soft Mutation** (e.g. *da -> dda*).",
+    "whyCym": "Ar ôl **bod + yn**, mae ansoddeiriau'n cymryd **Treiglad Meddal** (e.e. *da -> dda*).",
+    "sourceRefs": [
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 13,
+        "boxLabel": "unit-1-pattern-box",
+        "note": "Sentence patterns introduced in Unit 1."
+      },
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 12,
+        "boxLabel": "unit-1-vocab-box",
+        "note": "Vocabulary box at start of unit."
+      }
+    ],
+    "qaStatus": "pending"
+  },
+  {
+    "cardId": "gen-b99c82c891b1",
+    "level": "mynediad",
+    "dialect": "south",
+    "course": "mynediad",
+    "unit": 1,
+    "patternId": "pat-u1-dw-in-verbnoun",
+    "ruleId": "none-bod-yn-verbnoun",
+    "mutation": "none",
+    "focus": "contrast-none",
+    "family": "none",
+    "category": "Phrase",
+    "trigger": "Dw i'n",
+    "base": "gyrru",
+    "before": "Dw i'n ",
+    "after": ".",
+    "answer": "gyrru",
+    "translateSent": "I drive.",
+    "why": "After **bod + yn**, a verbnoun stays in base form (no mutation).",
+    "whyCym": "Ar ôl **bod + yn**, mae berfenw'n aros yn y ffurf sylfaenol (dim treiglad).",
+    "sourceRefs": [
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 13,
+        "boxLabel": "unit-1-pattern-box",
+        "note": "Sentence patterns introduced in Unit 1."
+      },
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 12,
+        "boxLabel": "unit-1-vocab-box",
+        "note": "Vocabulary box at start of unit."
+      }
+    ],
+    "qaStatus": "pending"
+  },
+  {
+    "cardId": "gen-e9b55d69765f",
+    "level": "mynediad",
+    "dialect": "south",
+    "course": "mynediad",
+    "unit": 1,
+    "patternId": "pat-u1-dw-in-verbnoun",
+    "ruleId": "none-bod-yn-verbnoun",
+    "mutation": "none",
+    "focus": "contrast-none",
+    "family": "none",
+    "category": "Phrase",
+    "trigger": "Dw i'n",
+    "base": "gwylio",
+    "before": "Dw i'n ",
+    "after": ".",
+    "answer": "gwylio",
+    "translateSent": "I watch.",
+    "why": "After **bod + yn**, a verbnoun stays in base form (no mutation).",
+    "whyCym": "Ar ôl **bod + yn**, mae berfenw'n aros yn y ffurf sylfaenol (dim treiglad).",
+    "sourceRefs": [
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 13,
+        "boxLabel": "unit-1-pattern-box",
+        "note": "Sentence patterns introduced in Unit 1."
+      },
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 12,
+        "boxLabel": "unit-1-vocab-box",
+        "note": "Vocabulary box at start of unit."
+      }
+    ],
+    "qaStatus": "pending"
+  },
+  {
+    "cardId": "gen-fe434c0aaccd",
+    "level": "mynediad",
+    "dialect": "south",
+    "course": "mynediad",
+    "unit": 1,
+    "patternId": "pat-u1-dw-in-verbnoun",
+    "ruleId": "none-bod-yn-verbnoun",
+    "mutation": "none",
+    "focus": "contrast-none",
+    "family": "none",
+    "category": "Phrase",
+    "trigger": "Dw i'n",
+    "base": "dysgu",
+    "before": "Dw i'n ",
+    "after": ".",
+    "answer": "dysgu",
+    "translateSent": "I learn, to teach.",
+    "why": "After **bod + yn**, a verbnoun stays in base form (no mutation).",
+    "whyCym": "Ar ôl **bod + yn**, mae berfenw'n aros yn y ffurf sylfaenol (dim treiglad).",
+    "sourceRefs": [
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 13,
+        "boxLabel": "unit-1-pattern-box",
+        "note": "Sentence patterns introduced in Unit 1."
+      },
+      {
+        "sourceId": "mynediad-de-v2-2023",
+        "page": 12,
+        "boxLabel": "unit-1-vocab-box",
+        "note": "Vocabulary box at start of unit."
+      }
+    ],
+    "qaStatus": "pending"
+  }
+]

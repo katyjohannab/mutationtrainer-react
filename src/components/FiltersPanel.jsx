@@ -4,7 +4,7 @@ import AppIcon from "./icons/AppIcon";
 import { useI18n } from "../i18n/I18nContext";
 import { cn } from "../lib/cn";
 import { PRESET_DEFS, PRESET_ORDER } from "../data/presets";
-import { COURSES } from "../data/courses";
+import DysguCourseUnitPicker from "./filters/DysguCourseUnitPicker";
 
 import {
   Accordion,
@@ -13,6 +13,7 @@ import {
   AccordionTrigger,
 } from "./ui/accordion";
 import { Badge, badgeVariants } from "./ui/badge";
+import { Button } from "./ui/button";
 
 const MUTATION_FILTERS = [
   { id: "aspirate", labelKey: "mutationFilterAspirate" },
@@ -22,6 +23,12 @@ const MUTATION_FILTERS = [
 ];
 
 const MUTATION_FILTER_IDS = new Set(MUTATION_FILTERS.map((item) => item.id));
+const LEVEL_LABEL_KEY_BY_ID = {
+  mynediad: "courseMynediad",
+  sylfaen: "courseSylfaen",
+  canolradd: "courseCanolradd",
+  uwch: "courseUwch",
+};
 
 function FilterBadge({ active, onClick, children, className, variant }) {
   return (
@@ -50,26 +57,41 @@ function ResetBadge({ onClick, children }) {
   );
 }
 
+function categoryTranslationKey(label) {
+  return `category${String(label || "").replace(/\s+/g, "")}`;
+}
+
 export default function FiltersPanel({
   className,
   activePresetId,
   onTogglePreset,
-  available = { families: [], categories: [] },
-  filters = { families: new Set(), categories: new Set() },
+  onSetPreset,
+  onPresetApplied,
+  available = { families: [], categories: [], levels: [] },
+  filters = { families: new Set(), categories: new Set(), levels: new Set() },
   onToggleFilter,
   onClearFilterType,
   openItems,
   onOpenItemsChange,
   accordionType = "single",
 }) {
-  const { t, lang } = useI18n();
+  const { t } = useI18n();
 
   const [expandedCats, setExpandedCats] = useState(false);
+
   const headerBase = "inline-flex items-center gap-2 font-semibold";
   const headerIcon = "h-4 w-4 shrink-0";
 
-  const safeAvailable = available || { families: [], categories: [] };
-  const safeFilters = filters || { families: new Set(), categories: new Set() };
+  const safeAvailable = {
+    families: available?.families ?? [],
+    categories: available?.categories ?? [],
+    levels: available?.levels ?? [],
+  };
+  const safeFilters = {
+    families: filters?.families ?? new Set(),
+    categories: filters?.categories ?? new Set(),
+    levels: filters?.levels ?? new Set(),
+  };
 
   useEffect(() => {
     const current = Array.from(safeFilters.families ?? []);
@@ -80,9 +102,8 @@ export default function FiltersPanel({
 
   const isFamilyAll = safeFilters.families.size === 0;
   const isCategoryAll = safeFilters.categories.size === 0;
+  const isLevelAll = safeFilters.levels.size === 0;
 
-  // Decide how many categories to show
-  // Screenshot has about 8-9 visible before "Fewer/More"
   const INITIAL_CAT_COUNT = 8;
   const visibleCategories = expandedCats
     ? safeAvailable.categories
@@ -90,16 +111,20 @@ export default function FiltersPanel({
 
   const labelFor = (item) => {
     if (!item) return "";
-    // Check for explicit labelKey (e.g. mutation filters)
     if (item.labelKey) return t(item.labelKey);
-    // Check for category translation key (e.g. "Article" → "categoryArticle")
+
     if (item.label) {
-      const categoryKey = `category${item.label.replace(/\s+/g, "")}`;
-      const translated = t(categoryKey);
-      // If translation exists and is different from key, use it
-      if (translated && translated !== categoryKey) return translated;
+      const translated = t(categoryTranslationKey(item.label));
+      if (translated && translated !== categoryTranslationKey(item.label)) return translated;
     }
-    // Fallback to raw label
+
+    return item.label ?? "";
+  };
+
+  const levelLabelFor = (item) => {
+    if (!item) return "";
+    const key = LEVEL_LABEL_KEY_BY_ID[item.id];
+    if (key) return t(key);
     return item.label ?? "";
   };
 
@@ -108,7 +133,6 @@ export default function FiltersPanel({
       ? { value: openItems, onValueChange: onOpenItemsChange }
       : { defaultValue: "item-start" };
 
-  // Only pass collapsible for single-type accordions (Radix requirement)
   const collapsibleProp = accordionType === "single" ? { collapsible: true } : {};
 
   return (
@@ -155,121 +179,23 @@ export default function FiltersPanel({
                 className={cn(headerIcon, "text-[hsl(var(--cymru-green))]")}
                 aria-hidden="true"
               />
-              <span>{t("coursesTitle") || "Courses"}</span>
+              <span>{t("coursesTitle") || "Dysgu Cymraeg Courses"}</span>
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="mb-3">
+            <div className="mb-3 space-y-2">
+              <Badge variant="cymru-dark-wash" className="rounded-full">
+                {t("coursesLearnerBadge")}
+              </Badge>
               <p className="text-xs text-muted-foreground">
-                {t("coursesSubtitle") || "Structured learning paths."}
+                {t("coursesSubtitle") || "Structured course-unit routes for Dysgu Cymraeg learners."}
               </p>
             </div>
-
-            <div className="space-y-4">
-              {COURSES.map((course) => {
-                // Group units by section key to create visual breaks
-                const bySection = course.units.reduce((acc, unit) => {
-                  const s = unit.section || "default";
-                  if (!acc[s]) acc[s] = [];
-                  acc[s].push(unit);
-                  return acc;
-                }, {});
-                
-                // Order: block1, block2, block3, block4, then anything else
-                const orderedKeys = ["block1", "block2", "block3", "block4", "default"].filter(k => bySection[k]);
-                // If specific keys aren't found, just use whatever keys exist
-                Object.keys(bySection).forEach(k => {
-                  if (!orderedKeys.includes(k)) orderedKeys.push(k);
-                });
-
-                return (
-                <div key={course.id} className="space-y-3 mb-6">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground border-b pb-1 mb-2">
-                    {course.title[lang] || course.title.en}
-                  </h4>
-                  
-                  <Accordion type="multiple" className="w-full space-y-2">
-                  {orderedKeys.map(sectKey => {
-                    const units = bySection[sectKey];
-                    let label = sectKey;
-                    if (sectKey.startsWith("block")) {
-                      const n = sectKey.replace("block", "");
-                      label = lang === "cy" ? `Bloc ${n}` : `Block ${n}`;
-                    } else if (sectKey === "default") {
-                      label = lang === "cy" ? "Eraill" : "Other";
-                    }
-
-                    return (
-                      <AccordionItem key={sectKey} value={sectKey} className="border-none">
-                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg bg-secondary/20 px-4 py-2 text-sm font-medium hover:bg-secondary/30 hover:no-underline [&[data-state=open]>svg]:rotate-180">
-                          <span>{label}</span>
-                        </AccordionTrigger>
-                        <AccordionContent className="pt-3 px-1">
-                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                              {units.map((unit) => {
-                                const active = activePresetId === unit.id;
-                                const label = unit.title[lang] || unit.title.en;
-                                const isCumul = unit.isCumulative;
-
-                                return (
-                                  <div
-                                    key={unit.id}
-                                    onClick={() => onTogglePreset?.(active ? null : unit.id)}
-                                    className={cn(
-                                      "relative cursor-pointer rounded-xl border p-3 transition-all hover:shadow-md text-left select-none group",
-                                      active
-                                        ? "bg-primary/10 border-2 border-[hsl(var(--cymru-green-light))]"
-                                        : "bg-card border-border hover:border-primary/30",
-                                      isCumul && "sm:col-span-2 bg-stone-50/50 dark:bg-stone-900/20 border-dashed"
-                                    )}
-                                  >
-                                    {active && (
-                                      <div className="absolute -top-2 -right-2 bg-card rounded-full p-0.5 shadow-sm border border-border">
-                                        <div className="bg-primary rounded-full p-0.5 text-primary-foreground">
-                                          <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="10"
-                                            height="10"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="3"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                          >
-                                            <path d="M20 6 9 17l-5-5" />
-                                          </svg>
-                                        </div>
-                                      </div>
-                                    )}
-
-                                    <div className="flex flex-col gap-0.5">
-                                      <span
-                                        className={cn(
-                                          "font-semibold text-sm",
-                                          active ? "text-[hsl(var(--cymru-green))]" : "text-foreground group-hover:text-primary transition-colors"
-                                        )}
-                                      >
-                                        {label}
-                                      </span>
-                                      {isCumul && (
-                                        <span className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">
-                                          {lang === "cy" ? "Adolygiad Cronnus" : "Cumulative Review"}
-                                        </span>
-                                      )}
-                                    </div>
-                                  </div>
-                                );
-                              })}
-                           </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    );
-                  })}
-                  </Accordion>
-                </div>
-              )})}
-            </div>
+            <DysguCourseUnitPicker
+              activePresetId={activePresetId}
+              onSetPreset={onSetPreset}
+              onPresetApplied={onPresetApplied}
+            />
           </AccordionContent>
         </AccordionItem>
 
@@ -281,16 +207,16 @@ export default function FiltersPanel({
                 className={cn(headerIcon, "text-[hsl(var(--cymru-green))]")}
                 aria-hidden="true"
               />
-              <span>{t("quickPacksTitle")}</span>
+              <span>{t("starterPacksTitle")}</span>
             </div>
           </AccordionTrigger>
           <AccordionContent>
             <div className="mb-3">
               <p className="text-xs text-muted-foreground">
-                {t("quickPacksSubtitle")}
+                {t("starterPacksSubtitle")}
               </p>
               <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-                {t("quickPacksHint")}
+                {t("starterPacksHint")}
               </p>
             </div>
 
@@ -304,30 +230,27 @@ export default function FiltersPanel({
                   : def?.desc ?? "Practice set";
 
                 return (
-                  <div
+                  <Button
                     key={id}
+                    type="button"
+                    variant="ghost"
                     onClick={() => onTogglePreset?.(active ? null : id)}
                     className={cn(
-                      "relative cursor-pointer rounded-xl border p-4 transition-all hover:shadow-md text-left select-none group",
+                      "relative h-auto w-full justify-start rounded-xl border p-4 text-left transition-all hover:shadow-md",
                       active
-                        ? "bg-primary/10 border-2 border-[hsl(var(--cymru-green-light))]"
-                        : "bg-card border-border hover:border-primary/30"
+                        ? "border-2 border-[hsl(var(--cymru-green-light))] bg-primary/10"
+                        : "border-border bg-card hover:border-primary/30"
                     )}
                   >
-                    {active && (
-                      <div className="absolute -top-2 -right-2 bg-card rounded-full p-0.5 shadow-sm border border-border">
-                        <div className="bg-primary rounded-full p-0.5 text-primary-foreground">
-                           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                        </div>
-                      </div>
-                    )}
-                    <div className="font-semibold text-foreground text-sm mb-1 pr-4 group-hover:text-primary transition-colors">
-                      {label}
-                    </div>
-                    <div className="text-xs text-muted-foreground leading-snug">
-                      {desc}
-                    </div>
-                  </div>
+                    <span className="flex flex-col items-start gap-1 pr-4">
+                      <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+                        {label}
+                      </span>
+                      <span className="text-xs text-muted-foreground leading-snug">
+                        {desc}
+                      </span>
+                    </span>
+                  </Button>
                 );
               })}
             </div>
@@ -342,17 +265,50 @@ export default function FiltersPanel({
                 className={cn(headerIcon, "text-[hsl(var(--cymru-green))]")}
                 aria-hidden="true"
               />
-              <span>{t("coreFiltersTitle")}</span>
+              <span>{t("advancedFiltersTitle")}</span>
             </div>
           </AccordionTrigger>
           <AccordionContent>
             <div className="mb-3">
               <p className="text-xs text-muted-foreground">
-                {t("coreFiltersSubtitle")}
+                {t("advancedFiltersSubtitle")}
               </p>
             </div>
 
-            {/* Mutation Type */}
+            <div className="mb-6">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
+                {t("levelsHeading")}
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                <FilterBadge
+                  active={isLevelAll}
+                  onClick={() => onClearFilterType?.("levels")}
+                  variant={isLevelAll ? "cymru-dark" : "cymru-dark-wash"}
+                >
+                  {t("filtersAll")}
+                </FilterBadge>
+                {safeAvailable.levels.map((item) => (
+                  <FilterBadge
+                    key={item.id}
+                    active={safeFilters.levels.has(item.id)}
+                    onClick={() => onToggleFilter?.("levels", item.id)}
+                    variant={
+                      safeFilters.levels.has(item.id)
+                        ? "cymru-dark"
+                        : "cymru-dark-wash"
+                    }
+                  >
+                    {levelLabelFor(item)}
+                  </FilterBadge>
+                ))}
+                {!isLevelAll && (
+                  <ResetBadge onClick={() => onClearFilterType?.("levels")}>
+                    {t("filtersReset")}
+                  </ResetBadge>
+                )}
+              </div>
+            </div>
+
             <div className="mb-6">
               <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
                 {t("mutationTypeHeading")}
@@ -387,7 +343,6 @@ export default function FiltersPanel({
               </div>
             </div>
 
-            {/* Categories */}
             <div>
               <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
                 {t("categoriesHeading")}
@@ -415,7 +370,6 @@ export default function FiltersPanel({
                   </FilterBadge>
                 ))}
 
-                {/* Expander */}
                 {safeAvailable.categories.length > INITIAL_CAT_COUNT && (
                   <button
                     type="button"

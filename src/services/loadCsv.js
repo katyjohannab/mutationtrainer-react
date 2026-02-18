@@ -1,6 +1,7 @@
 // src/services/loadCsv.js
 import Papa from "papaparse";
 import { GRAMMAR_RULES } from "../data/rules";
+import { CSV_SOURCE_META } from "../data/csvSources";
 import { mutateWord } from "../utils/grammar";
 
 // Map normalized lower-case alpha-only headers to internal keys
@@ -8,6 +9,12 @@ const CANON_MAP = {
   "cardid": "cardId",
   "id": "cardId",
   "ruleid": "ruleId",
+  "course": "course",
+  "level": "level",
+  "dialect": "dialect",
+  "patternid": "patternId",
+  "focus": "focus",
+  "qastatus": "qaStatus",
   
   "rulefamily": "family",
   "family": "family",
@@ -31,16 +38,43 @@ const CANON_MAP = {
   "after": "after",
   "answer": "answer",
   "outcome": "outcome",
+  "mutation": "outcome",
   
   "translatesent": "translateSent",
   "sentencesmeaning": "translateSent",
   
   "why": "why",
   "whycym": "whyCym",
-  "whycymraeg": "whyCym"
+  "whycymraeg": "whyCym",
+  
+  "explanationen": "why",
+  "explanationcy": "whyCym"
 };
 
-function normaliseRow(row, filename) {
+function applySourceMetadata(row, filename) {
+  const sourceMeta = CSV_SOURCE_META[filename];
+  if (!sourceMeta) return row;
+
+  const out = { ...row };
+  if (!out.course && sourceMeta.course) out.course = sourceMeta.course;
+  if (!out.level && sourceMeta.level) out.level = sourceMeta.level;
+  if (!out.dialect && sourceMeta.dialect) out.dialect = sourceMeta.dialect;
+  if (!out.unit && sourceMeta.unit) out.unit = sourceMeta.unit;
+
+  return out;
+}
+
+function fallbackCardId(filename, rowIndex) {
+  const sourceKey = String(filename)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  // +2 because rowIndex is zero-based and the CSV header is line 1.
+  return `${sourceKey || "csv"}-r${rowIndex + 2}`;
+}
+
+function normaliseRow(row, filename, rowIndex) {
   const out = { __source: filename };
   
   for (const [rawKey, val] of Object.entries(row)) {
@@ -98,8 +132,8 @@ function normaliseRow(row, filename) {
     if (parts.length >= 2) out.after = parts[1].trim();
   }
 
-  // Safety Defaults
-  if (!out.cardId) out.cardId = `gen-${Math.random().toString(36).slice(2)}`;
+  // Safety default must remain deterministic for stable review/debug.
+  if (!out.cardId) out.cardId = fallbackCardId(filename, rowIndex);
   
   // Normalise specific categories based on rules
   if (out.category && out.category.trim().toLowerCase() === "verb") {
@@ -123,7 +157,7 @@ function normaliseRow(row, filename) {
   }
 
   
-  return out;
+  return applySourceMetadata(out, filename);
 }
 
 export async function loadCsvFromPublicData(filename) {
@@ -155,7 +189,7 @@ export async function loadCsvFromPublicData(filename) {
       r && Object.values(r).some((v) => (v ?? "").toString().trim() !== "")
     );
 
-    return rows.map((row) => normaliseRow(row, filename));
+    return rows.map((row, rowIndex) => normaliseRow(row, filename, rowIndex));
     
   } catch (err) {
     console.error("Error loading CSV:", filename, err);

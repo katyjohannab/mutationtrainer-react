@@ -43,6 +43,7 @@ export default function App() {
   const [filters, setFilters] = useState({
     families: new Set(),
     categories: new Set(),
+    levels: new Set(),
   });
 
   // avoid annoying repeats in random mode
@@ -77,16 +78,21 @@ export default function App() {
   const available = useMemo(() => {
     const famMap = new Map();
     const catMap = new Map();
+    const levelMap = new Map();
 
     for (const r of rows) {
       const famRaw = r.family || r.rulefamily || r.RuleFamily || r.Family || "";
       const catRaw = r.category || r.rulecategory || r.RuleCategory || r.Category || "";
+      const levelRaw = r.level || r.Level || r.course || r.Course || "";
 
       const famKey = canon(famRaw);
       if (famKey && !famMap.has(famKey)) famMap.set(famKey, famRaw.trim());
 
       const catKey = canon(catRaw);
       if (catKey && !catMap.has(catKey)) catMap.set(catKey, catRaw.trim());
+
+      const levelKey = canon(levelRaw);
+      if (levelKey && !levelMap.has(levelKey)) levelMap.set(levelKey, levelRaw.trim());
     }
 
     return {
@@ -94,6 +100,9 @@ export default function App() {
         .map(([id, label]) => ({ id, label }))
         .sort((a, b) => a.label.localeCompare(b.label)),
       categories: Array.from(catMap.entries())
+        .map(([id, label]) => ({ id, label }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
+      levels: Array.from(levelMap.entries())
         .map(([id, label]) => ({ id, label }))
         .sort((a, b) => a.label.localeCompare(b.label)),
     };
@@ -255,6 +264,10 @@ export default function App() {
     setActivePresetId((prev) => (prev === id ? null : id));
   }
 
+  function handleSetPreset(idOrNull) {
+    setActivePresetId(idOrNull ?? null);
+  }
+
   const toggleFilter = (kind, id) => {
     setFilters((prev) => {
       const nextSet = new Set(prev[kind] ?? []);
@@ -334,6 +347,7 @@ export default function App() {
               filterProps={{
                 activePresetId,
                 onTogglePreset: handleTogglePreset,
+                onSetPreset: handleSetPreset,
                 available,
                 filters,
                 onToggleFilter: toggleFilter,
@@ -355,6 +369,8 @@ export default function App() {
           filterProps={{
             activePresetId,
             onTogglePreset: handleTogglePreset,
+            onSetPreset: handleSetPreset,
+            onPresetApplied: () => setDrawer((prev) => ({ ...prev, open: false })),
             available,
             filters,
             onToggleFilter: toggleFilter,

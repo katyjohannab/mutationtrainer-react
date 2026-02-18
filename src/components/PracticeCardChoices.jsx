@@ -23,6 +23,7 @@ import {
   SkipForward,
 } from "lucide-react";
 import AppIcon from "./icons/AppIcon";
+import { deriveDysguBadges } from "../utils/dysguBadges";
 
 function normalizeChoice(value) {
   return String(value ?? "")
@@ -51,28 +52,16 @@ export default function PracticeCardChoices({
   tooltipWordCategory,
   guess,
   unit,
+  course,
+  level,
   sourceFile,
 }) {
   const isFeedback = cardState === "feedback";
   const baseword = sent?.base || "_____";
-  const courseBadge = useMemo(() => {
-    if (!unit) return null;
-    let course = "";
-
-    // Heuristic for course name from filename
-    const src = (sourceFile || "").toLowerCase();
-    if (src.includes("mynediad")) {
-       course = "Mynediad";
-    } else if (src.includes("sylfaen")) {
-       course = "Sylfaen";
-    }
-    
-    const prefix = t("unitPrefix") || "Unit";
-    const unitPart = `${prefix} ${unit}`;
-
-    if (course) return `${course} • ${unitPart}`;
-    return unitPart;
-  }, [unit, sourceFile, t]);
+  const dysguBadges = useMemo(
+    () => deriveDysguBadges({ course, level, unit, sourceFile, t }),
+    [course, level, unit, sourceFile, t]
+  );
 
   const blankSlot = "_____";
   const hoverCardContentClass =
@@ -131,12 +120,19 @@ export default function PracticeCardChoices({
 
   return (
     <div className="space-y-6">
-      {/* Course Badge - Top Left */}
-      {courseBadge && (
-        <div className="flex w-full px-2 justify-start">
-           <Badge className="bg-[hsl(var(--cymru-green-light))] text-white hover:bg-[hsl(var(--cymru-green-light))] border-0 text-[10px] uppercase tracking-wider font-semibold opacity-90">
-             {courseBadge}
-           </Badge>
+      {/* Dysgu course/unit badges */}
+      {dysguBadges && (
+        <div className="flex w-full justify-start gap-2 px-2">
+          {dysguBadges.courseLabel && (
+            <Badge variant="cymru-dark" className="rounded-full px-3 py-1 text-xs font-semibold">
+              {dysguBadges.courseLabel}
+            </Badge>
+          )}
+          {dysguBadges.unitLabel && (
+            <Badge variant="cymru-light" className="rounded-full px-3 py-1 text-xs font-semibold">
+              {dysguBadges.unitLabel}
+            </Badge>
+          )}
         </div>
       )}
       
@@ -144,7 +140,7 @@ export default function PracticeCardChoices({
         <div className="relative inline-flex max-w-full">
           <Badge
             variant="secondary"
-            className="w-full max-w-[min(100%,52rem)] rounded-full border-2 border-[hsl(var(--cymru-green-light))] bg-[hsl(var(--hero-pill-bg))] px-[clamp(1.5rem,5vw,4.5rem)] py-[clamp(1rem,3vw,2.25rem)] shadow-sm"
+            className="w-full max-w-[min(100%,52rem)] rounded-full border-2 border-[hsl(var(--cymru-green-light))] bg-[hsl(var(--hero-pill-bg))] px-[clamp(1.5rem,5vw,4.5rem)] py-[clamp(1rem,3vw,2.25rem)] shadow-[0_6px_18px_rgba(0,0,0,0.10),0_1px_2px_rgba(0,0,0,0.06)]"
           >
             <h1 className="text-center text-[clamp(2.5rem,6vw,5.25rem)] font-extrabold tracking-tight text-primary leading-[0.95] text-balance break-words">
               {baseword}
@@ -328,3 +324,6 @@ export default function PracticeCardChoices({
     </div>
   );
 }
+
+
+

@@ -1,0 +1,20 @@
+{
+  "sourceId": "mynediad-de-v2-2023",
+  "sourceTitle": "Mynediad y De - Fersiwn 2 (argraffiad 2023)",
+  "level": "mynediad",
+  "dialect": "south",
+  "unit": 1,
+  "notes": "Store citation metadata only; no long textbook extracts.",
+  "refs": [
+    {
+      "page": 12,
+      "boxLabel": "unit-1-vocab-box",
+      "note": "Vocabulary box at the start of Unit 1."
+    },
+    {
+      "page": 13,
+      "boxLabel": "unit-1-pattern-box",
+      "note": "Sentence patterns and principles taught in Unit 1."
+    }
+  ]
+}
