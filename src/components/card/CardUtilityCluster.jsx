@@ -25,7 +25,7 @@ export default function CardUtilityCluster({
   const revealLabel = t("reveal") || "Reveal";
   const skipLabel = t("skip") || "Skip";
   const shuffleLabel = t("shuffle") || "Shuffle";
-  const showShuffle = mode === "random" && typeof onShuffle === "function";
+  const showShuffle = typeof onShuffle === "function";
 
   const utilityBaseClass =
     "h-10 w-10 border border-transparent shadow-none transition-all duration-200 hover:-translate-y-px hover:shadow-sm focus-visible:ring-2 focus-visible:ring-ring/40";
@@ -61,22 +61,23 @@ export default function CardUtilityCluster({
           </ButtonGroup>
 
           <ButtonGroup className="flex-wrap">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  type="button"
-                  variant="default"
-                  onClick={onSkip}
-                  disabled={isFeedback}
-                  size="icon"
-                  className={cn(utilityBaseClass, skipClass)}
-                  aria-label={skipLabel}
-                >
-                  <AppIcon icon={SkipForward} className="h-4 w-4" aria-hidden="true" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>{skipLabel}</TooltipContent>
-            </Tooltip>
+            {showShuffle ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="default"
+                    onClick={onShuffle}
+                    size="icon"
+                    className={cn(utilityBaseClass, shuffleClass)}
+                    aria-label={shuffleLabel}
+                  >
+                    <AppIcon icon={Shuffle} className="h-4 w-4" aria-hidden="true" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>{shuffleLabel}</TooltipContent>
+              </Tooltip>
+            ) : null}
 
             <Tooltip>
               <TooltipTrigger asChild>
@@ -95,23 +96,22 @@ export default function CardUtilityCluster({
               <TooltipContent>{revealLabel}</TooltipContent>
             </Tooltip>
 
-            {showShuffle ? (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="default"
-                    onClick={onShuffle}
-                    size="icon"
-                    className={cn(utilityBaseClass, shuffleClass)}
-                    aria-label={shuffleLabel}
-                  >
-                    <AppIcon icon={Shuffle} className="h-4 w-4" aria-hidden="true" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>{shuffleLabel}</TooltipContent>
-              </Tooltip>
-            ) : null}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="default"
+                  onClick={onSkip}
+                  disabled={isFeedback}
+                  size="icon"
+                  className={cn(utilityBaseClass, skipClass)}
+                  aria-label={skipLabel}
+                >
+                  <AppIcon icon={SkipForward} className="h-4 w-4" aria-hidden="true" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{skipLabel}</TooltipContent>
+            </Tooltip>
           </ButtonGroup>
         </div>
 
