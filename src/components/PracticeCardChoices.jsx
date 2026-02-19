@@ -49,8 +49,6 @@ export default function PracticeCardChoices({
     [course, level, unit, sourceFile, t, showDysguBadges]
   );
 
-  const blankSlot = "_____";
-
   useEffect(() => {
     const handler = (event) => {
       if (disabled) return;
@@ -112,14 +110,12 @@ export default function PracticeCardChoices({
         />
       </div>
 
-      <div className="min-w-0 flex flex-wrap items-center gap-x-2.5 gap-y-2 text-lg sm:text-xl leading-relaxed text-foreground/80">
+      <div className="text-[clamp(1.05rem,0.6vw+0.95rem,1.45rem)] leading-relaxed text-foreground flex flex-wrap justify-center items-baseline gap-x-2.5 gap-y-2">
         <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
-        <Badge
-          variant="secondary"
-          className="rounded-full border border-border bg-muted text-base font-semibold text-foreground"
-        >
-          {blankSlot}
-        </Badge>
+        <div
+          aria-hidden="true"
+          className="mx-0 inline-flex h-9 sm:h-10 min-w-[7.5ch] w-[9.5ch] sm:w-[11.5ch] lg:w-[12.5ch] max-w-full shrink-0 rounded-lg border-0 bg-[hsl(var(--cymru-gold)/0.08)] px-3 shadow-sm pointer-events-none select-none relative -top-px"
+        />
         <span className="whitespace-pre-wrap break-words">{sent?.after}</span>
       </div>
 

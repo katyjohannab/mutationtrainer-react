@@ -105,6 +105,12 @@ describe("grammar.js utils", () => {
       expect(choices).toContain("gi");
     });
 
+    it("always includes baseword when distinct from correct", () => {
+      const row = { base: "ci", answer: "gi" };
+      const choices = makeChoices(row, [], { base: "ci" });
+      expect(choices).toContain("ci");
+    });
+
     it("uses real alternatives from the deck if available", () => {
       const row = { base: "ci", answer: "gi" };
       const choices = makeChoices(row, mockDeck, { base: "ci" });
@@ -117,18 +123,23 @@ describe("grammar.js utils", () => {
       expect(choices).not.toContain("gath");
     });
 
-    it("generates artificial mutants if no real alternatives exist", () => {
-      // "potel" isn't in deck. Should generate mutations like botel, mhotel, photel...
+    it("uses canonical plausible variants if no real alternatives exist", () => {
       const row = { base: "potel", answer: "potel" }; // none
       const choices = makeChoices(row, mockDeck, { base: "potel" });
 
       expect(choices.length).toBeGreaterThanOrEqual(2);
-      // Soft of potel -> botel
-      // Aspirate -> photel
-      // Nasal -> mhotel
-      
       const combined = choices.join(" ");
-      expect(combined).toMatch(/botel|photel|mhotel/);
+      expect(combined).toMatch(/botel|mhotel|photel/);
+    });
+
+    it("never generates arbitrary prefixed nonsense forms", () => {
+      const row = { base: "meddyg", answer: "feddyg" };
+      const choices = makeChoices(row, [], { base: "meddyg" });
+      expect(choices).toContain("feddyg");
+      expect(choices).toContain("meddyg");
+      expect(choices).not.toContain("hmeddyg");
+      expect(choices).not.toContain("rhmeddyg");
+      expect(choices).not.toContain("ghmeddyg");
     });
 
     it("deduplicates choices", () => {
@@ -138,15 +149,26 @@ describe("grammar.js utils", () => {
       expect(unique.size).toBe(choices.length);
     });
 
-    it("always returns 3 choices if possible", () => {
-        // We guarantee logic attempts to fill up to 3 (correct + 2 distractors)
-        const row = { base: "bwrdd", answer: "fwrdd" };
-        const choices = makeChoices(row, [], { base: "bwrdd" });
-        // fwrdd (correct)
-        // mwrdd (nasal)
-        // bwrdd (none/hard)
-        // The generator fallback tries sequences.
-        expect(choices.length).toBe(3);
+    it("returns only 2 choices when only 2 plausible unique forms exist", () => {
+      const row = { base: "llaw", answer: "law" };
+      const choices = makeChoices(row, [], { base: "llaw" });
+      expect(choices.length).toBe(2);
+      expect(choices).toContain("law");
+      expect(choices).toContain("llaw");
+    });
+
+    it("returns up to 3 choices when plausible forms are available", () => {
+      const row = { base: "bwrdd", answer: "fwrdd" };
+      const choices = makeChoices(row, [], { base: "bwrdd" });
+      expect(choices.length).toBe(3);
+    });
+
+    it("keeps phrase variants plausible by mutating only first word", () => {
+      const row = { base: "ci mawr", answer: "gi mawr" };
+      const choices = makeChoices(row, [], { base: "ci mawr" });
+      expect(choices).toContain("gi mawr");
+      expect(choices).toContain("ci mawr");
+      expect(choices.join(" ")).toMatch(/nghi mawr|chi mawr/);
     });
   });
 });

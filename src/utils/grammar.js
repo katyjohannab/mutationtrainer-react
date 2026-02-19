@@ -126,72 +126,48 @@ export function applyMutationSequence(base, kinds) {
 export function makeChoices(currentRow, deckRows, sent) {
   const correct = getAnswerValue(currentRow);
   const normalizedCorrect = normalizeChoice(correct);
-  const exclude = new Set(normalizedCorrect ? [normalizedCorrect] : []);
-
   const allRows = Array.isArray(deckRows) ? deckRows : [];
-  const baseWord = sent?.base || currentRow?.base || currentRow?.Base || "";
+  const baseWord = String(sent?.base || currentRow?.base || currentRow?.Base || "").trim();
   const baseKey = normalizeBase(baseWord);
 
-  const distractors = [];
-  const takeFromList = (list) => {
-    for (const item of list) {
-      if (distractors.length >= 2) break;
-      distractors.push(item);
-    }
+  const choices = [];
+  const seen = new Set();
+  const addChoice = (value) => {
+    const trimmed = String(value ?? "").trim();
+    const key = normalizeChoice(trimmed);
+    if (!trimmed || !key || seen.has(key)) return false;
+    seen.add(key);
+    choices.push(trimmed);
+    return true;
   };
 
-  // 1. Try to find other correct answers for the SAME word in the deck
-  // (e.g. if 'ci' appears multiple times, use those real answers as distractors)
-  if (baseKey) {
-    const sameBaseAnswers = [];
+  // 1) Always include correct answer
+  addChoice(correct);
+
+  // 2) Always include baseword if it differs from the correct form
+  if (baseWord && normalizeChoice(baseWord) !== normalizedCorrect) {
+    addChoice(baseWord);
+  }
+
+  // 3) Use real alternatives from same base in deck order
+  if (baseKey && choices.length < 3) {
     for (const row of allRows) {
+      if (choices.length >= 3) break;
       const rowBase = row?.base ?? row?.Base ?? "";
       if (normalizeBase(rowBase) !== baseKey) continue;
-      const value = getAnswerValue(row);
-      const key = normalizeChoice(value);
-      if (!key || exclude.has(key) || !value) continue;
-      exclude.add(key);
-      sameBaseAnswers.push(value);
+      addChoice(getAnswerValue(row));
     }
-    takeFromList(sameBaseAnswers);
   }
 
-  // 2. If we need more distractors, generate them algorithmically
-  if (distractors.length < 2) {
-    const mutationSequences = [
-      ["soft"],
-      ["aspirate"],
-      ["nasal"],
-      ["soft", "nasal"],
-      ["aspirate", "nasal"],
-      ["soft", "aspirate"],
-      ["nasal", "soft"],
-    ];
-    const variants = [];
-    for (const seq of mutationSequences) {
-      const mutated = applyMutationSequence(baseWord, seq);
-      const key = normalizeChoice(mutated);
-      if (!mutated || !key || exclude.has(key)) continue;
-      exclude.add(key);
-      variants.push(mutated);
+  // 4) Fill from canonical plausible variants only
+  if (baseWord && choices.length < 3) {
+    const canonicalKinds = ["none", "soft", "nasal", "aspirate"];
+    for (const kind of canonicalKinds) {
+      if (choices.length >= 3) break;
+      const candidate = kind === "none" ? baseWord : applyMutation(baseWord, kind);
+      addChoice(candidate);
     }
-    takeFromList(variants);
   }
 
-  // 3. Fallback: just add prefixes if we are desperate
-  if (distractors.length < 2 && baseWord) {
-    const fallback = [];
-    const prefixVariants = ["h", "rh", "gh"];
-    for (const prefix of prefixVariants) {
-      const mutated = `${prefix}${baseWord}`;
-      const key = normalizeChoice(mutated);
-      if (!key || exclude.has(key)) continue;
-      exclude.add(key);
-      fallback.push(mutated);
-    }
-    takeFromList(fallback);
-  }
-
-  const choices = [correct, ...distractors].filter((value) => value);
-  return shuffleArray(choices);
+  return shuffleArray(choices.slice(0, 3));
 }

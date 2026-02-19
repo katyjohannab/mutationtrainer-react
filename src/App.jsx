@@ -196,6 +196,23 @@ export default function App() {
       recordResult(result === "correct");
     }
 
+    if (result === "shuffle") {
+      if (!filtered.length) return;
+
+      if (mode === "random") {
+        if (!currentRow) return;
+        const key = getCardKey(currentRow, currentIdx);
+        pushRecent(key);
+        pickNext(leitnerRef.current);
+        return;
+      }
+
+      // Smart mode: jump to a fresh random start point in the current pool.
+      const idx = pickRandomIndex(filtered, new Set());
+      setCurrentIdx(idx);
+      return;
+    }
+
     if (mode === "smart") {
       if (!currentRow) return;
 
@@ -233,14 +250,6 @@ export default function App() {
       return;
     }
 
-    if (result === "shuffle") {
-      if (!currentRow) return;
-      const key = getCardKey(currentRow, currentIdx);
-      pushRecent(key);
-      pickNext(leitnerRef.current);
-      return;
-    }
-
     // grading only: update Leitner but do NOT navigate
     if (!currentRow) return;
 
@@ -259,7 +268,6 @@ export default function App() {
   }
 
   const handleShuffle = () => {
-    if (mode !== "random") return;
     onResult({ result: "shuffle" });
   };
 
