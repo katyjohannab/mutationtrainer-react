@@ -46,17 +46,17 @@ export default function StatItem({
   /* ── compact  (mobile inline) ───────────────────────── */
   if (size === "compact") {
     return (
-      <div className="inline-flex items-center gap-1.5" title={label}>
+      <div className="inline-flex items-center gap-1.5 leading-none" title={label}>
         <span
           className={cn(
             "inline-flex items-center gap-1 text-xs font-semibold",
             colors.text
           )}
         >
-          {Icon && <Icon className="h-3 w-3 shrink-0" />}
-          <span>{value}</span>
+          {Icon && <Icon className="h-3.5 w-3.5 shrink-0" />}
+          <span className="text-sm font-bold tabular-nums">{value}</span>
         </span>
-        <span className="text-[10px] font-medium text-muted-foreground">
+        <span className="text-[10px] font-medium leading-none text-muted-foreground/75">
           {label}
         </span>
       </div>

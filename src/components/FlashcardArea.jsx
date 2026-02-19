@@ -37,10 +37,61 @@ export default function FlashcardArea({
     <section className={cn("flex-1", className)}>
       <div className="space-y-4 rounded-[var(--radius)] border border-border bg-[hsl(var(--panel))] p-4 sm:p-5 lg:p-6">
         {/* Header row - unified control bar */}
-        <div className="flex flex-wrap items-start gap-2 sm:gap-3 text-sm">
-          {/* Progress + Card ID + Mobile Stats */}
-          <div className="flex flex-col-reverse items-start gap-1 min-w-0 shrink-0">
-            <div className="flex flex-col items-start gap-0.5">
+        <div className="text-sm">
+          <div className="space-y-2 md:hidden">
+            {sessionStats && (
+              <SessionStatsInline
+                stats={sessionStats}
+                className="w-full rounded-lg border border-border/60 bg-card/65 px-2 py-1.5"
+              />
+            )}
+            <div className="flex flex-col items-start gap-0.5 leading-tight">
+              <span className="text-[11px] font-medium text-muted-foreground/70">
+                {progressText}
+              </span>
+              {cardId && (
+                <span className="text-[10px] font-medium text-muted-foreground/55">
+                  {t("reportCardId") || "Card ID"}: {cardId.toUpperCase()}
+                </span>
+              )}
+            </div>
+            <div className="flex flex-wrap items-start gap-2">
+              <ToggleGroup
+                type="single"
+                value={mode}
+                onValueChange={(value) => value && onModeChange(value)}
+                size="sm"
+                className={toggleGroupClass}
+              >
+                <ToggleGroupItem value="random" className={toggleItemClass}>
+                  {t("random")}
+                </ToggleGroupItem>
+                <ToggleGroupItem value="smart" className={toggleItemClass}>
+                  {t("smart")}
+                </ToggleGroupItem>
+              </ToggleGroup>
+
+              {onAnswerModeChange && (
+                <ToggleGroup
+                  type="single"
+                  value={answerMode}
+                  onValueChange={(value) => value && onAnswerModeChange(value)}
+                  size="sm"
+                  className={toggleGroupClass}
+                >
+                  <ToggleGroupItem value="type" className={toggleItemClass}>
+                    {t("typeMode") || "Type"}
+                  </ToggleGroupItem>
+                  <ToggleGroupItem value="tap" className={toggleItemClass}>
+                    {t("tapMode") || "Tap"}
+                  </ToggleGroupItem>
+                </ToggleGroup>
+              )}
+            </div>
+          </div>
+
+          <div className="hidden md:flex md:flex-wrap md:items-start md:gap-3">
+            <div className="flex flex-col items-start gap-0.5 min-w-0 shrink-0">
               <span className="text-xs font-medium text-muted-foreground truncate">
                 {progressText}
               </span>
@@ -50,31 +101,23 @@ export default function FlashcardArea({
                 </span>
               )}
             </div>
-            {sessionStats && (
-              <SessionStatsInline stats={sessionStats} className="md:hidden" />
-            )}
-          </div>
+            <div className="flex flex-wrap items-start gap-2 ml-auto">
+              <ToggleGroup
+                type="single"
+                value={mode}
+                onValueChange={(value) => value && onModeChange(value)}
+                size="sm"
+                className={toggleGroupClass}
+              >
+                <ToggleGroupItem value="random" className={toggleItemClass}>
+                  {t("random")}
+                </ToggleGroupItem>
+                <ToggleGroupItem value="smart" className={toggleItemClass}>
+                  {t("smart")}
+                </ToggleGroupItem>
+              </ToggleGroup>
 
-          {/* Controls - pushed right, wrap-safe */}
-          <div className="flex flex-wrap items-start gap-2 ml-auto">
-            {/* Mode toggle */}
-            <ToggleGroup
-              type="single"
-              value={mode}
-              onValueChange={(value) => value && onModeChange(value)}
-              size="sm"
-              className={toggleGroupClass}
-            >
-              <ToggleGroupItem value="random" className={toggleItemClass}>
-                {t("random")}
-              </ToggleGroupItem>
-              <ToggleGroupItem value="smart" className={toggleItemClass}>
-                {t("smart")}
-              </ToggleGroupItem>
-            </ToggleGroup>
-
-            {/* Answer mode toggle */}
-            {onAnswerModeChange && (
+              {onAnswerModeChange && (
               <ToggleGroup
                 type="single"
                 value={answerMode}
@@ -89,7 +132,8 @@ export default function FlashcardArea({
                   {t("tapMode") || "Tap"}
                 </ToggleGroupItem>
               </ToggleGroup>
-            )}
+              )}
+            </div>
           </div>
         </div>
 

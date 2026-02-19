@@ -12,7 +12,7 @@ export default function SessionStatsInline({ stats, className }) {
     : 0;
 
   return (
-    <div className={cn("flex items-center gap-3", className)}>
+    <div className={cn("flex flex-wrap items-center gap-x-3 gap-y-1.5", className)}>
       <StatItem
         icon={Flame}
         value={stats.streak}

@@ -48,7 +48,7 @@ export default function HeroPill({
         "relative inline-flex max-w-[min(96vw,44rem)] overflow-visible",
         "rounded-[1.15rem] p-[2.5px] sm:rounded-[1.35rem] sm:p-[3px]",
         "bg-[radial-gradient(140%_155%_at_50%_50%,hsl(var(--cymru-green))_0%,hsl(var(--cymru-green-light))_52%,hsl(var(--cymru-green))_100%)]",
-        "shadow-[0_8px_18px_rgba(9,34,27,0.14),0_2px_6px_rgba(9,34,27,0.09),inset_0_1px_0_rgba(255,255,255,0.4)] sm:shadow-[0_7px_16px_rgba(9,34,27,0.12),0_2px_6px_rgba(9,34,27,0.08),inset_0_1px_0_rgba(255,255,255,0.36)]",
+        "shadow-[0_4px_10px_rgba(9,34,27,0.1),0_1px_3px_rgba(9,34,27,0.06),inset_0_1px_0_rgba(255,255,255,0.34)] sm:shadow-[0_7px_16px_rgba(9,34,27,0.12),0_2px_6px_rgba(9,34,27,0.08),inset_0_1px_0_rgba(255,255,255,0.36)]",
         className
       )}
     >
@@ -62,7 +62,7 @@ export default function HeroPill({
         className={cn(
           "relative inline-flex items-center justify-center rounded-[1rem] sm:rounded-[1.2rem]",
           "px-[clamp(1.3rem,4.8vw,3.4rem)] py-[clamp(0.75rem,2.8vw,1.5rem)]",
-          "shadow-[0_2px_0_rgba(255,255,255,0.35)_inset,0_8px_18px_rgba(10,34,27,0.12)]",
+          "shadow-[0_1px_0_rgba(255,255,255,0.32)_inset,0_4px_10px_rgba(10,34,27,0.08)] sm:shadow-[0_2px_0_rgba(255,255,255,0.35)_inset,0_7px_16px_rgba(10,34,27,0.1)]",
           styles.fill,
           styles.text,
           "font-extrabold tracking-tight leading-[1.1]"
