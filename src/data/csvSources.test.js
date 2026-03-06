@@ -9,6 +9,7 @@ describe("csv runtime source lock", () => {
   it("includes registered unit csv files", () => {
     expect(ALL_RUNTIME_DATA_FILES).toContain("Uwch1/unit1.csv");
     expect(ALL_RUNTIME_DATA_FILES).toContain("Uwch1/unit2.csv");
+    expect(ALL_RUNTIME_DATA_FILES).toContain("Mynediad-De/packs/myn-de-p01-places.tsv");
     expect(ALL_CSV_FILES).toEqual(ALL_RUNTIME_DATA_FILES);
   });
 
@@ -18,6 +19,17 @@ describe("csv runtime source lock", () => {
       course: "uwch",
       dialect: "south",
       unit: "1",
+    });
+  });
+
+  it("provides source metadata for registered pack tsv files", () => {
+    expect(CSV_SOURCE_META["Mynediad-De/packs/myn-de-p01-places.tsv"]).toMatchObject({
+      sourceType: "dysgu-pack",
+      course: "mynediad",
+      level: "mynediad",
+      dialect: "south",
+      unit: "p01",
+      pack: "myn-de-p01-places",
     });
   });
 });
