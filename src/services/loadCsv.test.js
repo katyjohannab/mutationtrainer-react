@@ -83,4 +83,54 @@ describe("loadCsvFromPublicData", () => {
       answer: "fara",
     });
   });
+
+  it("normalizes canonicalized TSV headers and outcome shortcodes case-insensitively", async () => {
+    const tsvText = [
+      "Sentence With Gap\tSentence Eng\tTarget Word\tRule Cat\tWhy Eng\tOutcomes (SM/NM/AM/NONE)\tQA Status (SM/NM/AM/NONE)",
+      "Dw i'n _____ nawr\tI am _____ now\tcath\tSubjectBoundary\tTriggers soft mutation\tAm\tNM",
+    ].join("\n");
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        text: vi.fn().mockResolvedValue(tsvText),
+      })
+    );
+
+    const rows = await loadCsvFromPublicData("canonicalized-headers.tsv");
+
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      sentenceWithGap: "Dw i'n _____ nawr",
+      translateSent: "I am _____ now",
+      answer: "cath",
+      category: "SubjectBoundary",
+      why: "Triggers soft mutation",
+      outcome: "aspirate",
+      qaStatus: "NM",
+      __source: "canonicalized-headers.tsv",
+    });
+  });
+
+  it("maps NONE outcome shortcode case-insensitively", async () => {
+    const tsvText = [
+      "Base\tOutcomes (SM/NM/AM/NONE)",
+      "cath\tNoNe",
+    ].join("\n");
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        text: vi.fn().mockResolvedValue(tsvText),
+      })
+    );
+
+    const rows = await loadCsvFromPublicData("none-outcome.tsv");
+
+    expect(rows).toHaveLength(1);
+    expect(rows[0].outcome).toBe("none");
+    expect(rows[0].answer).toBe("cath");
+  });
 });
