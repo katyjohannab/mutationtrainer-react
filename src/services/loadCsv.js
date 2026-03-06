@@ -15,12 +15,14 @@ const CANON_MAP = {
   "patternid": "patternId",
   "focus": "focus",
   "qastatus": "qaStatus",
+  "qastatusmnmamnone": "qaStatus",
   
   "rulefamily": "family",
   "family": "family",
   
   "rulecategory": "category",
   "category": "category",
+  "rulecat": "category",
   
   "trigger": "trigger",
   "base": "base",
@@ -37,7 +39,10 @@ const CANON_MAP = {
   "before": "before",
   "after": "after",
   "answer": "answer",
+  "targetword": "answer",
   "outcome": "outcome",
+  "outcomesmnmamnone": "outcome",
+  "outcomessmnmamnone": "outcome",
   "mutation": "outcome",
   
   "translatesent": "translateSent",
@@ -45,6 +50,7 @@ const CANON_MAP = {
   "sentencewithgap": "sentenceWithGap",
   
   "why": "why",
+  "whyeng": "why",
   "whycym": "whyCym",
   "whycymraeg": "whyCym",
   
@@ -85,7 +91,7 @@ function normaliseRow(row, filename, rowIndex) {
     const keyCanon = rawKey.trim().toLowerCase().replace(/[^a-z0-9]/g, "");
     
     // Check map with canonical key
-    const mapped = CANON_MAP[keyCanon];
+    const mapped = CANON_MAP[keyCanon] || (keyCanon.startsWith("qastatus") ? "qaStatus" : undefined);
     if (mapped && cleanVal) {
       out[mapped] = cleanVal;
     }
@@ -108,6 +114,7 @@ function normaliseRow(row, filename, rowIndex) {
     if (raw === "sm") out.outcome = "soft";
     else if (raw === "nm") out.outcome = "nasal";
     else if (raw === "am") out.outcome = "aspirate";
+    else if (raw === "none") out.outcome = "none";
   }
 
   // Lazy generation: answer
