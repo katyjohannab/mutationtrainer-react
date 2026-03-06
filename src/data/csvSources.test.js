@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ALL_CSV_FILES, CSV_SOURCE_META, PROTECTED_MANUAL_CSV_FILES } from "./csvSources";
+import { ALL_CSV_FILES, ALL_RUNTIME_DATA_FILES, CSV_SOURCE_META, PROTECTED_MANUAL_CSV_FILES } from "./csvSources";
 
 describe("csv runtime source lock", () => {
   it("keeps protected manual csv files present", () => {
@@ -7,8 +7,9 @@ describe("csv runtime source lock", () => {
   });
 
   it("includes registered unit csv files", () => {
-    expect(ALL_CSV_FILES).toContain("Uwch1/unit1.csv");
-    expect(ALL_CSV_FILES).toContain("Uwch1/unit2.csv");
+    expect(ALL_RUNTIME_DATA_FILES).toContain("Uwch1/unit1.csv");
+    expect(ALL_RUNTIME_DATA_FILES).toContain("Uwch1/unit2.csv");
+    expect(ALL_CSV_FILES).toEqual(ALL_RUNTIME_DATA_FILES);
   });
 
   it("provides source metadata for registered unit csv files", () => {

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PRESET_DEFS } from "./data/presets";
-import { ALL_CSV_FILES } from "./data/csvSources";
+import { ALL_RUNTIME_DATA_FILES } from "./data/csvSources";
 import { loadManyCsvFiles } from "./services/loadCsv";
 import { applyFilters } from "./utils/applyFilters";
 
@@ -68,7 +68,7 @@ export default function App() {
       .replace(/[^a-z0-9]+/g, "");
 
   useEffect(() => {
-    loadManyCsvFiles(ALL_CSV_FILES)
+    loadManyCsvFiles(ALL_RUNTIME_DATA_FILES)
       .then(setRows)
       .catch((e) => console.error(e));
   }, []);
