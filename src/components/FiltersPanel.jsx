@@ -3,7 +3,7 @@ import { HelpCircle, Zap, Filter, BookOpen, Check } from "lucide-react";
 import AppIcon from "./icons/AppIcon";
 import { useI18n } from "../i18n/I18nContext";
 import { cn } from "../lib/cn";
-import { PRESET_DEFS, STARTER_PACK_ORDER } from "../data/presets";
+import { PRESET_DEFS, STARTER_PACK_GROUPS, STARTER_PACK_ORDER } from "../data/presets";
 import DysguCourseUnitPicker from "./filters/DysguCourseUnitPicker";
 
 import {
@@ -135,6 +135,12 @@ export default function FiltersPanel({
 
   const collapsibleProp = accordionType === "single" ? { collapsible: true } : {};
 
+
+  const starterPackGroups =
+    STARTER_PACK_GROUPS?.length
+      ? STARTER_PACK_GROUPS
+      : [{ id: "default", presetIds: STARTER_PACK_ORDER }];
+
   return (
     <div className={cn("space-y-8 py-2 px-1", className)}>
       <Accordion
@@ -220,44 +226,55 @@ export default function FiltersPanel({
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {STARTER_PACK_ORDER.map((id) => {
-                const def = PRESET_DEFS[id];
-                const active = activePresetId === id;
-                const label = def?.titleKey ? t(def.titleKey) : def?.title ?? id;
-                const desc = def?.descriptionKey
-                  ? t(def.descriptionKey)
-                  : def?.desc ?? "Practice set";
+            <div className="space-y-4">
+              {starterPackGroups.map((group) => (
+                <div key={group.id} className="space-y-2">
+                  {group.titleKey ? (
+                    <p className="mt-subtitle text-muted-foreground">{t(group.titleKey)}</p>
+                  ) : null}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {group.presetIds.map((id) => {
+                      const def = PRESET_DEFS[id];
+                      if (!def) return null;
 
-                return (
-                  <Button
-                    key={id}
-                    type="button"
-                    variant="ghost"
-                    onClick={() => onTogglePreset?.(active ? null : id)}
-                    className={cn(
-                      "group relative h-auto w-full items-start justify-start rounded-xl border p-4 text-left whitespace-normal break-words overflow-visible transition-all hover:shadow-md",
-                      active
-                        ? "border-2 border-[hsl(var(--cymru-green-light))] bg-primary/10"
-                        : "border-border bg-card hover:border-primary/30"
-                    )}
-                  >
-                    <span className="flex min-w-0 flex-col items-start gap-1 pr-4">
-                      <span className="w-full text-sm font-semibold leading-snug text-foreground transition-colors group-hover:text-primary whitespace-normal break-words">
-                        {label}
-                      </span>
-                      <span className="w-full text-xs text-muted-foreground leading-snug whitespace-normal break-words">
-                        {desc}
-                      </span>
-                    </span>
-                    {active ? (
-                      <span className="absolute -right-1.5 -top-1.5 sm:-right-2 sm:-top-2 inline-flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full border-2 border-card bg-[hsl(var(--cymru-green))] text-white shadow-sm">
-                        <AppIcon icon={Check} className="h-3 w-3 sm:h-3.5 sm:w-3.5" aria-hidden="true" />
-                      </span>
-                    ) : null}
-                  </Button>
-                );
-              })}
+                      const active = activePresetId === id;
+                      const label = def?.titleKey ? t(def.titleKey) : def?.title ?? id;
+                      const desc = def?.descriptionKey
+                        ? t(def.descriptionKey)
+                        : def?.desc ?? "Practice set";
+
+                      return (
+                        <Button
+                          key={id}
+                          type="button"
+                          variant="ghost"
+                          onClick={() => onTogglePreset?.(active ? null : id)}
+                          className={cn(
+                            "group relative h-auto w-full items-start justify-start rounded-xl border p-4 text-left whitespace-normal break-words overflow-visible transition-all hover:shadow-md",
+                            active
+                              ? "border-2 border-[hsl(var(--cymru-green-light))] bg-primary/10"
+                              : "border-border bg-card hover:border-primary/30"
+                          )}
+                        >
+                          <span className="flex min-w-0 flex-col items-start gap-1 pr-4">
+                            <span className="w-full text-sm font-semibold leading-snug text-foreground transition-colors group-hover:text-primary whitespace-normal break-words">
+                              {label}
+                            </span>
+                            <span className="w-full text-xs text-muted-foreground leading-snug whitespace-normal break-words">
+                              {desc}
+                            </span>
+                          </span>
+                          {active ? (
+                            <span className="absolute -right-1.5 -top-1.5 sm:-right-2 sm:-top-2 inline-flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full border-2 border-card bg-[hsl(var(--cymru-green))] text-white shadow-sm">
+                              <AppIcon icon={Check} className="h-3 w-3 sm:h-3.5 sm:w-3.5" aria-hidden="true" />
+                            </span>
+                          ) : null}
+                        </Button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
             </div>
           </AccordionContent>
         </AccordionItem>

@@ -47,6 +47,13 @@ const rows = [
     outcome: "soft",
     trigger: "i",
   },
+  {
+    cardId: "5",
+    __source: "Mynediad-De/packs/myn-de-p01-places.tsv",
+    category: "PlaceName",
+    outcome: "nasal",
+    trigger: "yn",
+  },
 ];
 
 describe("applyFilters preset extensions", () => {
@@ -98,11 +105,20 @@ describe("applyFilters preset extensions", () => {
     expect(output.map((x) => x.cardId)).toEqual(["4"]);
   });
 
+
+  it("filters by TSV sourceScope for the Mynediad place-name pack", () => {
+    const output = applyFilters(rows, {
+      preset: { sourceScope: ["Mynediad-De/packs/myn-de-p01-places.tsv"] },
+      filters: { families: new Set(), categories: new Set() },
+    });
+    expect(output.map((x) => x.cardId)).toEqual(["5"]);
+  });
+
   it("keeps general pool available when no preset is active", () => {
     const output = applyFilters(rows, {
       preset: null,
       filters: { families: new Set(), categories: new Set() },
     });
-    expect(output.map((x) => x.cardId)).toEqual(["1", "2", "3", "4"]);
+    expect(output.map((x) => x.cardId)).toEqual(["1", "2", "3", "4", "5"]);
   });
 });

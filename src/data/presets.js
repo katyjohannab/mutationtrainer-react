@@ -33,6 +33,12 @@ const BASE_PRESETS = {
     descriptionKey: "preset.placeNames.desc",
     category: "PlaceName",
   },
+  "mynediad-place-names-pack-01": {
+    id: "mynediad-place-names-pack-01",
+    titleKey: "preset.mynediadPlaceNamesPack01.title",
+    descriptionKey: "preset.mynediadPlaceNamesPack01.desc",
+    sourceScope: ["Mynediad-De/packs/myn-de-p01-places.tsv"],
+  },
 };
 
 // Generate presets from Courses
@@ -72,6 +78,18 @@ export const STARTER_PACK_ORDER = [
   "numbers-1-10",
   "articles",
   "place-names",
+  "mynediad-place-names-pack-01",
 ];
 
+export const STARTER_PACK_GROUPS = [
+  {
+    id: "core",
+    presetIds: ["starter-preps", "numbers-1-10", "articles", "place-names"],
+  },
+  {
+    id: "mynediad",
+    titleKey: "courseMynediad",
+    presetIds: ["mynediad-place-names-pack-01"],
+  },
+];
 
