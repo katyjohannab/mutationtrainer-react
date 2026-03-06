@@ -158,6 +158,8 @@ export const STRINGS = {
     "preset.articles.desc": "Ffocws ar y fannod (Sylfaen).",
     "preset.placeNames.title": "Enwau lleoedd",
     "preset.placeNames.desc": "Cardiau enwau lleoedd ar draws pob CSV.",
+    "preset.mynediadPlaceNamesPack01.title": "Dod o i byw yn",
+    "preset.mynediadPlaceNamesPack01.desc": "Pecyn Mynediad sy’n canolbwyntio ar gymhwyso treiglad meddal a thrwynol i enwau lleoedd Cymraeg.",
 
     // Report mistake
     reportMistake: "Sylwi ar gamgymeriad?",
@@ -331,6 +333,8 @@ export const STRINGS = {
     "preset.articles.desc": "Article focus (Sylfaen).",
     "preset.placeNames.title": "Place names",
     "preset.placeNames.desc": "Place name cards across all CSVs.",
+    "preset.mynediadPlaceNamesPack01.title": "From going to to living in",
+    "preset.mynediadPlaceNamesPack01.desc": "Mynediad pack focused on applying soft and nasal mutation to Welsh place names.",
 
     // Report mistake
     reportMistake: "Noticed a mistake?",
