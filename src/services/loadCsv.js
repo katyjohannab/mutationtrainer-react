@@ -47,7 +47,6 @@ const CANON_MAP = {
   
   "translatesent": "translateSent",
   "sentencesmeaning": "translateSent",
-  "sentenceeng": "translateSent",
   "sentencewithgap": "sentenceWithGap",
   
   "why": "why",
@@ -139,6 +138,29 @@ function normaliseRow(row, filename, rowIndex) {
     // e.g. "Dw i'n {answer} rwan" -> before="Dw i'n ", after=" rwan"
     if (parts.length >= 1) out.before = parts[0].trim();
     if (parts.length >= 2) out.after = parts[1].trim();
+  }
+
+  // Lazy generation: sentences from sentenceWithGap marker.
+  // Supports [], [ ], [  ] and similar whitespace-only placeholders.
+  if (out.sentenceWithGap && !out.before && !out.after) {
+    const markerRegex = /\[\s*\]/;
+    const sentence = out.sentenceWithGap;
+    const markerMatch = sentence.match(markerRegex);
+
+    if (markerMatch) {
+      const markerIndex = markerMatch.index || 0;
+      const markerText = markerMatch[0];
+      const beforePart = sentence.slice(0, markerIndex);
+      const afterPart = sentence.slice(markerIndex + markerText.length);
+
+      out.before = beforePart.replace(/\s+$/, "");
+      out.after = afterPart.replace(/^\s+/, "");
+      out.sentenceWithGap = `${out.before}${out.after ? ` ${out.after}` : ""}`;
+    } else {
+      out.before = sentence.trim();
+      out.after = "";
+      out.sentenceWithGap = out.before;
+    }
   }
 
   // Safety default must remain deterministic for stable review/debug.
