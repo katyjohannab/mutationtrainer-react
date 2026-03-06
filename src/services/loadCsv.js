@@ -162,6 +162,7 @@ function normaliseRow(row, filename, rowIndex) {
 
 export async function loadCsvFromPublicData(filename) {
   const base = import.meta.env.BASE_URL || "/";
+  const isTsv = filename.toLowerCase().endsWith(".tsv");
   // Remove leading slash if base has one and filename has one to avoid //data
   const cleanBase = base.endsWith("/") ? base : `${base}/`;
   const url = `${cleanBase}data/${filename}`;
@@ -175,6 +176,7 @@ export async function loadCsvFromPublicData(filename) {
     const parsed = Papa.parse(csvText, { 
       header: true, 
       skipEmptyLines: true,
+      ...(isTsv ? { delimiter: "\t" } : {}),
       // transforming header is useful but we double-check in normaliseRow
       transformHeader: (h) => {
         return h.trim().toLowerCase().replace(/[^a-z0-9]/g, ""); 
