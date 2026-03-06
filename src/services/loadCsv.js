@@ -35,6 +35,8 @@ const CANON_MAP = {
   "pos": "wordCategory",
 
   "unit": "unit",
+  "packid": "pack",
+  "pack": "pack",
   
   "before": "before",
   "after": "after",
@@ -67,6 +69,7 @@ function applySourceMetadata(row, filename) {
   if (!out.level && sourceMeta.level) out.level = sourceMeta.level;
   if (!out.dialect && sourceMeta.dialect) out.dialect = sourceMeta.dialect;
   if (!out.unit && sourceMeta.unit) out.unit = sourceMeta.unit;
+  if (!out.pack && sourceMeta.pack) out.pack = sourceMeta.pack;
 
   return out;
 }

@@ -8,10 +8,15 @@ export const PROTECTED_MANUAL_CSV_FILES = [
 ];
 
 const REGISTERED_UNIT_FILES = ACTIVE_DYSGU_UNITS.map((unit) => unit.file);
+const REGISTERED_PACK_FILES = ["Mynediad-De/packs/myn-de-p01-places.tsv"];
 
 // Runtime dataset list for all delimited files (CSV and TSV).
 export const ALL_RUNTIME_DATA_FILES = [
-  ...new Set([...PROTECTED_MANUAL_CSV_FILES, ...REGISTERED_UNIT_FILES]),
+  ...new Set([
+    ...PROTECTED_MANUAL_CSV_FILES,
+    ...REGISTERED_UNIT_FILES,
+    ...REGISTERED_PACK_FILES,
+  ]),
 ];
 
 // Backwards-compatible alias while call-sites migrate.
@@ -34,4 +39,12 @@ export const CSV_SOURCE_META = {
       },
     ])
   ),
+  "Mynediad-De/packs/myn-de-p01-places.tsv": {
+    sourceType: "dysgu-pack",
+    course: "mynediad",
+    level: "mynediad",
+    dialect: "south",
+    unit: "p01",
+    pack: "myn-de-p01-places",
+  },
 };
