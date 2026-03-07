@@ -95,7 +95,7 @@ function parseJsonBody(req) {
 }
 
 function getConfiguredPassword() {
-  return String(process.env.WM_ADMIN_PASSWORD || "").trim();
+  return String(process.env.WM_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || "").trim();
 }
 
 function getSessionTtlMs() {
@@ -451,12 +451,24 @@ export function createAdminApiMiddleware({ rootDir }) {
 
   return async function adminApiMiddleware(req, res, next) {
     const url = new URL(req.url || "/", "http://localhost");
-    if (!url.pathname.startsWith("/api/admin")) {
+    const pathname = String(url.pathname || "");
+    const marker = "/api/admin";
+    const markerIndex = pathname.indexOf(marker);
+
+    if (markerIndex < 0) {
       next();
       return;
     }
 
-    if (req.method === "GET" && url.pathname === "/api/admin/session") {
+    const afterMarker = pathname.slice(markerIndex + marker.length);
+    if (afterMarker && !afterMarker.startsWith("/")) {
+      next();
+      return;
+    }
+
+    const adminPath = `${marker}${afterMarker}`;
+
+    if (req.method === "GET" && adminPath === "/api/admin/session") {
       sendJson(res, 200, {
         authenticated: isAuthenticated(req),
         configured: Boolean(getConfiguredPassword()),
@@ -465,7 +477,7 @@ export function createAdminApiMiddleware({ rootDir }) {
       return;
     }
 
-    if (req.method === "POST" && url.pathname === "/api/admin/login") {
+    if (req.method === "POST" && adminPath === "/api/admin/login") {
       const configuredPassword = getConfiguredPassword();
       if (!configuredPassword) {
         sendJson(res, 503, {
@@ -494,7 +506,7 @@ export function createAdminApiMiddleware({ rootDir }) {
       }
     }
 
-    if (req.method === "POST" && url.pathname === "/api/admin/logout") {
+    if (req.method === "POST" && adminPath === "/api/admin/logout") {
       const token = getSessionToken(req);
       if (token) adminSessions.delete(token);
       res.setHeader("Set-Cookie", clearCookieValue(req));
@@ -502,7 +514,7 @@ export function createAdminApiMiddleware({ rootDir }) {
       return;
     }
 
-    if (req.method === "POST" && url.pathname === "/api/admin/save-card") {
+    if (req.method === "POST" && adminPath === "/api/admin/save-card") {
       if (!isAuthenticated(req)) {
         sendJson(res, 401, { error: "Admin authentication required." });
         return;

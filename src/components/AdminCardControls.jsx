@@ -179,7 +179,7 @@ export default function AdminCardControls({
                 {!loginError && authError ? (
                   <p className="text-sm text-destructive">{authError}</p>
                 ) : null}
-                {!authConfigured ? (
+                {!authConfigured && !authError ? (
                   <p className="text-sm text-muted-foreground">
                     Server has no admin password configured.
                   </p>
@@ -396,5 +396,6 @@ export default function AdminCardControls({
     </div>
   );
 }
+
 
 

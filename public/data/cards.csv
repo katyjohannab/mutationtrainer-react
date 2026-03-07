@@ -476,7 +476,7 @@ c000476,"Soft, Contact",Adjective+Noun,yr holl,dillad,clothes,noun-pl,Golchwyd y
 c000477,"Soft, Contact",Adjective+Noun,holl,plant,children,noun-pl,Daeth eu holl,yn ôl yn ddiogel.,blant,SM,holl before the noun causes soft mutation: plant → blant (p→b).,Mae holl o flaen enw yn achosi treiglad meddal: plant → blant (p→b).
 c000478,"Soft, Contact",Adjective+Noun,ambell,tro,time/occasion,noun-masc,Weithiau mae ambell,yn tynnu sylw.,dro,SM,ambell (“an occasional…”) before a noun causes soft mutation: tro → dro (t→d).,Mae ambell o flaen enw yn achosi treiglad meddal: tro → dro (t→d).
 c000479,"Soft, Contact",Adjective+Noun,ambell,cân,song,noun-fem,Clywsom ni ambell,ar y radio.,gân,SM,ambell before the noun causes soft mutation: cân → gân (c→g).,Mae ambell o flaen enw yn achosi treiglad meddal: cân → gân (c→g).
-c000480,"Soft, Contact",Adjective+Noun,ambell,gwall,error,noun-masc,Dim ond ambell ,achlysurol sydd yn y ddogfen,wall,SM,"ambell causes soft mutation; with g-, the g disappears: gwall → wall.","Mae ambell yn achosi treiglad meddal; gyda g-, mae’r g yn diflannu: gwall → wall."
+c000480,"Soft, Contact",Adjective+Noun,ambell,gwall,error,noun-masc,"Dim ond ambell ",achlysurol sydd yn y ddogfen,wall,SM,"ambell causes soft mutation; with g-, the g disappears: gwall → wall.","Mae ambell yn achosi treiglad meddal; gyda g-, mae’r g yn diflannu: gwall → wall."
 c000481,"Soft, Contact",Adjective+Noun,unig,plentyn,child,noun-masc,Maen nhw’n magu unig,ar hyn o bryd.,blentyn,SM,unig (“only”) before a noun causes soft mutation: plentyn → blentyn (p→b).,Mae unig (“only”) o flaen enw yn achosi treiglad meddal: plentyn → blentyn (p→b).
 c000482,"Soft, Contact",Adjective+Noun,unig,dadl,debate/argument,noun-fem,Dyma’r unig,a godwyd yn y pwyllgor.,ddadl,SM,unig before the noun causes soft mutation: dadl → ddadl (d→dd).,Mae unig o flaen enw yn achosi treiglad meddal: dadl → ddadl (d→dd).
 c000483,"Soft, Contact",Adjective+Noun,cyn-,llywydd,president/chair,noun-masc,Siaradodd y cyn-,yn y seremoni.,lywydd,SM,The prefix cyn- (“ex-/former”) causes soft mutation on the noun; ll- becomes l- in soft mutation: llywydd → lywydd.,Mae’r rhagddodiad cyn- (“former”) yn achosi treiglad meddal; mae ll- yn troi’n l-: llywydd → lywydd.
@@ -1709,33 +1709,3 @@ c001711,"Soft, Contact",Intensifier,go,cyffredin,common,adj,Mae’r math yma o g
 c001712,None,Intensifier,eitha,peryglus,dangerous,adj,Mae’r ffordd hon yn eitha,yn y nos.,peryglus,NONE,"Eitha modifies the adjective but does not trigger mutation, so peryglus stays the same.","Mae eitha yn addasu’r ansoddair ond nid yw’n achosi treiglad, felly mae peryglus yn aros yr un fath."
 c001713,None,Intensifier,mor,rhwydd,easy,adj,Mae’r dasg mor,fel bod pawb yn gallu ei wneud.,rhwydd,NONE,"Mor usually causes soft mutation, but it doesn’t mutate rh-, so rhwydd stays unchanged.","Fel arfer mae mor yn achosi treiglad meddal, ond nid yw’n treiglo rh-, felly mae rhwydd yn aros yr un fath."
 c001714,"Soft, Contact",Intensifier,braidd,gryf,strong,adj,Roedd y gwynt braidd yn,neithiwr.,ryf,SM,"In braidd yn + adjective, yn triggers soft mutation; with soft mutation initial g- disappears, so gryf → ryf.","Yn braidd yn + ansoddair, mae yn yn achosi treiglad meddal; gyda threiglad meddal mae g- ar y dechrau yn diflannu, felly gryf → ryf."
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

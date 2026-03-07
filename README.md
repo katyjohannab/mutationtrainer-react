@@ -60,3 +60,50 @@ Full runbook:
 - `docs/DEPLOY_ADMIN_MODE.md`
 - systemd template: `deploy/systemd/mutationtrainer.service`
 - env template: `deploy/systemd/mutationtrainer.env.example`
+
+## Admin Mode (Simple Setup + Daily Use)
+
+### Set Password Permanently (Windows)
+Run once:
+```powershell
+setx WM_ADMIN_PASSWORD "your-strong-password"
+```
+Important:
+- Close and reopen terminal/VS Code after running `setx`.
+- `setx` does not update the current shell immediately.
+
+Verify:
+```powershell
+echo $env:WM_ADMIN_PASSWORD
+```
+
+### Temporary Password (Current Terminal Only)
+```powershell
+$env:WM_ADMIN_PASSWORD="your-strong-password"
+```
+
+### Start Admin-Enabled Runtime
+```powershell
+npm run build
+npm run start:prod
+```
+Open:
+- `http://localhost:4173/mutationtrainer-react/`
+
+### Use Admin Mode (Step-by-Step)
+1. Open the app and practice normally.
+2. Click the `Admin` badge near the `Noticed a mistake?` area.
+3. Enter your admin password and sign in.
+4. Click `Edit current card`.
+5. Fix fields you want (`before`, `base`, `after`, `answer`, `outcome`, `trigger`, `category`, `translate`, `translateSent`, `why`, `whyCym`).
+6. Click `Save to source`.
+7. Confirm you see `Saved to source file.`.
+8. Click next card and continue.
+
+### Quick Check: Is Server Password Configured?
+```powershell
+Invoke-RestMethod http://localhost:4173/api/admin/session
+```
+Expected:
+- `configured: True` means password is set.
+- `authenticated: False` means not logged in yet (normal before login).

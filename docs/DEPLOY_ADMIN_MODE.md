@@ -43,6 +43,40 @@ npm run start:prod
 ```
 Open: `http://localhost:4173/mutationtrainer-react/`
 
+
+## 3.1 Permanent Password Setup
+
+### Windows workstation (local production testing)
+Set once:
+```powershell
+setx WM_ADMIN_PASSWORD "your-strong-password"
+```
+Then close and reopen terminal/VS Code.
+
+Verify in the new shell:
+```powershell
+echo $env:WM_ADMIN_PASSWORD
+```
+
+If you need it only for current shell session:
+```powershell
+$env:WM_ADMIN_PASSWORD="your-strong-password"
+```
+
+### VPS/systemd (recommended)
+Do not rely on shell exports. Put password in the systemd env file:
+```env
+WM_ADMIN_PASSWORD=your-real-password
+```
+Location used in this repo:
+- `/etc/mutationtrainer/mutationtrainer.env`
+
+Apply changes:
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart mutationtrainer.service
+sudo systemctl status mutationtrainer.service
+```
 ## 4. VPS Install (Ubuntu example)
 
 ### 4.1 Prepare app directory
@@ -131,6 +165,20 @@ sudo systemctl restart mutationtrainer.service
 7. Restart service and confirm change persists.
 8. Negative test: remove write permission temporarily and verify save returns clear writable-path error.
 
+
+## 8.1 Daily Admin Use (Operator Steps)
+1. Open app URL and start normal practice.
+2. Click `Admin`.
+3. Enter the shared password and sign in.
+4. Click `Edit current card`.
+5. Edit only fields you need to correct.
+6. Click `Save to source`.
+7. Wait for `Saved to source file.` notice.
+8. Move to the next card and repeat.
+
+Notes:
+- `configured: true` + `authenticated: false` means password exists, but you are not logged in yet.
+- If login modal says admin API unavailable, you are likely running static hosting instead of `npm run start:prod`.
 ## 9. Troubleshooting
 
 ### A) "Admin password is not configured on this server"
@@ -155,3 +203,6 @@ Fix: forward `X-Forwarded-Proto $scheme`; terminate TLS correctly at proxy.
 
 ## 10. Static-Only Deployment Block (Intentional)
 Do not deploy admin-enabled workflow to static-only hosting. You need a running Node server for `/api/admin/*` and disk writes.
+
+
+
