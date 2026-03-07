@@ -3,6 +3,7 @@ import { PRESET_DEFS } from "./data/presets";
 import { ALL_RUNTIME_DATA_FILES } from "./data/csvSources";
 import { loadManyCsvFiles } from "./services/loadCsv";
 import { applyFilters } from "./utils/applyFilters";
+import { getAdminSession, loginAdmin, logoutAdmin, saveAdminCard } from "./services/adminApi";
 
 import Header from "./components/Header";
 import FlashcardArea from "./components/FlashcardArea";
@@ -44,6 +45,12 @@ export default function App() {
   // Welcome/help modal state
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
 
+  const [adminState, setAdminState] = useState({
+    authenticated: false,
+    configured: true,
+    error: "",
+  });
+
   const [filters, setFilters] = useState({
     families: new Set(),
     categories: new Set(),
@@ -75,6 +82,32 @@ export default function App() {
     loadManyCsvFiles(ALL_RUNTIME_DATA_FILES)
       .then(setRows)
       .catch((e) => console.error(e));
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+
+    getAdminSession()
+      .then((session) => {
+        if (!active) return;
+        setAdminState({
+          authenticated: Boolean(session?.authenticated),
+          configured: session?.configured !== false,
+          error: "",
+        });
+      })
+      .catch((error) => {
+        if (!active) return;
+        setAdminState({
+          authenticated: false,
+          configured: false,
+          error: error?.message || "Admin API unavailable.",
+        });
+      });
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   const preset = activePresetId ? PRESET_DEFS[activePresetId] : null;
@@ -324,6 +357,48 @@ export default function App() {
   const resetSessionStats = () => {
     setSessionStats({ attempted: 0, correct: 0, streak: 0, bestStreak: 0 });
   };
+  async function handleAdminLogin(password) {
+    await loginAdmin(password);
+    const session = await getAdminSession();
+    setAdminState({
+      authenticated: Boolean(session?.authenticated),
+      configured: session?.configured !== false,
+      error: "",
+    });
+  }
+
+  async function handleAdminLogout() {
+    await logoutAdmin();
+    setAdminState((prev) => ({ ...prev, authenticated: false }));
+  }
+
+  async function handleAdminSave({ row, patch }) {
+    try {
+      const response = await saveAdminCard({
+        source: row?.__source,
+        rowIndex: row?.__rowIndex,
+        expectedCardId: row?.cardId || row?.CardId || "",
+        patch,
+      });
+
+      const updatedRow = response?.updatedRow || {};
+
+      setRows((prev) =>
+        prev.map((entry) => {
+          if (entry.__source !== row.__source) return entry;
+          if (entry.__rowIndex !== row.__rowIndex) return entry;
+          return { ...entry, ...updatedRow };
+        })
+      );
+
+      return updatedRow;
+    } catch (error) {
+      if (error?.status === 401) {
+        setAdminState((prev) => ({ ...prev, authenticated: false }));
+      }
+      throw error;
+    }
+  }
 
   // Drawer helpers
   const openDrawer = (intent) => {
@@ -366,6 +441,10 @@ export default function App() {
               onAnswerModeChange={setAnswerMode}
               deckRows={filtered}
               sessionStats={sessionStats}
+              adminState={adminState}
+              onAdminLogin={handleAdminLogin}
+              onAdminLogout={handleAdminLogout}
+              onAdminSave={handleAdminSave}
             />
           </div>
 
@@ -414,3 +493,8 @@ export default function App() {
     </div>
   );
 }
+
+
+
+
+

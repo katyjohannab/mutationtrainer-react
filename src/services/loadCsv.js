@@ -3,62 +3,7 @@ import Papa from "papaparse";
 import { GRAMMAR_RULES } from "../data/rules";
 import { CSV_SOURCE_META } from "../data/csvSources";
 import { mutateWord } from "../utils/grammar";
-
-// Map normalized lower-case alpha-only headers to internal keys
-const CANON_MAP = {
-  "cardid": "cardId",
-  "id": "cardId",
-  "ruleid": "ruleId",
-  "course": "course",
-  "level": "level",
-  "dialect": "dialect",
-  "patternid": "patternId",
-  "focus": "focus",
-  "qastatus": "qaStatus",
-  "qastatusmnmamnone": "qaStatus",
-  
-  "rulefamily": "family",
-  "family": "family",
-  
-  "rulecategory": "category",
-  "category": "category",
-  "rulecat": "category",
-  
-  "trigger": "trigger",
-  "base": "base",
-  "word": "base",
-  
-  "translate": "translate",
-  "translation": "translate",
-  
-  "wordcategory": "wordCategory",
-  "pos": "wordCategory",
-
-  "unit": "unit",
-  "packid": "pack",
-  "pack": "pack",
-  
-  "before": "before",
-  "after": "after",
-  "answer": "answer",
-  "targetword": "answer",
-  "outcome": "outcome",
-  "outcomesmnmamnone": "outcome",
-  "outcomessmnmamnone": "outcome",
-  "mutation": "outcome",
-  
-  "translatesent": "translateSent",
-  "sentencesmeaning": "translateSent",
-  "sentencewithgap": "sentenceWithGap",
-  
-  "why": "why",
-  "whyeng": "why",
-  "whycym": "whyCym",
-  "whycymraeg": "whyCym",
-  
-  "explanationen": "why",
-  "explanationcy": "whyCym"
-};
+import { getMappedKeyFromHeader, normalizeOutcomeValue } from "./csvFieldMap";
 
 function applySourceMetadata(row, filename) {
   const sourceMeta = CSV_SOURCE_META[filename];
@@ -85,66 +30,56 @@ function fallbackCardId(filename, rowIndex) {
 }
 
 function normaliseRow(row, filename, rowIndex) {
-  const out = { __source: filename };
-  
+  const out = {
+    __source: filename,
+    __rowIndex: rowIndex,
+    __fileType: filename.toLowerCase().endsWith(".tsv") ? "tsv" : "csv",
+  };
+
   for (const [rawKey, val] of Object.entries(row)) {
     const cleanVal = typeof val === "string" ? val.trim() : val;
-    
-    // Normalize key: remove non-alphanumeric, lowercase
-    const keyCanon = rawKey.trim().toLowerCase().replace(/[^a-z0-9]/g, "");
-    
-    // Check map with canonical key
-    const mapped = CANON_MAP[keyCanon] || (keyCanon.startsWith("qastatus") ? "qaStatus" : undefined);
-    if (mapped && cleanVal) {
+
+    const mapped = getMappedKeyFromHeader(rawKey);
+    if (mapped && cleanVal !== "") {
       out[mapped] = cleanVal;
     }
-    
-    // Keep original too
+
+    // Keep original key as parsed (already header-canonicalized by Papa config).
     out[rawKey] = cleanVal;
   }
-  
-  // CRITICAL: Hard fallbacks if map failed - check ALL possible variants
+
+  // CRITICAL: Hard fallbacks if map failed - check ALL possible variants.
   if (!out.family || out.family === "") {
-     out.family = out.rulefamily || row.RuleFamily || row.rulefamily || row.Family || "";
+    out.family = out.rulefamily || row.RuleFamily || row.rulefamily || row.Family || "";
   }
   if (!out.category || out.category === "") {
-     out.category = out.rulecategory || row.RuleCategory || row.rulecategory || row.Category || "";
+    out.category = out.rulecategory || row.RuleCategory || row.rulecategory || row.Category || "";
   }
 
-  // Handle outcome shortcodes
+  // Handle outcome shortcodes.
   if (out.outcome) {
-    const raw = out.outcome.trim().toLowerCase();
-    if (raw === "sm") out.outcome = "soft";
-    else if (raw === "nm") out.outcome = "nasal";
-    else if (raw === "am") out.outcome = "aspirate";
-    else if (raw === "none") out.outcome = "none";
+    out.outcome = normalizeOutcomeValue(out.outcome);
   }
 
-  // Lazy generation: answer
+  // Lazy generation: answer.
   if (!out.answer && out.base && out.outcome) {
     out.answer = mutateWord(out.base, out.outcome);
   }
 
-  // Lazy generation: sentences from template
+  // Lazy generation: sentences from template.
   if (out.template && (!out.before || !out.after)) {
-    let t = out.template;
+    let template = out.template;
     if (out.trigger) {
-      // Create a regex to replace trigger case-insensitively
       const triggerRegex = new RegExp(`{trigger}`, "gi");
-      t = t.replace(triggerRegex, out.trigger);
+      template = template.replace(triggerRegex, out.trigger);
     }
-    
-    // Split by {answer} case-insensitively using regex split with capturing group to be safe
-    // but simplified: split by the literal token we expect the user to write
-    const parts = t.split(/\{answer\}/i);
-    
-    // e.g. "Dw i'n {answer} rwan" -> before="Dw i'n ", after=" rwan"
+
+    const parts = template.split(/\{answer\}/i);
     if (parts.length >= 1) out.before = parts[0].trim();
     if (parts.length >= 2) out.after = parts[1].trim();
   }
 
   // Lazy generation: sentences from sentenceWithGap marker.
-  // Supports [], [ ], [  ] and similar whitespace-only placeholders.
   if (out.sentenceWithGap && !out.before && !out.after) {
     const markerRegex = /\[\s*\]/;
     const sentence = out.sentenceWithGap;
@@ -168,17 +103,15 @@ function normaliseRow(row, filename, rowIndex) {
 
   // Safety default must remain deterministic for stable review/debug.
   if (!out.cardId) out.cardId = fallbackCardId(filename, rowIndex);
-  
-  // Normalise specific categories based on rules
+
+  // Normalise specific categories based on rules.
   if (out.category && out.category.trim().toLowerCase() === "verb") {
-      // "Verb" is too generic. Refine based on rule ID if possible.
-      const rid = (out.ruleId || "").toLowerCase();
-      if (rid.includes("interrog")) {
-          out.category = "Interrogative";
-      } else {
-          // Default fallback for "Verb" in Mynediad (Gwnes i...) is Subject Boundary
-          out.category = "SubjectBoundary";
-      }
+    const rid = (out.ruleId || "").toLowerCase();
+    if (rid.includes("interrog")) {
+      out.category = "Interrogative";
+    } else {
+      out.category = "SubjectBoundary";
+    }
   }
 
   if (out.ruleId) {
@@ -190,14 +123,12 @@ function normaliseRow(row, filename, rowIndex) {
     }
   }
 
-  
   return applySourceMetadata(out, filename);
 }
 
 export async function loadCsvFromPublicData(filename) {
   const base = import.meta.env.BASE_URL || "/";
   const isTsv = filename.toLowerCase().endsWith(".tsv");
-  // Remove leading slash if base has one and filename has one to avoid //data
   const cleanBase = base.endsWith("/") ? base : `${base}/`;
   const url = `${cleanBase}data/${filename}`;
 
@@ -206,27 +137,27 @@ export async function loadCsvFromPublicData(filename) {
     if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.status}`);
 
     const csvText = await res.text();
-    
-    const parsed = Papa.parse(csvText, { 
-      header: true, 
+
+    const parsed = Papa.parse(csvText, {
+      header: true,
       skipEmptyLines: true,
       ...(isTsv ? { delimiter: "\t" } : {}),
-      // transforming header is useful but we double-check in normaliseRow
-      transformHeader: (h) => {
-        return h.trim().toLowerCase().replace(/[^a-z0-9]/g, ""); 
-      }
+      transformHeader: (h) => h.trim().toLowerCase().replace(/[^a-z0-9]/g, ""),
     });
 
     if (parsed.errors?.length) {
-       console.warn(`CSV parse warnings for ${filename}`, parsed.errors);
+      console.warn(`CSV parse warnings for ${filename}`, parsed.errors);
     }
 
-    const rows = (parsed.data || []).filter((r) =>
-      r && Object.values(r).some((v) => (v ?? "").toString().trim() !== "")
-    );
+    const rows = [];
+    (parsed.data || []).forEach((row, sourceRowIndex) => {
+      if (!row) return;
+      const hasValues = Object.values(row).some((v) => (v ?? "").toString().trim() !== "");
+      if (!hasValues) return;
+      rows.push(normaliseRow(row, filename, sourceRowIndex));
+    });
 
-    return rows.map((row, rowIndex) => normaliseRow(row, filename, rowIndex));
-    
+    return rows;
   } catch (err) {
     console.error("Error loading CSV:", filename, err);
     return [];

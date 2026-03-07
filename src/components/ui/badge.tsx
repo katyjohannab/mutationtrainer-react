@@ -1,7 +1,7 @@
-import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
   "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
@@ -32,26 +32,25 @@ const badgeVariants = cva(
           "border-transparent bg-[hsl(var(--cymru-gold))] text-[hsl(var(--cymru-white))] hover:bg-[hsl(var(--cymru-gold)/0.9)]",
         "cymru-gold-wash":
           "border-transparent bg-[hsl(var(--cymru-gold-wash))] text-[hsl(var(--cymru-gold))] hover:bg-[hsl(var(--cymru-gold-wash)/0.85)]",
-        ghost:
-          "border-border bg-transparent hover:bg-muted",
+        ghost: "border-border bg-transparent hover:bg-muted",
         warning:
           "border-[hsl(var(--cymru-red)/0.3)] bg-transparent text-[hsl(var(--cymru-red))] hover:bg-[hsl(var(--cymru-red-wash))] hover:border-[hsl(var(--cymru-red)/0.5)]",
+        admin:
+          "border-[hsl(var(--cymru-gold)/0.35)] bg-transparent text-[hsl(var(--cymru-gold))] hover:bg-[hsl(var(--cymru-gold-wash))] hover:border-[hsl(var(--cymru-gold)/0.55)]",
       },
     },
     defaultVariants: {
       variant: "default",
     },
   }
-)
+);
 
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof badgeVariants> {}
 
 function Badge({ className, variant, ...props }: BadgeProps) {
-  return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props} />
-  )
+  return <div className={cn(badgeVariants({ variant }), className)} {...props} />;
 }
 
-export { Badge, badgeVariants }
+export { Badge, badgeVariants };

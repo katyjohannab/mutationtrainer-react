@@ -1,6 +1,7 @@
 import PracticeCard from "./PracticeCard";
 import SessionStatsInline from "./SessionStatsInline";
 import ReportMistake from "./ReportMistake";
+import AdminCardControls from "./AdminCardControls";
 import { useI18n } from "../i18n/I18nContext";
 import { cn } from "../lib/cn";
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
@@ -29,6 +30,10 @@ export default function FlashcardArea({
   onShuffle,
   showDysguBadges = false,
   sessionStats,
+  adminState,
+  onAdminLogin,
+  onAdminLogout,
+  onAdminSave,
 }) {
   const { t } = useI18n();
   const cardId = currentRow?.cardId ?? currentRow?.CardId ?? "";
@@ -118,20 +123,20 @@ export default function FlashcardArea({
               </ToggleGroup>
 
               {onAnswerModeChange && (
-              <ToggleGroup
-                type="single"
-                value={answerMode}
-                onValueChange={(value) => value && onAnswerModeChange(value)}
-                size="sm"
-                className={toggleGroupClass}
-              >
-                <ToggleGroupItem value="type" className={toggleItemClass}>
-                  {t("typeMode") || "Type"}
-                </ToggleGroupItem>
-                <ToggleGroupItem value="tap" className={toggleItemClass}>
-                  {t("tapMode") || "Tap"}
-                </ToggleGroupItem>
-              </ToggleGroup>
+                <ToggleGroup
+                  type="single"
+                  value={answerMode}
+                  onValueChange={(value) => value && onAnswerModeChange(value)}
+                  size="sm"
+                  className={toggleGroupClass}
+                >
+                  <ToggleGroupItem value="type" className={toggleItemClass}>
+                    {t("typeMode") || "Type"}
+                  </ToggleGroupItem>
+                  <ToggleGroupItem value="tap" className={toggleItemClass}>
+                    {t("tapMode") || "Tap"}
+                  </ToggleGroupItem>
+                </ToggleGroup>
               )}
             </div>
           </div>
@@ -159,10 +164,18 @@ export default function FlashcardArea({
           />
         )}
 
-        {/* Card footer — report button aligned right */}
         {currentRow && (
-          <div className="flex items-center justify-end pt-3">
-            <ReportMistake cardId={cardId} />
+          <div className="flex items-center justify-end gap-2 pt-3">
+            {!adminState?.authenticated ? <ReportMistake cardId={cardId} /> : null}
+            <AdminCardControls
+              row={currentRow}
+              isAuthenticated={Boolean(adminState?.authenticated)}
+              authConfigured={adminState?.configured !== false}
+              authError={adminState?.error || ""}
+              onLogin={onAdminLogin}
+              onLogout={onAdminLogout}
+              onSave={onAdminSave}
+            />
           </div>
         )}
       </div>

@@ -2,13 +2,14 @@ import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { viteAdminApiPlugin } from "./server/viteAdminApiPlugin.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default defineConfig({
-  plugins: [react()],
-  base: '/mutationtrainer-react/',
+  plugins: [react(), viteAdminApiPlugin()],
+  base: "/mutationtrainer-react/",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

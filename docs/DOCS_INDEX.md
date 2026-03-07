@@ -11,6 +11,7 @@ Use this file as the starting point for any human or agent onboarding.
 - `docs/AI_DATA_ENTRY_PROMPT.md`
 - `docs/PROJECT_STATUS.md`
 - `docs/AGENT_HANDOFF.md`
+- `docs/DEPLOY_ADMIN_MODE.md`
 - `docs/TAXONOMY.md`
 - `src/DEFINITION_OF_DONE.md`
 
@@ -48,4 +49,5 @@ npm run check:docs
 npm run test -- --run
 npm run build
 ```
+
 
