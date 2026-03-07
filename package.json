@@ -16,7 +16,10 @@
     "compile:unit-data": "node src/content-gen/generators/compile-unit-data.mjs",
     "promote:review": "node src/content-gen/generators/promote-reviewed.mjs",
     "build:external-prompt": "node scripts/build-external-agent-prompt.cjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "serve:prod": "node scripts/start-prod.cjs",
+    "start:prod": "npm run serve:prod",
+    "deploy:smoke:admin": "vitest --run"
   },
   "dependencies": {
     "@faker-js/faker": "^10.3.0",
@@ -68,3 +71,5 @@
     "vite": "npm:rolldown-vite@7.2.5"
   }
 }
+
+

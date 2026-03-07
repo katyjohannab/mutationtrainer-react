@@ -1,0 +1,24 @@
+[Unit]
+Description=Mutation Trainer (Vite Preview + Admin API)
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/srv/mutationtrainer-react
+EnvironmentFile=/etc/mutationtrainer/mutationtrainer.env
+ExecStart=/usr/bin/npm run start:prod
+Restart=always
+RestartSec=5
+TimeoutStopSec=15
+
+# Hardening baseline
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/srv/mutationtrainer-react/public/data
+
+[Install]
+WantedBy=multi-user.target

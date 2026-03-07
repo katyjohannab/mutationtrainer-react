@@ -1,104 +1,157 @@
-# Admin Mode Deployment (Writable Runtime)
+# Admin Mode Deployment (Writable Runtime, VPS-First)
 
 Last updated: 2026-03-07
 
-This guide explains exactly how to run the app with writable admin mode (live CSV/TSV edits).
+This is the production runbook for Option 2: one Node process on a VPS/VM, saving admin edits directly to `public/data/**`.
 
-## Why Static Hosting Is Not Enough
-Admin save writes to files under `public/data/**` through server endpoints:
+## 1. Why Static Hosting Cannot Work
+Admin mode writes files through API endpoints:
+- `GET /api/admin/session`
 - `POST /api/admin/login`
 - `POST /api/admin/logout`
 - `POST /api/admin/save-card`
 
-A static host (for example pure GitHub Pages) can only serve files and cannot run this Node API or write files on save.
+A static host (for example GitHub Pages without a server) cannot execute these endpoints and cannot write CSV/TSV files.
 
-## Local Run (Windows PowerShell)
-Run these commands from the repo root.
+## 2. Required Environment Contract
+- Required:
+  - `WM_ADMIN_PASSWORD` (shared admin password)
+- Optional:
+  - `PORT` (default `4173`)
+  - `WM_BIND_HOST` (default `0.0.0.0`)
+  - `WM_ADMIN_SESSION_TTL_HOURS` (default `12`, clamp `0.25` to `168`)
+  - `NODE_ENV=production` (recommended in VPS service env)
 
-1. Install dependencies (once):
+## 3. Local Dry Run (Before VPS)
+Run from repo root.
+
+### Windows PowerShell
 ```powershell
 npm install
-```
-
-2. Set admin password for the current terminal session:
-```powershell
-$env:WM_ADMIN_PASSWORD = "choose-a-strong-password"
-```
-
-3. Build production assets:
-```powershell
+$env:WM_ADMIN_PASSWORD="choose-a-strong-password"
 npm run build
+npm run start:prod
 ```
+Open: `http://localhost:4173/mutationtrainer-react/`
 
-4. Start the Node preview server (serves app + `/api/admin/*`):
-```powershell
-npm run preview -- --host 0.0.0.0 --port 4173
-```
-
-5. Open:
-- Local machine: `http://localhost:4173/mutationtrainer-react/`
-- Same network (optional): `http://<your-lan-ip>:4173/mutationtrainer-react/`
-
-## Local Run (macOS/Linux)
+### macOS/Linux
 ```bash
 npm install
 export WM_ADMIN_PASSWORD="choose-a-strong-password"
 npm run build
-npm run preview -- --host 0.0.0.0 --port 4173
+npm run start:prod
 ```
-Open `http://localhost:4173/mutationtrainer-react/`.
+Open: `http://localhost:4173/mutationtrainer-react/`
 
-## Persisting Password
-- Linux/macOS shell profile: add `export WM_ADMIN_PASSWORD="..."` to `.bashrc`, `.zshrc`, etc.
-- Windows persistent env var:
-```powershell
-setx WM_ADMIN_PASSWORD "choose-a-strong-password"
+## 4. VPS Install (Ubuntu example)
+
+### 4.1 Prepare app directory
+```bash
+sudo mkdir -p /srv/mutationtrainer-react
+sudo chown -R $USER:$USER /srv/mutationtrainer-react
+# copy repo files into /srv/mutationtrainer-react
+cd /srv/mutationtrainer-react
+npm install
+npm run build
 ```
-Then open a new terminal before starting the server.
 
-## Writable Filesystem Requirement
-The server process user must be able to write under:
+### 4.2 Create service env file
+```bash
+sudo mkdir -p /etc/mutationtrainer
+sudo cp deploy/systemd/mutationtrainer.env.example /etc/mutationtrainer/mutationtrainer.env
+sudo nano /etc/mutationtrainer/mutationtrainer.env
+```
+Set at least:
+```env
+WM_ADMIN_PASSWORD=your-real-password
+PORT=4173
+WM_BIND_HOST=0.0.0.0
+NODE_ENV=production
+```
+
+### 4.3 Install systemd service
+```bash
+sudo cp deploy/systemd/mutationtrainer.service /etc/systemd/system/mutationtrainer.service
+sudo systemctl daemon-reload
+sudo systemctl enable mutationtrainer.service
+sudo systemctl start mutationtrainer.service
+sudo systemctl status mutationtrainer.service
+```
+
+### 4.4 Logs
+```bash
+journalctl -u mutationtrainer.service -f
+```
+
+## 5. Reverse Proxy (Nginx)
+Use template:
+- `deploy/nginx/mutationtrainer.conf`
+
+Key requirement: forward `X-Forwarded-Proto` so secure admin cookie behavior works correctly behind HTTPS.
+
+After configuring Nginx:
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+## 6. Writable + Persistent Data Requirement
+The service user must have write access to:
 - `public/data/cards.csv`
 - `public/data/prep.csv`
 - `public/data/article-sylfaen.csv`
-- any registered unit/pack file under `public/data/**`
+- all registered unit/pack files under `public/data/**`
 
-Quick check (PowerShell):
-```powershell
-Test-Path .\public\data\cards.csv
-```
-If save fails with permission errors, fix folder permissions for the service user.
+For VPS, persistence is usually the VM disk. For containers/cloud, mount a persistent volume to the app `public/data` path.
 
-## Cloud/Container Requirement (Persistent Volume)
-If you deploy in Docker/cloud, app writes must survive restart/redeploy.
-Mount persistent storage to the app path containing `public/data`.
+## 7. Backup and Restore (Before/After Admin Editing)
 
-### Example: Docker (bind mount)
+### Backup
 ```bash
-docker run -d \
-  -p 4173:4173 \
-  -e WM_ADMIN_PASSWORD="choose-a-strong-password" \
-  -v /host/mutation-data:/app/public/data \
-  your-image \
-  sh -c "npm run build && npm run preview -- --host 0.0.0.0 --port 4173"
+cd /srv/mutationtrainer-react
+mkdir -p backups
+stamp=$(date +%Y%m%d-%H%M%S)
+tar -czf "backups/public-data-$stamp.tgz" public/data
 ```
 
-Meaning:
-- `/host/mutation-data` is persistent storage on host
-- `/app/public/data` is where the app reads/writes CSV/TSV
+### Restore
+```bash
+cd /srv/mutationtrainer-react
+tar -xzf backups/public-data-YYYYMMDD-HHMMSS.tgz
+sudo systemctl restart mutationtrainer.service
+```
 
-## Reverse Proxy / HTTPS
-For production, run behind HTTPS (Nginx/Caddy/cloud proxy). The admin auth cookie is intended for secure deployments.
+## 8. VPS Smoke Test Checklist
+1. Service starts with no errors.
+2. Open app and verify normal learner flow still works.
+3. Admin login succeeds with `WM_ADMIN_PASSWORD`.
+4. Edit one card and save.
+5. Verify changed content appears in app immediately.
+6. Verify source file changed on disk (`public/data/...`).
+7. Restart service and confirm change persists.
+8. Negative test: remove write permission temporarily and verify save returns clear writable-path error.
 
-## Deployment Checklist
-1. Server can run Node process continuously.
-2. `WM_ADMIN_PASSWORD` is set in environment/secrets.
-3. `public/data` is writable by the process user.
-4. `public/data` is on persistent storage (volume/disk).
-5. App is reachable at `/mutationtrainer-react/` (or update Vite `base` if you deploy on a different path).
+## 9. Troubleshooting
 
-## If You Deploy at Root (`/`) Instead of `/mutationtrainer-react/`
-Current config uses:
-- `vite.config.js` -> `base: "/mutationtrainer-react/"`
+### A) "Admin password is not configured on this server"
+Cause: `WM_ADMIN_PASSWORD` missing in runtime environment.
+Fix: set env var in systemd env file and restart service.
 
-If your domain serves app at root, change `base` to `"/"`, rebuild, and redeploy.
+### B) 401 on save-card
+Cause: session missing/expired or not logged in.
+Fix: login again; check browser cookies; confirm reverse proxy forwards headers correctly.
+
+### C) "rowIndex is out of range" or card mismatch
+Cause: data changed between load and save, or stale card state.
+Fix: refresh app deck and retry edit.
+
+### D) "Server cannot write ... public/data"
+Cause: filesystem permission issue (or read-only mount).
+Fix: grant write permissions to service user; ensure mounted disk is read-write.
+
+### E) Cookie/session issues behind proxy
+Cause: proxy not forwarding scheme or HTTPS misconfiguration.
+Fix: forward `X-Forwarded-Proto $scheme`; terminate TLS correctly at proxy.
+
+## 10. Static-Only Deployment Block (Intentional)
+Do not deploy admin-enabled workflow to static-only hosting. You need a running Node server for `/api/admin/*` and disk writes.

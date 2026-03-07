@@ -48,3 +48,15 @@ npm run lint
 npm run test -- --run
 npm run build
 ```
+
+## Operator Quickstart (Admin Mode, VPS-First)
+For writable admin editing in production-like setup:
+1. Set `WM_ADMIN_PASSWORD`
+2. Build the app (`npm run build`)
+3. Start server runtime (`npm run start:prod`)
+4. Ensure `public/data/**` is writable and persistent
+
+Full runbook:
+- `docs/DEPLOY_ADMIN_MODE.md`
+- systemd template: `deploy/systemd/mutationtrainer.service`
+- env template: `deploy/systemd/mutationtrainer.env.example`

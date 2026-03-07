@@ -13,7 +13,7 @@ import {
 import { mutateWord } from "../src/utils/grammar.js";
 
 const SESSION_COOKIE = "wm_admin_session";
-const SESSION_TTL_MS = 12 * 60 * 60 * 1000;
+const DEFAULT_SESSION_TTL_HOURS = 12;
 const MAX_BODY_BYTES = 1024 * 1024;
 
 const adminSessions = new Map();
@@ -98,9 +98,35 @@ function getConfiguredPassword() {
   return String(process.env.WM_ADMIN_PASSWORD || "").trim();
 }
 
+function getSessionTtlMs() {
+  const raw = String(process.env.WM_ADMIN_SESSION_TTL_HOURS || "").trim();
+  if (!raw) return DEFAULT_SESSION_TTL_HOURS * 60 * 60 * 1000;
+
+  const hours = Number(raw);
+  if (!Number.isFinite(hours) || hours <= 0) {
+    return DEFAULT_SESSION_TTL_HOURS * 60 * 60 * 1000;
+  }
+
+  const clampedHours = Math.min(168, Math.max(0.25, hours));
+  return Math.round(clampedHours * 60 * 60 * 1000);
+}
+
+function getForwardedProto(req) {
+  const raw = String(req.headers["x-forwarded-proto"] || "").trim().toLowerCase();
+  if (!raw) return "";
+  return raw
+    .split(",")
+    .map((part) => part.trim())
+    .find(Boolean);
+}
+
+function shouldUseSecureCookie(req) {
+  const proto = getForwardedProto(req);
+  return proto === "https" || process.env.NODE_ENV === "production";
+}
+
 function buildCookieValue(token, req, maxAgeSec) {
-  const proto = String(req.headers["x-forwarded-proto"] || "").toLowerCase();
-  const secure = proto === "https" || process.env.NODE_ENV === "production";
+  const secure = shouldUseSecureCookie(req);
   const parts = [
     `${SESSION_COOKIE}=${encodeURIComponent(token)}`,
     "HttpOnly",
@@ -113,8 +139,7 @@ function buildCookieValue(token, req, maxAgeSec) {
 }
 
 function clearCookieValue(req) {
-  const proto = String(req.headers["x-forwarded-proto"] || "").toLowerCase();
-  const secure = proto === "https" || process.env.NODE_ENV === "production";
+  const secure = shouldUseSecureCookie(req);
   const parts = [
     `${SESSION_COOKIE}=`,
     "HttpOnly",
@@ -228,6 +253,38 @@ function normalizeSavedRow(row, source, rowIndex) {
   return out;
 }
 
+export function mapSaveOperationalError(error, sourcePath, stage) {
+  const code = String(error?.code || "").toUpperCase();
+
+  if (code === "ENOENT") {
+    return Object.assign(
+      new Error(`Source file is missing on server: ${sourcePath}.`),
+      { statusCode: 404 }
+    );
+  }
+
+  if (code === "EACCES" || code === "EPERM" || code === "EROFS") {
+    return Object.assign(
+      new Error(
+        `Server cannot write to ${sourcePath}. Ensure public/data is writable for the service user.`
+      ),
+      { statusCode: 500 }
+    );
+  }
+
+  if (code === "ENOSPC") {
+    return Object.assign(
+      new Error(`Server disk is full while trying to ${stage} ${sourcePath}.`),
+      { statusCode: 500 }
+    );
+  }
+
+  return Object.assign(
+    new Error(`Failed to ${stage} source file (${sourcePath}): ${error?.message || "Unknown error"}`),
+    { statusCode: 500 }
+  );
+}
+
 export function applyPatchToParsedRow({ row, canonicalToHeader, patch }) {
   const setByCanonical = (canonicalKey, value) => {
     const header = canonicalToHeader.get(canonicalKey);
@@ -319,7 +376,13 @@ export async function saveCardPatch({
     throw Object.assign(new Error("Invalid source path."), { statusCode: 400 });
   }
 
-  const raw = await fs.readFile(sourcePath, "utf8");
+  let raw;
+  try {
+    raw = await fs.readFile(sourcePath, "utf8");
+  } catch (error) {
+    throw mapSaveOperationalError(error, sourcePath, "read");
+  }
+
   const delimiter = normalizedSource.toLowerCase().endsWith(".tsv") ? "\t" : ",";
   const newline = raw.includes("\r\n") ? "\r\n" : "\n";
 
@@ -369,7 +432,11 @@ export async function saveCardPatch({
     }
   );
 
-  await fs.writeFile(sourcePath, output, "utf8");
+  try {
+    await fs.writeFile(sourcePath, output, "utf8");
+  } catch (error) {
+    throw mapSaveOperationalError(error, sourcePath, "write");
+  }
 
   return {
     source: normalizedSource,
@@ -380,6 +447,7 @@ export async function saveCardPatch({
 
 export function createAdminApiMiddleware({ rootDir }) {
   const root = rootDir || process.cwd();
+  const sessionTtlMs = getSessionTtlMs();
 
   return async function adminApiMiddleware(req, res, next) {
     const url = new URL(req.url || "/", "http://localhost");
@@ -392,6 +460,7 @@ export function createAdminApiMiddleware({ rootDir }) {
       sendJson(res, 200, {
         authenticated: isAuthenticated(req),
         configured: Boolean(getConfiguredPassword()),
+        sessionTtlHours: Number((sessionTtlMs / (60 * 60 * 1000)).toFixed(2)),
       });
       return;
     }
@@ -415,8 +484,8 @@ export function createAdminApiMiddleware({ rootDir }) {
         }
 
         const token = crypto.randomBytes(32).toString("hex");
-        adminSessions.set(token, { expiresAt: Date.now() + SESSION_TTL_MS });
-        res.setHeader("Set-Cookie", buildCookieValue(token, req, SESSION_TTL_MS / 1000));
+        adminSessions.set(token, { expiresAt: Date.now() + sessionTtlMs });
+        res.setHeader("Set-Cookie", buildCookieValue(token, req, Math.floor(sessionTtlMs / 1000)));
         sendJson(res, 200, { authenticated: true });
         return;
       } catch (error) {
@@ -462,5 +531,3 @@ export function createAdminApiMiddleware({ rootDir }) {
     sendJson(res, 404, { error: "Not found." });
   };
 }
-
-

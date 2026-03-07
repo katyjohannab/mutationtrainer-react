@@ -56,3 +56,21 @@ Status:
 
 ## 6. Generated Markdown Artifacts
 Markdown under `generated/` is output data, not canonical documentation.
+
+## 7. Admin Runtime (Writable Mode)
+Admin mode is backed by server endpoints and filesystem writes:
+- `GET /api/admin/session`
+- `POST /api/admin/login`
+- `POST /api/admin/logout`
+- `POST /api/admin/save-card`
+
+Persistence model:
+- source of truth remains `public/data/**` CSV/TSV files
+- server runtime must have write access and persistent disk
+
+Environment contract:
+- required: `WM_ADMIN_PASSWORD`
+- optional: `PORT`, `WM_BIND_HOST`, `WM_ADMIN_SESSION_TTL_HOURS`
+
+Operational runbook:
+- `docs/DEPLOY_ADMIN_MODE.md`
