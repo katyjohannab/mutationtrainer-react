@@ -9,6 +9,7 @@ import FlashcardArea from "./components/FlashcardArea";
 import FilterSheet from "./components/FilterSheet";
 import RailContent from "./components/rail/RailContent";
 import PageContainer from "./components/layout/PageContainer";
+import WelcomeModal from "./components/WelcomeModal";
 
 import { loadLeitnerMap, updateLeitner } from "./utils/leitner";
 import { getCardKey, pickRandomIndex, pickSmartIndex } from "./utils/pickNext";
@@ -37,8 +38,11 @@ export default function App() {
   // Centralized drawer state with intent
   const [drawer, setDrawer] = useState({
     open: false,
-    intent: "filters", // "help" | "filters"
+    intent: "filters", // "filters"
   });
+
+  // Welcome/help modal state
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
 
   const [filters, setFilters] = useState({
     families: new Set(),
@@ -273,13 +277,22 @@ export default function App() {
 
   function handleTogglePreset(id) {
     setActivePresetId((prev) => (prev === id ? null : id));
+    // Selecting a pack clears any active advanced filters (they're mutually exclusive)
+    if (id !== null) {
+      setFilters({ families: new Set(), categories: new Set(), levels: new Set() });
+    }
   }
 
   function handleSetPreset(idOrNull) {
     setActivePresetId(idOrNull ?? null);
+    if (idOrNull !== null) {
+      setFilters({ families: new Set(), categories: new Set(), levels: new Set() });
+    }
   }
 
   const toggleFilter = (kind, id) => {
+    // Applying any advanced filter clears the active pack
+    setActivePresetId(null);
     setFilters((prev) => {
       const nextSet = new Set(prev[kind] ?? []);
       if (nextSet.has(id)) nextSet.delete(id);
@@ -317,16 +330,22 @@ export default function App() {
     setDrawer({ open: true, intent });
   };
 
-  // Derive accordion open items from drawer intent
-  const drawerAccordionItems = drawer.intent === "help" 
-    ? ["item-start"] 
-    : ["item-courses", "item-quick", "item-core"];
+  // Derive accordion open items for drawer
+  // NOTE: do NOT pass openItems to the drawer — let FiltersPanel manage its own
+  // accordion state so all items are user-togglable on mobile.
+  const drawerAccordionItems = ["item-packs"]; // used as defaultValue only
 
   return (
     <div className="min-h-full">
       <Header
         onOpenFilters={() => openDrawer("filters")}
-        onOpenHelp={() => openDrawer("help")}
+        onOpenHelp={() => setShowWelcomeModal(true)}
+      />
+
+      {/* Welcome/Help Modal */}
+      <WelcomeModal
+        forceOpen={showWelcomeModal}
+        onClose={() => setShowWelcomeModal(false)}
       />
 
       <PageContainer as="main" className="pb-4 pt-6 sm:pt-7 lg:pt-8 2xl:pt-10">
@@ -387,7 +406,7 @@ export default function App() {
             filters,
             onToggleFilter: toggleFilter,
             onClearFilterType: clearFilterType,
-            openItems: drawerAccordionItems,
+            defaultOpenItems: drawerAccordionItems,
             accordionType: "multiple",
           }}
         />

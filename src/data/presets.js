@@ -93,3 +93,29 @@ export const STARTER_PACK_GROUPS = [
   },
 ];
 
+// ─────────────────────────────────────────────────────────────────────────────
+// NEW FILTER UI DATA STRUCTURES
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Foundation packs — generalist packs for any learner.
+ * These are not tied to any specific Dysgu Cymraeg course level.
+ */
+export const FOUNDATION_PACKS = [
+  "starter-preps",
+  "numbers-1-10",
+  "articles",
+  "place-names",
+];
+
+/**
+ * Dysgu Cymraeg packs organized by course level.
+ * Add pack IDs here as content is created for each level.
+ */
+export const DYSGU_PACKS_BY_LEVEL = {
+  mynediad: ["mynediad-place-names-pack-01"],
+  sylfaen: [],
+  canolradd: [],
+  uwch: [], // Note: uwch unit content exists but not organized as "packs" yet
+};
+

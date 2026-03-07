@@ -13,7 +13,6 @@ import {
 export default function CardUtilityCluster({
   t,
   isFeedback,
-  mode,
   onToggleHint,
   onReveal,
   onSkip,

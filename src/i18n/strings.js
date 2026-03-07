@@ -146,6 +146,28 @@ export const STRINGS = {
     courseCanolradd: "Canolradd",
     courseUwch: "Uwch",
 
+    // New filter UI strings
+    practicePacksTitle: "Pecynnau Ymarfer",
+    practicePacksSubtitle: "Dewiswch becyn i ddechrau arni.",
+    designSessionTitle: "Dyluniwch Eich Sesiwn",
+    designSessionSubtitle: "Cyfunwch hidlyddion i greu sesiwn bwrpasol.",
+    designSessionHint: "Cyfunwch hidlyddion i greu sesiwn bwrpasol o'r gronfa gardiau lawn.",
+    foundationPacksHeading: "Sylfaenol",
+    dysguPacksHeading: "Dysgu Cymraeg",
+    dysguPacksComingSoon: "Mae pecynnau cwrs ar y ffordd.",
+    levelComingSoon: "Mae cynnwys ar gyfer y lefel hon ar y ffordd.",
+
+    // Onboarding modal
+    onboardingWelcome: "Croeso i Treiglap!",
+    onboardingSubtitle: "Meistrolwch dreigladau Cymraeg gydag ymarfer pwrpasol.",
+    onboardingStep1Title: "Dewiswch becyn",
+    onboardingStep1Desc: "Dewiswch Becyn Ymarfer neu dyluniwch eich sesiwn eich hun gyda hidlyddion.",
+    onboardingStep2Title: "Ymarferwch dreigladau",
+    onboardingStep2Desc: "Teipiwch neu tapiwch ffurf dreigledig y gair sylfaen.",
+    onboardingStep3Title: "Adeiladwch eich streak",
+    onboardingStep3Desc: "Daliwch ati i wella'ch cywirdeb a datgloi streaks hirach.",
+    onboardingGotIt: "Iawn!",
+    onboardingDontShow: "Peidiwch â dangos hwn eto",
 
     // Preset pack titles + descriptions
     "preset.starterPreps.title": "Pecynnau dechrau",
@@ -321,6 +343,29 @@ export const STRINGS = {
     courseSylfaen: "Sylfaen",
     courseCanolradd: "Canolradd",
     courseUwch: "Uwch",
+
+    // New filter UI strings
+    practicePacksTitle: "Practice Packs",
+    practicePacksSubtitle: "Pick a pack to start practising.",
+    designSessionTitle: "Design Your Session",
+    designSessionSubtitle: "Combine filters to create a custom session.",
+    designSessionHint: "Combine filters to create a custom session from the full card pool.",
+    foundationPacksHeading: "Foundation",
+    dysguPacksHeading: "Dysgu Cymraeg",
+    dysguPacksComingSoon: "Course-aligned packs coming soon.",
+    levelComingSoon: "Content for this level coming soon.",
+
+    // Onboarding modal
+    onboardingWelcome: "Welcome to Treiglap!",
+    onboardingSubtitle: "Master Welsh mutations with focused practice.",
+    onboardingStep1Title: "Pick a pack",
+    onboardingStep1Desc: "Choose a Practice Pack or design your own session with filters.",
+    onboardingStep2Title: "Practice mutations",
+    onboardingStep2Desc: "Type or tap the mutated form of the baseword shown.",
+    onboardingStep3Title: "Build your streak",
+    onboardingStep3Desc: "Keep going to improve your accuracy and unlock longer streaks.",
+    onboardingGotIt: "Got it!",
+    onboardingDontShow: "Don't show this again",
 
     // Preset pack titles + descriptions
     "preset.starterPreps.title": "Starter preps",

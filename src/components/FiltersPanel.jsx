@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { HelpCircle, Zap, Filter, BookOpen, Check } from "lucide-react";
+import { Sparkles, SlidersHorizontal } from "lucide-react";
 import AppIcon from "./icons/AppIcon";
 import { useI18n } from "../i18n/I18nContext";
 import { cn } from "../lib/cn";
-import { PRESET_DEFS, STARTER_PACK_GROUPS, STARTER_PACK_ORDER } from "../data/presets";
-import DysguCourseUnitPicker from "./filters/DysguCourseUnitPicker";
+import { PRESET_DEFS, FOUNDATION_PACKS } from "../data/presets";
+import DysguLevelPacks from "./filters/DysguLevelPacks";
+import PackCard from "./filters/PackCard";
 
 import {
   Accordion,
@@ -13,7 +14,7 @@ import {
   AccordionTrigger,
 } from "./ui/accordion";
 import { Badge, badgeVariants } from "./ui/badge";
-import { Button } from "./ui/button";
+import { Separator } from "./ui/separator";
 
 const MUTATION_FILTERS = [
   { id: "aspirate", labelKey: "mutationFilterAspirate" },
@@ -65,17 +66,14 @@ export default function FiltersPanel({
   className,
   activePresetId,
   onTogglePreset,
-  onSetPreset,
-  onPresetApplied,
   available = { families: [], categories: [], levels: [] },
   filters = { families: new Set(), categories: new Set(), levels: new Set() },
   onToggleFilter,
   onClearFilterType,
-  openItems,
-  onOpenItemsChange,
+  defaultOpenItems,
   accordionType = "single",
 }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
 
   const [expandedCats, setExpandedCats] = useState(false);
 
@@ -128,302 +126,260 @@ export default function FiltersPanel({
     return item.label ?? "";
   };
 
-  const accordionProps =
-    openItems !== undefined
-      ? { value: openItems, onValueChange: onOpenItemsChange }
-      : { defaultValue: "item-start" };
+  // Always uncontrolled — let the user open/close items freely.
+  // defaultOpenItems can seed which items start open (e.g. "item-packs" for mobile drawer).
+  const accordionProps = {
+    defaultValue: defaultOpenItems ?? "item-packs",
+  };
 
   const collapsibleProp = accordionType === "single" ? { collapsible: true } : {};
 
+  /**
+   * Get localized text from preset definitions
+   */
+  const getPackLabel = (def, lang) => {
+    if (!def) return "";
+    if (def.titleKey) return t(def.titleKey);
+    if (typeof def.title === "object") return def.title[lang] || def.title.en || def.id;
+    return def.title || def.id;
+  };
 
-  const starterPackGroups =
-    STARTER_PACK_GROUPS?.length
-      ? STARTER_PACK_GROUPS
-      : [{ id: "default", presetIds: STARTER_PACK_ORDER }];
+  const getPackDesc = (def, lang) => {
+    if (!def) return "";
+    if (def.descriptionKey) return t(def.descriptionKey);
+    if (typeof def.description === "object") return def.description[lang] || def.description.en || "";
+    return def.description || def.desc || "";
+  };
 
   return (
-    <div className={cn("space-y-8 py-2 px-1", className)}>
+    <div className={cn("space-y-4 py-2 px-1", className)}>
       <Accordion
-        className="w-full"
+        className="w-full space-y-3"
         type={accordionType}
         {...collapsibleProp}
         {...accordionProps}
       >
-        <AccordionItem value="item-start">
-          <AccordionTrigger>
+        {/* ────────────────────────────────────────────────────────────────────
+            PRACTICE PACKS — Foundation + Dysgu Cymraeg
+        ──────────────────────────────────────────────────────────────────── */}
+        <AccordionItem
+          value="item-packs"
+          className="rounded-xl border border-border bg-card overflow-hidden"
+        >
+          <AccordionTrigger className="px-4 py-3 hover:no-underline data-[state=open]:border-l-4 data-[state=open]:border-l-[hsl(var(--cymru-green))]">
             <div className={cn(headerBase, "text-sm text-[hsl(var(--cymru-green))]")}>
               <AppIcon
-                icon={HelpCircle}
-                className={cn(headerIcon, "text-[hsl(var(--cymru-green))]")}
+                icon={Sparkles}
+                className={cn(headerIcon, "h-5 w-5 text-[hsl(var(--cymru-green))]")}
                 aria-hidden="true"
               />
-              <span>{t("startHereTitle")}</span>
+              <span className="font-bold">{t("practicePacksTitle")}</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent>
-            <div className="p-4 space-y-3">
-              <p className="text-sm text-foreground font-semibold">
-                {t("startHereSubtitle")}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                {t("startHereIntro")}
-              </p>
-              <ul className="text-sm text-muted-foreground space-y-2 list-disc pl-5">
-                <li>{t("startHereStepPick")}</li>
-                <li>{t("startHereStepRefine")}</li>
-                <li>{t("startHereStepPractice")}</li>
-              </ul>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem value="item-courses">
-          <AccordionTrigger>
-            <div className={cn(headerBase, "text-sm text-[hsl(var(--cymru-green))]")}>
-              <AppIcon
-                icon={BookOpen}
-                className={cn(headerIcon, "text-[hsl(var(--cymru-green))]")}
-                aria-hidden="true"
-              />
-              <span>{t("coursesTitle") || "Dysgu Cymraeg Courses"}</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent>
-            <div className="mb-3 space-y-2">
-              <Badge variant="cymru-dark-wash" className="rounded-full">
-                {t("coursesLearnerBadge")}
-              </Badge>
+          <AccordionContent className="px-0 pb-0">
+            {/* Subtle green wash background */}
+            <div className="bg-[hsl(var(--cymru-green-wash)/0.4)] px-4 py-5 space-y-6">
+              {/* Subtitle hint */}
               <p className="text-xs text-muted-foreground">
-                {t("coursesSubtitle") || "Structured course-unit routes for Dysgu Cymraeg learners."}
+                {t("practicePacksSubtitle")}
               </p>
-            </div>
-            <DysguCourseUnitPicker
-              activePresetId={activePresetId}
-              onSetPreset={onSetPreset}
-              onPresetApplied={onPresetApplied}
-            />
-          </AccordionContent>
-        </AccordionItem>
 
-        <AccordionItem value="item-quick">
-          <AccordionTrigger>
-            <div className={cn(headerBase, "text-sm text-[hsl(var(--cymru-green))]")}>
-              <AppIcon
-                icon={Zap}
-                className={cn(headerIcon, "text-[hsl(var(--cymru-green))]")}
-                aria-hidden="true"
-              />
-              <span>{t("starterPacksTitle")}</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent>
-            <div className="mb-3">
-              <p className="text-xs text-muted-foreground">
-                {t("starterPacksSubtitle")}
-              </p>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-                {t("starterPacksHint")}
-              </p>
-            </div>
+              {/* Foundation Packs Section */}
+              <div className="space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[hsl(var(--cymru-green))]">
+                  {t("foundationPacksHeading")}
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {FOUNDATION_PACKS.map((id) => {
+                    const def = PRESET_DEFS[id];
+                    if (!def) return null;
+                    const isActive = activePresetId === id;
 
-            <div className="space-y-4">
-              {starterPackGroups.map((group) => (
-                <div key={group.id} className="space-y-2">
-                  {group.titleKey ? (
-                    <p className="mt-subtitle text-muted-foreground">{t(group.titleKey)}</p>
-                  ) : null}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {group.presetIds.map((id) => {
-                      const def = PRESET_DEFS[id];
-                      if (!def) return null;
-
-                      const active = activePresetId === id;
-                      const label = def?.titleKey ? t(def.titleKey) : def?.title ?? id;
-                      const desc = def?.descriptionKey
-                        ? t(def.descriptionKey)
-                        : def?.desc ?? "Practice set";
-
-                      return (
-                        <Button
-                          key={id}
-                          type="button"
-                          variant="ghost"
-                          onClick={() => onTogglePreset?.(active ? null : id)}
-                          className={cn(
-                            "group relative h-auto w-full items-start justify-start rounded-xl border p-4 text-left whitespace-normal break-words overflow-visible transition-all hover:shadow-md",
-                            active
-                              ? "border-2 border-[hsl(var(--cymru-green-light))] bg-primary/10"
-                              : "border-border bg-card hover:border-primary/30"
-                          )}
-                        >
-                          <span className="flex min-w-0 flex-col items-start gap-1 pr-4">
-                            <span className="w-full text-sm font-semibold leading-snug text-foreground transition-colors group-hover:text-primary whitespace-normal break-words">
-                              {label}
-                            </span>
-                            <span className="w-full text-xs text-muted-foreground leading-snug whitespace-normal break-words">
-                              {desc}
-                            </span>
-                          </span>
-                          {active ? (
-                            <span className="absolute -right-1.5 -top-1.5 sm:-right-2 sm:-top-2 inline-flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full border-2 border-card bg-[hsl(var(--cymru-green))] text-white shadow-sm">
-                              <AppIcon icon={Check} className="h-3 w-3 sm:h-3.5 sm:w-3.5" aria-hidden="true" />
-                            </span>
-                          ) : null}
-                        </Button>
-                      );
-                    })}
-                  </div>
+                    return (
+                      <PackCard
+                        key={id}
+                        active={isActive}
+                        title={getPackLabel(def, lang)}
+                        description={getPackDesc(def, lang)}
+                        onClick={() => onTogglePreset?.(isActive ? null : id)}
+                      />
+                    );
+                  })}
                 </div>
-              ))}
+              </div>
+
+              <Separator className="bg-border/60" />
+
+              {/* Dysgu Cymraeg Section */}
+              <div className="space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[hsl(var(--cymru-green))]">
+                  {t("dysguPacksHeading")}
+                </h3>
+                <DysguLevelPacks
+                  activePresetId={activePresetId}
+                  onTogglePreset={onTogglePreset}
+                />
+              </div>
             </div>
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="item-core">
-          <AccordionTrigger>
-            <div className={cn(headerBase, "text-sm text-[hsl(var(--cymru-green))]")}>
+        {/* ────────────────────────────────────────────────────────────────────
+            DESIGN YOUR SESSION — Advanced Filters
+        ──────────────────────────────────────────────────────────────────── */}
+        <AccordionItem
+          value="item-filters"
+          className="rounded-xl border border-border bg-card overflow-hidden"
+        >
+          <AccordionTrigger className="px-4 py-3 hover:no-underline data-[state=open]:border-l-4 data-[state=open]:border-l-[hsl(var(--cymru-gold))]">
+            <div className={cn(headerBase, "text-sm text-[hsl(var(--cymru-gold))]")}>
               <AppIcon
-                icon={Filter}
-                className={cn(headerIcon, "text-[hsl(var(--cymru-green))]")}
+                icon={SlidersHorizontal}
+                className={cn(headerIcon, "h-5 w-5 text-[hsl(var(--cymru-gold))]")}
                 aria-hidden="true"
               />
-              <span>{t("advancedFiltersTitle")}</span>
+              <span className="font-bold">{t("designSessionTitle")}</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent>
-            <div className="mb-3">
+          <AccordionContent className="px-0 pb-0">
+            {/* Subtle gold wash background */}
+            <div className="bg-[hsl(var(--cymru-gold-wash)/0.4)] px-4 py-5 space-y-6">
+              {/* Hint text */}
               <p className="text-xs text-muted-foreground">
-                {t("advancedFiltersSubtitle")}
+                {t("designSessionHint")}
               </p>
-            </div>
 
-            <div className="mb-6">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
-                {t("levelsHeading")}
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                <FilterBadge
-                  active={isLevelAll}
-                  onClick={() => onClearFilterType?.("levels")}
-                  variant={isLevelAll ? "cymru-gold" : "cymru-gold-wash"}
-                >
-                  {t("filtersAll")}
-                </FilterBadge>
-                {safeAvailable.levels.map((item) => (
+              {/* Levels */}
+              <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
+                  {t("levelsHeading")}
+                </h3>
+                <div className="flex flex-wrap gap-2">
                   <FilterBadge
-                    key={item.id}
-                    active={safeFilters.levels.has(item.id)}
-                    onClick={() => onToggleFilter?.("levels", item.id)}
-                    variant={
-                      safeFilters.levels.has(item.id)
-                        ? "cymru-gold"
-                        : "cymru-gold-wash"
-                    }
+                    active={isLevelAll}
+                    onClick={() => onClearFilterType?.("levels")}
+                    variant={isLevelAll ? "cymru-gold" : "cymru-gold-wash"}
                   >
-                    {levelLabelFor(item)}
+                    {t("filtersAll")}
                   </FilterBadge>
-                ))}
-                {!isLevelAll && (
-                  <ResetBadge onClick={() => onClearFilterType?.("levels")}>
-                    {t("filtersReset")}
-                  </ResetBadge>
-                )}
-              </div>
-            </div>
-
-            <div className="mb-6">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
-                {t("mutationTypeHeading")}
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                <FilterBadge
-                  active={isFamilyAll}
-                  onClick={() => onClearFilterType?.("families")}
-                  variant={isFamilyAll ? "cymru-dark" : "cymru-dark-wash"}
-                >
-                  {t("filtersAll")}
-                </FilterBadge>
-                {MUTATION_FILTERS.map((item) => (
-                  <FilterBadge
-                    key={item.id}
-                    active={safeFilters.families.has(item.id)}
-                    onClick={() => onToggleFilter?.("families", item.id)}
-                    variant={
-                      safeFilters.families.has(item.id)
-                        ? "cymru-dark"
-                        : "cymru-dark-wash"
-                    }
-                  >
-                    {labelFor(item)}
-                  </FilterBadge>
-                ))}
-                {!isFamilyAll && (
-                  <ResetBadge onClick={() => onClearFilterType?.("families")}>
-                    {t("filtersReset")}
-                  </ResetBadge>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
-                {t("categoriesHeading")}
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                <FilterBadge
-                  active={isCategoryAll}
-                  onClick={() => onClearFilterType?.("categories")}
-                  variant={isCategoryAll ? "cymru-light" : "cymru-light-wash"}
-                >
-                  {t("filtersAll")}
-                </FilterBadge>
-                {visibleCategories.map((item) => (
-                  <FilterBadge
-                    key={item.id}
-                    active={safeFilters.categories.has(item.id)}
-                    onClick={() => onToggleFilter?.("categories", item.id)}
-                    variant={
-                      safeFilters.categories.has(item.id)
-                        ? "cymru-light"
-                        : "cymru-light-wash"
-                    }
-                  >
-                    {labelFor(item)}
-                  </FilterBadge>
-                ))}
-
-                {safeAvailable.categories.length > INITIAL_CAT_COUNT && (
-                  <button
-                    type="button"
-                    onClick={() => setExpandedCats(!expandedCats)}
-                    className={cn(
-                      badgeVariants({ variant: "outline" }),
-                      "cursor-pointer select-none rounded-full px-3 py-1 text-xs font-semibold border-dashed border-accent/40 text-foreground hover:bg-accent/10",
-                      "gap-1"
-                    )}
-                  >
-                    {t(expandedCats ? "filtersFewer" : "filtersMore")}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className={cn("transition-transform", expandedCats && "rotate-180")}
+                  {safeAvailable.levels.map((item) => (
+                    <FilterBadge
+                      key={item.id}
+                      active={safeFilters.levels.has(item.id)}
+                      onClick={() => onToggleFilter?.("levels", item.id)}
+                      variant={
+                        safeFilters.levels.has(item.id)
+                          ? "cymru-gold"
+                          : "cymru-gold-wash"
+                      }
                     >
-                      <path d="m6 9 6 6 6-6" />
-                    </svg>
-                  </button>
-                )}
-                {!isCategoryAll && (
-                  <ResetBadge onClick={() => onClearFilterType?.("categories")}>
-                    {t("filtersReset")}
-                  </ResetBadge>
-                )}
+                      {levelLabelFor(item)}
+                    </FilterBadge>
+                  ))}
+                  {!isLevelAll && (
+                    <ResetBadge onClick={() => onClearFilterType?.("levels")}>
+                      {t("filtersReset")}
+                    </ResetBadge>
+                  )}
+                </div>
+              </div>
+
+              {/* Mutation Type */}
+              <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
+                  {t("mutationTypeHeading")}
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  <FilterBadge
+                    active={isFamilyAll}
+                    onClick={() => onClearFilterType?.("families")}
+                    variant={isFamilyAll ? "cymru-dark" : "cymru-dark-wash"}
+                  >
+                    {t("filtersAll")}
+                  </FilterBadge>
+                  {MUTATION_FILTERS.map((item) => (
+                    <FilterBadge
+                      key={item.id}
+                      active={safeFilters.families.has(item.id)}
+                      onClick={() => onToggleFilter?.("families", item.id)}
+                      variant={
+                        safeFilters.families.has(item.id)
+                          ? "cymru-dark"
+                          : "cymru-dark-wash"
+                      }
+                    >
+                      {labelFor(item)}
+                    </FilterBadge>
+                  ))}
+                  {!isFamilyAll && (
+                    <ResetBadge onClick={() => onClearFilterType?.("families")}>
+                      {t("filtersReset")}
+                    </ResetBadge>
+                  )}
+                </div>
+              </div>
+
+              {/* Categories */}
+              <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
+                  {t("categoriesHeading")}
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  <FilterBadge
+                    active={isCategoryAll}
+                    onClick={() => onClearFilterType?.("categories")}
+                    variant={isCategoryAll ? "cymru-light" : "cymru-light-wash"}
+                  >
+                    {t("filtersAll")}
+                  </FilterBadge>
+                  {visibleCategories.map((item) => (
+                    <FilterBadge
+                      key={item.id}
+                      active={safeFilters.categories.has(item.id)}
+                      onClick={() => onToggleFilter?.("categories", item.id)}
+                      variant={
+                        safeFilters.categories.has(item.id)
+                          ? "cymru-light"
+                          : "cymru-light-wash"
+                      }
+                    >
+                      {labelFor(item)}
+                    </FilterBadge>
+                  ))}
+
+                  {safeAvailable.categories.length > INITIAL_CAT_COUNT && (
+                    <button
+                      type="button"
+                      onClick={() => setExpandedCats(!expandedCats)}
+                      className={cn(
+                        badgeVariants({ variant: "outline" }),
+                        "cursor-pointer select-none rounded-full px-3 py-1 text-xs font-semibold border-dashed border-accent/40 text-foreground hover:bg-accent/10",
+                        "gap-1"
+                      )}
+                    >
+                      {t(expandedCats ? "filtersFewer" : "filtersMore")}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className={cn("transition-transform", expandedCats && "rotate-180")}
+                      >
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </button>
+                  )}
+                  {!isCategoryAll && (
+                    <ResetBadge onClick={() => onClearFilterType?.("categories")}>
+                      {t("filtersReset")}
+                    </ResetBadge>
+                  )}
+                </div>
               </div>
             </div>
           </AccordionContent>
