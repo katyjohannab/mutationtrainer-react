@@ -33,18 +33,53 @@ function resolveViteBin() {
   return path.resolve(path.dirname(pkgJsonPath), binEntry);
 }
 
-const args = ["preview", "--host", host, "--port", port];
-const viteBin = resolveViteBin();
+function runViteCommand(viteBin, args) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(process.execPath, [viteBin, ...args], {
+      stdio: "inherit",
+      env: process.env,
+    });
 
-const child = spawn(process.execPath, [viteBin, ...args], {
-  stdio: "inherit",
-  env: process.env,
-});
+    child.on("error", reject);
 
-child.on("exit", (code, signal) => {
-  if (signal) {
-    process.kill(process.pid, signal);
-    return;
+    child.on("exit", (code, signal) => {
+      if (signal) {
+        process.kill(process.pid, signal);
+        return;
+      }
+
+      if ((code ?? 0) !== 0) {
+        reject(new Error(`Vite command failed: ${args.join(" ")} (exit ${code ?? 0})`));
+        return;
+      }
+
+      resolve();
+    });
+  });
+}
+
+(async () => {
+  const viteBin = resolveViteBin();
+
+  try {
+    await runViteCommand(viteBin, ["build"]);
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exit(1);
   }
-  process.exit(code ?? 0);
-});
+
+  const previewArgs = ["preview", "--host", host, "--port", port];
+
+  const previewChild = spawn(process.execPath, [viteBin, ...previewArgs], {
+    stdio: "inherit",
+    env: process.env,
+  });
+
+  previewChild.on("exit", (code, signal) => {
+    if (signal) {
+      process.kill(process.pid, signal);
+      return;
+    }
+    process.exit(code ?? 0);
+  });
+})();

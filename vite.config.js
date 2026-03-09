@@ -11,7 +11,16 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   Object.assign(process.env, env);
 
+  const configuredBase = String(
+    env.WM_BASE_PATH || env.VITE_BASE_PATH || "/"
+  ).trim();
+
+  const normalizedBase = configuredBase.endsWith("/")
+    ? configuredBase
+    : `${configuredBase}/`;
+
   return {
+    base: normalizedBase,
     plugins: [react(), tailwindcss(), viteAdminApiPlugin()],
     resolve: {
       alias: {
