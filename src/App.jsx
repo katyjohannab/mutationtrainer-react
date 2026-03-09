@@ -268,6 +268,11 @@ export default function App() {
         return;
       }
 
+      if (result === "skipped") {
+        pickNext(leitnerRef.current);
+        return;
+      }
+
       if (result === "easy" || result === "again" || result === "next") {
         const normalizedBase = baseResult === "correct" ? "correct" : "wrong";
         const nextMap = updateLeitner(leitnerRef.current, key, normalizedBase, {
@@ -281,8 +286,8 @@ export default function App() {
       return;
     }
 
-    // Only "next" advances
-    if (result === "next") {
+    // "next" and "skipped" both advance without grading
+    if (result === "next" || result === "skipped") {
       pickNext(leitnerRef.current);
       return;
     }

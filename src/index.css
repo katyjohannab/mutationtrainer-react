@@ -75,22 +75,22 @@
     180deg,
     hsl(var(--cymru-green-light) / var(--feedback-gradient-solid)) 0%,
     hsl(var(--cymru-green-light) / var(--feedback-gradient-shine)) 30%,
-    hsl(0 0% 100%) 70%,
-    hsl(0 0% 100%) 100%
+    hsl(var(--cymru-green-light-wash)) 70%,
+    hsl(var(--cymru-green-light-wash)) 100%
   );
   --gradient-incorrect: linear-gradient(
     180deg,
     hsl(var(--feedback-incorrect-base) / var(--feedback-gradient-solid)) 0%,
     hsl(var(--feedback-incorrect-base) / var(--feedback-gradient-shine)) 30%,
-    hsl(0 0% 100%) 70%,
-    hsl(0 0% 100%) 100%
+    hsl(var(--cymru-red-wash)) 70%,
+    hsl(var(--cymru-red-wash)) 100%
   );
   --gradient-revealed: linear-gradient(
     180deg,
     hsl(var(--feedback-revealed-base) / var(--feedback-gradient-solid)) 0%,
     hsl(var(--feedback-revealed-base) / var(--feedback-gradient-shine)) 30%,
-    hsl(0 0% 100%) 70%,
-    hsl(0 0% 100%) 100%
+    hsl(var(--cymru-gold-wash)) 70%,
+    hsl(var(--cymru-gold-wash)) 100%
   );
 
   /* Typography */
@@ -159,22 +159,22 @@
     180deg,
     hsl(var(--cymru-green-light) / var(--feedback-gradient-solid)) 0%,
     hsl(var(--cymru-green-light) / var(--feedback-gradient-shine)) 30%,
-    hsl(0 0% 100%) 70%,
-    hsl(0 0% 100%) 100%
+    hsl(var(--cymru-green-light-wash)) 70%,
+    hsl(var(--cymru-green-light-wash)) 100%
   );
   --gradient-incorrect: linear-gradient(
     180deg,
     hsl(var(--feedback-incorrect-base) / var(--feedback-gradient-solid)) 0%,
     hsl(var(--feedback-incorrect-base) / var(--feedback-gradient-shine)) 30%,
-    hsl(0 0% 100%) 70%,
-    hsl(0 0% 100%) 100%
+    hsl(var(--cymru-red-wash)) 70%,
+    hsl(var(--cymru-red-wash)) 100%
   );
   --gradient-revealed: linear-gradient(
     180deg,
     hsl(var(--feedback-revealed-base) / var(--feedback-gradient-solid)) 0%,
     hsl(var(--feedback-revealed-base) / var(--feedback-gradient-shine)) 30%,
-    hsl(0 0% 100%) 70%,
-    hsl(0 0% 100%) 100%
+    hsl(var(--cymru-gold-wash)) 70%,
+    hsl(var(--cymru-gold-wash)) 100%
   );
 
   /* Dark mode wash variants */
