@@ -180,8 +180,8 @@ export const STRINGS = {
     "preset.articles.desc": "Ffocws ar y fannod (Sylfaen).",
     "preset.placeNames.title": "Enwau lleoedd",
     "preset.placeNames.desc": "Cardiau enwau lleoedd ar draws pob CSV.",
-    "preset.mynediadPlaceNamesPack01.title": "Dod o i byw yn",
-    "preset.mynediadPlaceNamesPack01.desc": "Pecyn Mynediad sy’n canolbwyntio ar gymhwyso treiglad meddal a thrwynol i enwau lleoedd Cymraeg.",
+    "preset.mynediadPlaceNamesPack01.title": "Dod o, Byw yn, Mynd i: Enwau Lleoedd",
+    "preset.mynediadPlaceNamesPack01.desc": "Ymarfer treiglad meddal a thrwynol gydag enwau lleoedd Cymraeg gan ddefnyddio'r ymadroddion dod o, byw yn a mynd i.",
 
     // Report mistake
     reportMistake: "Sylwi ar gamgymeriad?",
@@ -378,8 +378,8 @@ export const STRINGS = {
     "preset.articles.desc": "Article focus (Sylfaen).",
     "preset.placeNames.title": "Place names",
     "preset.placeNames.desc": "Place name cards across all CSVs.",
-    "preset.mynediadPlaceNamesPack01.title": "From going to to living in",
-    "preset.mynediadPlaceNamesPack01.desc": "Mynediad pack focused on applying soft and nasal mutation to Welsh place names.",
+    "preset.mynediadPlaceNamesPack01.title": "Dod o, Byw yn, Mynd i: Welsh Place Names",
+    "preset.mynediadPlaceNamesPack01.desc": "Practise soft and nasal mutation with Welsh place names using dod o (come from), byw yn (live in) and mynd i (go to).",
 
     // Report mistake
     reportMistake: "Noticed a mistake?",
