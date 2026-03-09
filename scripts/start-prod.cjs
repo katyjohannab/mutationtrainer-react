@@ -33,53 +33,31 @@ function resolveViteBin() {
   return path.resolve(path.dirname(pkgJsonPath), binEntry);
 }
 
-function runViteCommand(viteBin, args) {
-  return new Promise((resolve, reject) => {
-    const child = spawn(process.execPath, [viteBin, ...args], {
-      stdio: "inherit",
-      env: process.env,
-    });
+const viteBin = resolveViteBin();
+const previewArgs = ["preview", "--host", host, "--port", port];
 
-    child.on("error", reject);
-
-    child.on("exit", (code, signal) => {
-      if (signal) {
-        process.kill(process.pid, signal);
-        return;
-      }
-
-      if ((code ?? 0) !== 0) {
-        reject(new Error(`Vite command failed: ${args.join(" ")} (exit ${code ?? 0})`));
-        return;
-      }
-
-      resolve();
-    });
-  });
+const distDir = path.resolve(process.cwd(), "dist");
+if (!fs.existsSync(distDir)) {
+  console.error(
+    "Missing dist/ build output. Run `npm run build` before `npm run start:prod`."
+  );
+  process.exit(1);
 }
 
-(async () => {
-  const viteBin = resolveViteBin();
+const previewChild = spawn(process.execPath, [viteBin, ...previewArgs], {
+  stdio: "inherit",
+  env: process.env,
+});
 
-  try {
-    await runViteCommand(viteBin, ["build"]);
-  } catch (error) {
-    console.error(error instanceof Error ? error.message : String(error));
-    process.exit(1);
+previewChild.on("exit", (code, signal) => {
+  if (signal) {
+    process.kill(process.pid, signal);
+    return;
   }
+  process.exit(code ?? 0);
+});
 
-  const previewArgs = ["preview", "--host", host, "--port", port];
-
-  const previewChild = spawn(process.execPath, [viteBin, ...previewArgs], {
-    stdio: "inherit",
-    env: process.env,
-  });
-
-  previewChild.on("exit", (code, signal) => {
-    if (signal) {
-      process.kill(process.pid, signal);
-      return;
-    }
-    process.exit(code ?? 0);
-  });
-})();
+previewChild.on("error", (error) => {
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exit(1);
+});

@@ -34,6 +34,8 @@ jobs:
         run: npm ci
 
       - name: Build
+        env:
+          WM_BASE_PATH: /mutationtrainer-react/
         run: npm run build
 
       - name: Setup Pages
