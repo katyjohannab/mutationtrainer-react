@@ -33,18 +33,31 @@ function resolveViteBin() {
   return path.resolve(path.dirname(pkgJsonPath), binEntry);
 }
 
-const args = ["preview", "--host", host, "--port", port];
 const viteBin = resolveViteBin();
+const previewArgs = ["preview", "--host", host, "--port", port];
 
-const child = spawn(process.execPath, [viteBin, ...args], {
+const distDir = path.resolve(process.cwd(), "dist");
+if (!fs.existsSync(distDir)) {
+  console.error(
+    "Missing dist/ build output. Run `npm run build` before `npm run start:prod`."
+  );
+  process.exit(1);
+}
+
+const previewChild = spawn(process.execPath, [viteBin, ...previewArgs], {
   stdio: "inherit",
   env: process.env,
 });
 
-child.on("exit", (code, signal) => {
+previewChild.on("exit", (code, signal) => {
   if (signal) {
     process.kill(process.pid, signal);
     return;
   }
   process.exit(code ?? 0);
+});
+
+previewChild.on("error", (error) => {
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exit(1);
 });
