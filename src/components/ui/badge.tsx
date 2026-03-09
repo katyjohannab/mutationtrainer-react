@@ -21,17 +21,17 @@ const badgeVariants = cva(
         outline:
           "border-border bg-transparent text-foreground hover:bg-secondary/15",
         "cymru-dark":
-          "border-transparent bg-[hsl(var(--cymru-green))] text-[hsl(var(--cymru-white))] hover:bg-[hsl(var(--cymru-green)/0.9)]",
+          "border-transparent bg-[hsl(var(--cymru-green))] text-[hsl(var(--cymru-white))] hover:bg-[hsl(var(--cymru-green)/0.85)]",
         "cymru-light":
           "border-transparent bg-[hsl(var(--cymru-green-light))] text-[hsl(var(--cymru-white))] hover:bg-[hsl(var(--cymru-green-light)/0.9)]",
         "cymru-dark-wash":
-          "border-transparent bg-[hsl(var(--cymru-green-wash))] text-[hsl(var(--cymru-green))] hover:bg-[hsl(var(--cymru-green-wash)/0.85)]",
+          "border-transparent bg-[hsl(var(--cymru-green)/0.14)] text-[hsl(var(--cymru-green))] hover:bg-[hsl(var(--cymru-green)/0.24)]",
         "cymru-light-wash":
           "border-transparent bg-[hsl(var(--cymru-green-light)/0.2)] text-[hsl(var(--cymru-green))] hover:bg-[hsl(var(--cymru-green-light)/0.3)]",
         "cymru-gold":
-          "border-transparent bg-[hsl(var(--cymru-gold))] text-[hsl(var(--cymru-white))] hover:bg-[hsl(var(--cymru-gold)/0.9)]",
+          "border-transparent bg-[hsl(var(--cymru-gold))] text-[hsl(var(--cymru-white))] hover:bg-[hsl(var(--cymru-gold)/0.85)]",
         "cymru-gold-wash":
-          "border-transparent bg-[hsl(var(--cymru-gold-wash))] text-[hsl(var(--cymru-gold))] hover:bg-[hsl(var(--cymru-gold-wash)/0.85)]",
+          "border-transparent bg-[hsl(var(--cymru-gold)/0.14)] text-[hsl(var(--cymru-gold))] hover:bg-[hsl(var(--cymru-gold)/0.24)]",
         ghost: "border-border bg-transparent hover:bg-muted",
         warning:
           "border-[hsl(var(--cymru-red)/0.3)] bg-transparent text-[hsl(var(--cymru-red))] hover:bg-[hsl(var(--cymru-red-wash))] hover:border-[hsl(var(--cymru-red)/0.5)]",
