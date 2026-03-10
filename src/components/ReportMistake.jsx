@@ -51,6 +51,33 @@ function buildMailToUrl({ cardId, mistakeType, description }) {
   return `mailto:${CONTACT_EMAIL}?${params.toString()}`;
 }
 
+function buildGithubIssueUrl({ cardId, mistakeType, description }) {
+  const params = new URLSearchParams({
+    title: `[Mutation Trainer] Card report: ${cardId}`,
+    body: [
+      `Card ID: ${cardId}`,
+      `Mistake type: ${mistakeType === "current" ? "Current card" : "Something else"}`,
+      `Description: ${description}`,
+    ].join("\n"),
+    labels: "bug,card-report",
+  });
+
+  return `https://github.com/${GITHUB_REPO}/issues/new?${params.toString()}`;
+}
+
+function buildMailToUrl({ cardId, mistakeType, description }) {
+  const params = new URLSearchParams({
+    subject: `[Mutation Trainer] Card report: ${cardId}`,
+    body: [
+      `Card ID: ${cardId}`,
+      `Mistake type: ${mistakeType === "current" ? "Current card" : "Something else"}`,
+      `Description: ${description}`,
+    ].join("\n"),
+  });
+
+  return `mailto:${CONTACT_EMAIL}?${params.toString()}`;
+}
+
 /**
  * "Noticed a mistake?" button + dialog.
  *
