@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MessageSquareWarning, Github, Mail, Send, ExternalLink } from "lucide-react";
+import { Github, Mail, Send, ExternalLink } from "lucide-react";
 import { Badge } from "./ui/badge";
 import {
   Dialog,
@@ -21,6 +21,33 @@ import AppIcon from "./icons/AppIcon";
 
 const GITHUB_REPO = "katyjane/mutationtrainer-react";
 const CONTACT_EMAIL = "katyjohannabenson@gmail.com";
+
+function buildGithubIssueUrl({ cardId, mistakeType, description }) {
+  const params = new URLSearchParams({
+    title: `[Mutation Trainer] Card report: ${cardId}`,
+    body: [
+      `Card ID: ${cardId}`,
+      `Mistake type: ${mistakeType === "current" ? "Current card" : "Something else"}`,
+      `Description: ${description}`,
+    ].join("\n"),
+    labels: "bug,card-report",
+  });
+
+  return `https://github.com/${GITHUB_REPO}/issues/new?${params.toString()}`;
+}
+
+function buildMailToUrl({ cardId, mistakeType, description }) {
+  const params = new URLSearchParams({
+    subject: `[Mutation Trainer] Card report: ${cardId}`,
+    body: [
+      `Card ID: ${cardId}`,
+      `Mistake type: ${mistakeType === "current" ? "Current card" : "Something else"}`,
+      `Description: ${description}`,
+    ].join("\n"),
+  });
+
+  return `mailto:${CONTACT_EMAIL}?${params.toString()}`;
+}
 
 /**
  * "Noticed a mistake?" button + dialog.
@@ -46,27 +73,10 @@ export default function ReportMistake({ cardId }) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    const subject = encodeURIComponent(
-      `[Mutation Trainer] Card report: ${cardId}`
-    );
-    const bodyParts = [
-      `Card ID: ${cardId}`,
-      `Mistake type: ${mistakeType === "current" ? "Current card" : "Something else"}`,
-      `Description: ${description}`,
-    ];
-    const body = encodeURIComponent(bodyParts.join("\n"));
-
     if (notifyVia === "github") {
-      const labels = encodeURIComponent("bug,card-report");
-      window.open(
-        `https://github.com/${GITHUB_REPO}/issues/new?title=${subject}&body=${body}&labels=${labels}`,
-        "_blank"
-      );
+      window.open(buildGithubIssueUrl({ cardId, mistakeType, description }), "_blank", "noopener,noreferrer");
     } else {
-      window.open(
-        `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`,
-        "_blank"
-      );
+      window.location.href = buildMailToUrl({ cardId, mistakeType, description });
     }
 
     setOpen(false);
