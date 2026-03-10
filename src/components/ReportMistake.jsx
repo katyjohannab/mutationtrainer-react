@@ -19,8 +19,37 @@ import { cn } from "../lib/cn";
 import { useI18n } from "../i18n/I18nContext";
 import AppIcon from "./icons/AppIcon";
 
-const GITHUB_REPO = "katyjane/mutationtrainer-react";
-const CONTACT_EMAIL = "katyjohannabenson@gmail.com";
+const GITHUB_REPO = import.meta.env.VITE_REPORT_GITHUB_REPO || "katyjane/mutationtrainer-react";
+const CONTACT_EMAIL = import.meta.env.VITE_REPORT_EMAIL || "katyjohannabenson@gmail.com";
+
+function buildReportBody({ cardId, mistakeType, description }) {
+  return [
+    `Card ID: ${cardId}`,
+    `Mistake type: ${mistakeType === "current" ? "Current card" : "Something else"}`,
+    `Description: ${description || "(none provided)"}`,
+    `Page URL: ${window.location.href}`,
+    `Reported at: ${new Date().toISOString()}`,
+  ].join("\n");
+}
+
+function buildGithubIssueUrl({ cardId, mistakeType, description }) {
+  const params = new URLSearchParams({
+    title: `[Mutation Trainer] Card report: ${cardId}`,
+    body: buildReportBody({ cardId, mistakeType, description }),
+    labels: "bug,card-report",
+  });
+
+  return `https://github.com/${GITHUB_REPO}/issues/new?${params.toString()}`;
+}
+
+function buildMailToUrl({ cardId, mistakeType, description }) {
+  const params = new URLSearchParams({
+    subject: `[Mutation Trainer] Card report: ${cardId}`,
+    body: buildReportBody({ cardId, mistakeType, description }),
+  });
+
+  return `mailto:${CONTACT_EMAIL}?${params.toString()}`;
+}
 
 function buildGithubIssueUrl({ cardId, mistakeType, description }) {
   const params = new URLSearchParams({
@@ -73,11 +102,11 @@ export default function ReportMistake({ cardId }) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    if (notifyVia === "github") {
-      window.open(buildGithubIssueUrl({ cardId, mistakeType, description }), "_blank", "noopener,noreferrer");
-    } else {
-      window.location.href = buildMailToUrl({ cardId, mistakeType, description });
-    }
+    const url = notifyVia === "github"
+      ? buildGithubIssueUrl({ cardId, mistakeType, description })
+      : buildMailToUrl({ cardId, mistakeType, description });
+
+    window.location.assign(url);
 
     setOpen(false);
   }
