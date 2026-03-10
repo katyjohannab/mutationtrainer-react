@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MessageSquareWarning, Github, Mail, Send, ExternalLink } from "lucide-react";
+import { Github, Mail, Send, ExternalLink } from "lucide-react";
 import { Badge } from "./ui/badge";
 import {
   Dialog,
@@ -19,8 +19,37 @@ import { cn } from "../lib/cn";
 import { useI18n } from "../i18n/I18nContext";
 import AppIcon from "./icons/AppIcon";
 
-const GITHUB_REPO = "katyjane/mutationtrainer-react";
-const CONTACT_EMAIL = "katyjohannabenson@gmail.com";
+const GITHUB_REPO = import.meta.env.VITE_REPORT_GITHUB_REPO || "katyjane/mutationtrainer-react";
+const CONTACT_EMAIL = import.meta.env.VITE_REPORT_EMAIL || "katyjohannabenson@gmail.com";
+
+function buildReportBody({ cardId, mistakeType, description }) {
+  return [
+    `Card ID: ${cardId}`,
+    `Mistake type: ${mistakeType === "current" ? "Current card" : "Something else"}`,
+    `Description: ${description || "(none provided)"}`,
+    `Page URL: ${window.location.href}`,
+    `Reported at: ${new Date().toISOString()}`,
+  ].join("\n");
+}
+
+function buildGithubIssueUrl({ cardId, mistakeType, description }) {
+  const params = new URLSearchParams({
+    title: `[Mutation Trainer] Card report: ${cardId}`,
+    body: buildReportBody({ cardId, mistakeType, description }),
+    labels: "bug,card-report",
+  });
+
+  return `https://github.com/${GITHUB_REPO}/issues/new?${params.toString()}`;
+}
+
+function buildMailToUrl({ cardId, mistakeType, description }) {
+  const params = new URLSearchParams({
+    subject: `[Mutation Trainer] Card report: ${cardId}`,
+    body: buildReportBody({ cardId, mistakeType, description }),
+  });
+
+  return `mailto:${CONTACT_EMAIL}?${params.toString()}`;
+}
 
 /**
  * "Noticed a mistake?" button + dialog.
@@ -46,28 +75,11 @@ export default function ReportMistake({ cardId }) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    const subject = encodeURIComponent(
-      `[Mutation Trainer] Card report: ${cardId}`
-    );
-    const bodyParts = [
-      `Card ID: ${cardId}`,
-      `Mistake type: ${mistakeType === "current" ? "Current card" : "Something else"}`,
-      `Description: ${description}`,
-    ];
-    const body = encodeURIComponent(bodyParts.join("\n"));
+    const url = notifyVia === "github"
+      ? buildGithubIssueUrl({ cardId, mistakeType, description })
+      : buildMailToUrl({ cardId, mistakeType, description });
 
-    if (notifyVia === "github") {
-      const labels = encodeURIComponent("bug,card-report");
-      window.open(
-        `https://github.com/${GITHUB_REPO}/issues/new?title=${subject}&body=${body}&labels=${labels}`,
-        "_blank"
-      );
-    } else {
-      window.open(
-        `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`,
-        "_blank"
-      );
-    }
+    window.location.assign(url);
 
     setOpen(false);
   }
