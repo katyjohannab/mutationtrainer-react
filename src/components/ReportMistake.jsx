@@ -19,7 +19,7 @@ import { cn } from "../lib/cn";
 import { useI18n } from "../i18n/I18nContext";
 import AppIcon from "./icons/AppIcon";
 
-const GITHUB_REPO = "katyjane/mutationtrainer-react";
+const GITHUB_REPO = "katyjohannab/mutationtrainer-react";
 const CONTACT_EMAIL = "katyjohannabenson@gmail.com";
 
 function buildGithubIssueUrl({ cardId, mistakeType, description }) {
