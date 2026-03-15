@@ -59,6 +59,10 @@ export const CANON_MAP = {
 
   explanationen: "why",
   explanationcy: "whyCym",
+
+  tags: "tags",
+  location: "location",
+  frameid: "frameId",
 };
 
 export const ADMIN_EDITABLE_FIELDS = [

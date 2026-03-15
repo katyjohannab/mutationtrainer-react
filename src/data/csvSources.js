@@ -2,7 +2,7 @@
 import { ACTIVE_DYSGU_UNITS } from "./dysguUnitRegistry.js";
 
 export const PROTECTED_MANUAL_CSV_FILES = [
-  "cards.csv",
+  "cards.tsv",
   "prep.csv",
   "article-sylfaen.csv",
 ];

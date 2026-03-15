@@ -6,7 +6,7 @@ const BASE_PRESETS = {
     id: "starter-all-verified",
     titleKey: "preset.allVerified.title",
     descriptionKey: "preset.allVerified.desc",
-    sourceScope: ["cards.csv", "prep.csv", "article-sylfaen.csv"],
+    sourceScope: ["cards.tsv", "prep.csv", "article-sylfaen.csv"],
   },
   "starter-preps": {
     id: "starter-preps",

@@ -3,7 +3,7 @@ import { ALL_CSV_FILES, ALL_RUNTIME_DATA_FILES, CSV_SOURCE_META, PROTECTED_MANUA
 
 describe("csv runtime source lock", () => {
   it("keeps protected manual csv files present", () => {
-    expect(PROTECTED_MANUAL_CSV_FILES).toEqual(["cards.csv", "prep.csv", "article-sylfaen.csv"]);
+    expect(PROTECTED_MANUAL_CSV_FILES).toEqual(["cards.tsv", "prep.csv", "article-sylfaen.csv"]);
   });
 
   it("includes registered unit csv files", () => {

@@ -131,7 +131,7 @@ sudo systemctl reload nginx
 
 ## 6. Writable + Persistent Data Requirement
 The service user must have write access to:
-- `public/data/cards.csv`
+- `public/data/cards.tsv`
 - `public/data/prep.csv`
 - `public/data/article-sylfaen.csv`
 - all registered unit/pack files under `public/data/**`

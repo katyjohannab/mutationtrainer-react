@@ -8,8 +8,8 @@ describe("loadCsvFromPublicData", () => {
 
   it("parses CSV files with existing behavior", async () => {
     const csvText = [
-      "Card ID,Base,Outcome",
-      "card-1,cath,sm",
+      "Card ID\tBase\tOutcome",
+      "card-1\tcath\tsm",
     ].join("\n");
 
     vi.stubGlobal(
@@ -20,7 +20,7 @@ describe("loadCsvFromPublicData", () => {
       })
     );
 
-    const rows = await loadCsvFromPublicData("cards.csv");
+    const rows = await loadCsvFromPublicData("cards.tsv");
 
     expect(rows).toHaveLength(1);
     expect(rows[0]).toMatchObject({
@@ -28,7 +28,7 @@ describe("loadCsvFromPublicData", () => {
       base: "cath",
       outcome: "soft",
       answer: "gath",
-      __source: "cards.csv",
+      __source: "cards.tsv",
     });
   });
 

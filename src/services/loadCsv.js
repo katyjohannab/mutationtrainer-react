@@ -101,6 +101,16 @@ function normaliseRow(row, filename, rowIndex) {
     }
   }
 
+  // Parse pipe-delimited tags into an array.
+  if (typeof out.tags === "string" && out.tags.trim()) {
+    out.tags = out.tags
+      .split("|")
+      .map((t) => t.trim().toLowerCase())
+      .filter(Boolean);
+  } else if (!Array.isArray(out.tags)) {
+    out.tags = [];
+  }
+
   // Safety default must remain deterministic for stable review/debug.
   if (!out.cardId) out.cardId = fallbackCardId(filename, rowIndex);
 
@@ -141,7 +151,7 @@ export async function loadCsvFromPublicData(filename) {
     const parsed = Papa.parse(csvText, {
       header: true,
       skipEmptyLines: true,
-      ...(isTsv ? { delimiter: "\t" } : {}),
+      ...(isTsv ? { delimiter: "\t", quoteChar: "\0" } : {}),
       transformHeader: (h) => h.trim().toLowerCase().replace(/[^a-z0-9]/g, ""),
     });
 

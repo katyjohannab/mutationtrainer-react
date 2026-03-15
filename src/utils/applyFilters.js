@@ -83,8 +83,14 @@ export function applyFilters(rows, state) {
     }
 
     // B) Category
+    // Check both r.category (rule-grammar category) and r.wordCategory (word-type category)
+    // so that place-name TSVs tagged via wordcategory: "Place name" are included.
     if (preset.category) {
-      out = out.filter((r) => matchesCategory(r.category, preset.category));
+      out = out.filter(
+        (r) =>
+          matchesCategory(r.category, preset.category) ||
+          matchesCategory(r.wordCategory, preset.category)
+      );
     }
 
     // C) Triggers

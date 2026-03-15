@@ -6,7 +6,7 @@ Last updated: 2026-02-14
 React/Vite Welsh mutation trainer.
 
 Runtime data is manual-CSV-first and protected:
-- `public/data/cards.csv`
+- `public/data/cards.tsv`
 - `public/data/prep.csv`
 - `public/data/article-sylfaen.csv`
 

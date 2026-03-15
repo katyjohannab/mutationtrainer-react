@@ -7,7 +7,7 @@ Docs navigation:
 
 ## 1. Runtime Architecture (CSV-First)
 Runtime data comes from:
-- protected manual CSV files: `cards.csv`, `prep.csv`, `article-sylfaen.csv`
+- protected manual data files: `cards.tsv`, `prep.csv`, `article-sylfaen.csv`
 - registered Dysgu Cymraeg unit CSV files from `src/data/dysguUnitRegistry.js`
 
 Source composition and metadata map:

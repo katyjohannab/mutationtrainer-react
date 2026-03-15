@@ -138,6 +138,16 @@ export const STRINGS = {
     categoryNegation: "Gwadu",
     categoryTimeExpressions: "Ymadroddion amser",
     categoryPossessive: "Meddiannol",
+    categoryAdjectiveNoun: "Ansoddair",
+    categoryNumerals: "Rhifau",
+    categoryComplement: "Cyflenwad",
+    categoryIntensifier: "Dwysydd",
+    categoryRelative: "Perthynol",
+    categoryParticle: "Gronyn",
+    categoryPresentative: "Cyflwynydd",
+    categoryDeictic: "Deictig",
+    categoryBodyn: "Bod + yn",
+    categoryIdiom: "Idiom",
 
     // Badge / Course labels
     unitPrefix: "Uned",
@@ -190,7 +200,7 @@ export const STRINGS = {
     "preset.articles.title": "Y fannod",
     "preset.articles.desc": "Ffocws ar y fannod (Sylfaen).",
     "preset.placeNames.title": "Enwau lleoedd",
-    "preset.placeNames.desc": "Cardiau enwau lleoedd ar draws pob CSV.",
+    "preset.placeNames.desc": "Ymarfer treiglad Cymraeg gan ddefnyddio enwau lleoedd.",
     "preset.mynediadPlaceNamesPack01.title": "Dod o, Byw yn, Mynd i: Enwau Lleoedd",
     "preset.mynediadPlaceNamesPack01.desc": "Ymarfer treiglad meddal a thrwynol gydag enwau lleoedd Cymraeg gan ddefnyddio'r ymadroddion dod o, byw yn a mynd i.",
 
@@ -347,6 +357,16 @@ export const STRINGS = {
     categoryNegation: "Negation",
     categoryTimeExpressions: "Time expressions",
     categoryPossessive: "Possessive",
+    categoryAdjectiveNoun: "Adjective",
+    categoryNumerals: "Numbers",
+    categoryComplement: "Complement",
+    categoryIntensifier: "Intensifier",
+    categoryRelative: "Relative",
+    categoryParticle: "Particle",
+    categoryPresentative: "Presentative",
+    categoryDeictic: "Deictic",
+    categoryBodyn: "Bod + yn",
+    categoryIdiom: "Idiom",
 
     // Badge / Course labels
     unitPrefix: "Unit",
@@ -399,7 +419,7 @@ export const STRINGS = {
     "preset.articles.title": "Articles",
     "preset.articles.desc": "Article focus (Sylfaen).",
     "preset.placeNames.title": "Place names",
-    "preset.placeNames.desc": "Place name cards across all CSVs.",
+    "preset.placeNames.desc": "Practise Welsh mutation using place names.",
     "preset.mynediadPlaceNamesPack01.title": "Dod o, Byw yn, Mynd i: Welsh Place Names",
     "preset.mynediadPlaceNamesPack01.desc": "Practise soft and nasal mutation with Welsh place names using dod o (come from), byw yn (live in) and mynd i (go to).",
 

@@ -136,14 +136,14 @@ const STATIC_COURSES = [
         id: "core-manual-all",
         title: { en: "All Verified Cards", cy: "Pob Cerdyn Wedi'i Wirio" },
         description: {
-          en: "cards.csv + prep.csv + article-sylfaen.csv",
-          cy: "cards.csv + prep.csv + article-sylfaen.csv",
+          en: "cards.tsv + prep.csv + article-sylfaen.csv",
+          cy: "cards.tsv + prep.csv + article-sylfaen.csv",
         },
         status: "active",
         isSelectable: true,
         section: "units",
         criteria: {
-          sourceScope: ["cards.csv", "prep.csv", "article-sylfaen.csv"],
+          sourceScope: ["cards.tsv", "prep.csv", "article-sylfaen.csv"],
         },
       },
     ],

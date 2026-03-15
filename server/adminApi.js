@@ -383,13 +383,15 @@ export async function saveCardPatch({
     throw mapSaveOperationalError(error, sourcePath, "read");
   }
 
-  const delimiter = normalizedSource.toLowerCase().endsWith(".tsv") ? "\t" : ",";
+  const isTsv = normalizedSource.toLowerCase().endsWith(".tsv");
+  const delimiter = isTsv ? "\t" : ",";
   const newline = raw.includes("\r\n") ? "\r\n" : "\n";
 
   const parsed = Papa.parse(raw, {
     header: true,
     skipEmptyLines: true,
     delimiter,
+    ...(isTsv ? { quoteChar: "\0" } : {}),
   });
 
   if (parsed.errors?.length) {

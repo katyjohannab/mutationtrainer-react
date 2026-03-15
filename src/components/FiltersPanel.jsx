@@ -59,7 +59,7 @@ function ResetBadge({ onClick, children }) {
 }
 
 function categoryTranslationKey(label) {
-  return `category${String(label || "").replace(/\s+/g, "")}`;
+  return `category${String(label || "").replace(/[^a-zA-Z0-9]/g, "")}`;
 }
 
 export default function FiltersPanel({

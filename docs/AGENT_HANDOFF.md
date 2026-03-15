@@ -13,7 +13,7 @@ Current implementation phase: `CSV-first Dysgu course rollout`
 
 ## Non-Negotiables
 - Keep protected manual CSV files intact:
-  - `public/data/cards.csv`
+  - `public/data/cards.tsv`
   - `public/data/prep.csv`
   - `public/data/article-sylfaen.csv`
 - Register every new unit explicitly in `src/data/dysguUnitRegistry.js`.

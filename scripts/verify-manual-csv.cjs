@@ -6,8 +6,9 @@ const ROOT = process.cwd();
 
 const MANUAL_CSVS = [
   {
-    file: "public/data/cards.csv",
-    requiredColumns: ["CardId", "Trigger", "Base", "Before", "After", "Answer", "Outcome"],
+    file: "public/data/cards.tsv",
+    delimiter: "\t",
+    requiredColumns: ["card_seq", "trigger", "base", "sentence_with_gap", "outcome (SM/NM/AM/NONE)", "Target_word"],
   },
   {
     file: "public/data/prep.csv",
@@ -38,6 +39,7 @@ for (const entry of MANUAL_CSVS) {
   const parsed = Papa.parse(raw, {
     header: true,
     skipEmptyLines: true,
+    ...(entry.delimiter ? { delimiter: entry.delimiter, quoteChar: "\0" } : {}),
   });
 
   if (parsed.errors && parsed.errors.length > 0) {

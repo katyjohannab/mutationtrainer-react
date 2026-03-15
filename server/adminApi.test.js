@@ -14,12 +14,6 @@ async function setupTempRoot() {
   return root;
 }
 
-function makeCanonicalCsv(rows) {
-  const header =
-    "CardId,RuleFamily,RuleCategory,Trigger,Base,Translate,WordCategory,Before,After,Answer,Outcome,TranslateSent,Why,Why-Cym";
-  return `${header}\n${rows.join("\n")}`;
-}
-
 async function runMiddleware(middleware, { method, url, body, cookie, headers = {} }) {
   const req = new PassThrough();
   req.method = method;
@@ -89,7 +83,7 @@ describe("admin api", () => {
       method: "POST",
       url: "/api/admin/save-card",
       body: {
-        source: "cards.csv",
+        source: "cards.tsv",
         rowIndex: 0,
         expectedCardId: "c1",
         patch: { base: "bara" },
@@ -102,21 +96,19 @@ describe("admin api", () => {
 
   it("updates a row by source + rowIndex and rejects card mismatch", async () => {
     const rootDir = await setupTempRoot();
-    const cardsPath = path.join(rootDir, "public", "data", "cards.csv");
+    const cardsPath = path.join(rootDir, "public", "data", "cards.tsv");
 
-    await writeFile(
-      cardsPath,
-      makeCanonicalCsv([
-        '"c1","Soft","Article","y","cath","cat","noun","Mae\'r "," yn cysgu.","gath","SM","The cat sleeps.","English why","Welsh why"',
-        '"c2","None","Article","y","bara","bread","noun","Mae\'r "," yn ffres.","bara","NONE","The bread is fresh.","English why 2","Welsh why 2"',
-      ]),
-      "utf8"
-    );
+    const tsvHeader = "card_seq\tRuleCategory\ttrigger\tbase\ttranslate\twordcategory\tsentence_with_gap\tSentence_Eng\toutcome (SM/NM/AM/NONE)\tTarget_word\tWhyEng\tWhyCym";
+    const tsvRows = [
+      "c1\tArticle\ty\tcath\tcat\tnoun\tMae'r [ ] yn cysgu.\tThe cat sleeps.\tSM\tgath\tEnglish why\tWelsh why",
+      "c2\tArticle\ty\tbara\tbread\tnoun\tMae'r [ ] yn ffres.\tThe bread is fresh.\tNONE\tbara\tEnglish why 2\tWelsh why 2",
+    ];
+    await writeFile(cardsPath, `${tsvHeader}\n${tsvRows.join("\n")}`, "utf8");
 
     await expect(
       saveCardPatch({
         rootDir,
-        source: "cards.csv",
+        source: "cards.tsv",
         rowIndex: 0,
         expectedCardId: "wrong-id",
         rawPatch: { base: "pen" },
@@ -125,7 +117,7 @@ describe("admin api", () => {
 
     const saved = await saveCardPatch({
       rootDir,
-      source: "cards.csv",
+      source: "cards.tsv",
       rowIndex: 0,
       expectedCardId: "c1",
       rawPatch: { base: "pen", answer: "ben" },
@@ -135,9 +127,9 @@ describe("admin api", () => {
     expect(saved.updatedRow.answer).toBe("ben");
 
     const nextRaw = await readFile(cardsPath, "utf8");
-    const parsed = Papa.parse(nextRaw, { header: true, skipEmptyLines: true });
-    expect(parsed.data[0].Base).toBe("pen");
-    expect(parsed.data[0].Answer).toBe("ben");
+    const parsed = Papa.parse(nextRaw, { header: true, skipEmptyLines: true, delimiter: "\t" });
+    expect(parsed.data[0].base).toBe("pen");
+    expect(parsed.data[0].Target_word).toBe("ben");
   });
 
   it("preserves TSV delimiter and keeps file parseable after save", async () => {
@@ -195,7 +187,7 @@ describe("admin api", () => {
     await expect(
       saveCardPatch({
         rootDir,
-        source: "cards.csv",
+        source: "cards.tsv",
         rowIndex: 0,
         expectedCardId: "c1",
         rawPatch: { base: "bara" },
@@ -225,7 +217,7 @@ describe("admin api", () => {
 
   it("maps write permission errors to clear operational message", () => {
     const error = Object.assign(new Error("no permission"), { code: "EACCES" });
-    const mapped = mapSaveOperationalError(error, "/srv/app/public/data/cards.csv", "write");
+    const mapped = mapSaveOperationalError(error, "/srv/app/public/data/cards.tsv", "write");
     expect(mapped.statusCode).toBe(500);
     expect(mapped.message).toMatch(/cannot write/i);
   });
