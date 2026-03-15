@@ -22,6 +22,7 @@ import PageContainer from "./layout/PageContainer";
 export default function Header({
   onOpenFilters,
   onOpenHelp,
+  hasActiveFilters = false,
 }) {
   const { lang, setLang, t } = useI18n();
   const isCy = lang === "cy";
@@ -64,7 +65,7 @@ export default function Header({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="sm:hidden h-8 w-8 text-primary hover:bg-[hsl(var(--rail))]/70"
+                  className="lg:hidden h-8 w-8 text-primary hover:bg-[hsl(var(--rail))]/70"
                   aria-label={t("headerSwitchLang") || "Toggle language"}
                 >
                   <AppIcon icon={Globe} className="h-4 w-4" aria-hidden="true" />
@@ -100,7 +101,7 @@ export default function Header({
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <div className="hidden sm:flex items-center gap-1.5 sm:gap-2">
+            <div className="hidden lg:flex items-center gap-1.5 lg:gap-2">
               <span className={cn(
                 "text-[10px] sm:text-xs font-medium transition-colors",
                 !isCy ? "text-primary" : "text-muted-foreground"
@@ -127,7 +128,7 @@ export default function Header({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="sm:hidden h-8 w-8 text-primary hover:bg-[hsl(var(--rail))]/70"
+                  className="lg:hidden h-8 w-8 relative text-primary hover:bg-[hsl(var(--rail))]/70"
                   onClick={onOpenFilters}
                   aria-label={t("headerFilters") || "Filters"}
                 >
@@ -136,6 +137,9 @@ export default function Header({
                     className="h-4 w-4"
                     aria-hidden="true"
                   />
+                  {hasActiveFilters ? (
+                    <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-[hsl(var(--cymru-gold))] ring-2 ring-card" aria-hidden="true" />
+                  ) : null}
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom">
@@ -149,7 +153,7 @@ export default function Header({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="sm:hidden h-8 w-8 text-primary hover:bg-[hsl(var(--rail))]/70"
+                  className="lg:hidden h-8 w-8 text-primary hover:bg-[hsl(var(--rail))]/70"
                   onClick={onOpenHelp}
                   aria-label={t("headerHelp") || "Help"}
                 >

@@ -420,6 +420,12 @@ export default function App() {
       <Header
         onOpenFilters={() => openDrawer("filters")}
         onOpenHelp={() => setShowWelcomeModal(true)}
+        hasActiveFilters={Boolean(
+          activePresetId ||
+          filters.families.size > 0 ||
+          filters.categories.size > 0 ||
+          filters.levels.size > 0
+        )}
       />
 
       {/* Welcome/Help Modal */}
@@ -454,7 +460,7 @@ export default function App() {
           </div>
 
           {/* Right rail - hidden on mobile/tablet, sticky sidebar on lg+ */}
-          <aside className="hidden lg:block lg:sticky lg:top-6 lg:self-start space-y-4">
+          <aside className="hidden lg:block lg:sticky lg:top-[4.5rem] lg:self-start lg:max-h-[calc(100dvh-5.5rem)] lg:overflow-y-auto space-y-4">
             <RailContent
               variant="sidebar"
               stats={sessionStats}
@@ -462,11 +468,12 @@ export default function App() {
               filterProps={{
                 activePresetId,
                 onTogglePreset: handleTogglePreset,
-                onSetPreset: handleSetPreset,
                 available,
                 filters,
                 onToggleFilter: toggleFilter,
                 onClearFilterType: clearFilterType,
+                defaultOpenItems: ["item-packs"],
+                accordionType: "multiple",
               }}
             />
           </aside>
@@ -484,7 +491,6 @@ export default function App() {
           filterProps={{
             activePresetId,
             onTogglePreset: handleTogglePreset,
-            onSetPreset: handleSetPreset,
             onPresetApplied: () => setDrawer((prev) => ({ ...prev, open: false })),
             available,
             filters,

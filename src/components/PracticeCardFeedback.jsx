@@ -127,7 +127,7 @@ export default function PracticeCardFeedback({
           ) : null}
 
           {/* White content window */}
-          <div className="rounded-xl bg-card p-5 shadow-sm space-y-4">
+          <div className="rounded-xl bg-card p-3 sm:p-5 shadow-sm space-y-4">
             <p className="text-xl sm:text-2xl leading-relaxed text-foreground font-medium">
               <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
               <span className="mx-1 rounded-md border border-[hsl(var(--cymru-gold))] bg-[hsl(var(--cymru-gold-wash))] px-2 py-0.5 font-semibold text-foreground">

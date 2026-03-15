@@ -221,7 +221,7 @@ export default function PracticeCard({
     <div className="relative w-full max-w-2xl lg:max-w-3xl mx-auto">
       {!isFeedback && (
         <Card className={cardClassName}>
-          <div className="p-5 sm:p-7 md:p-8 lg:p-10">
+          <div className="p-3 sm:p-5 md:p-7 lg:p-10">
             {answerMode === "tap" ? (
               <PracticeCardChoices
                 sent={sent}
@@ -284,7 +284,7 @@ export default function PracticeCard({
       {isFeedback && (
         <div className="practice-card-reveal">
           <Card className={cardClassName}>
-            <div className="p-5 sm:p-7 md:p-8 lg:p-10">
+            <div className="p-3 sm:p-5 md:p-7 lg:p-10">
               <PracticeCardFeedback
                 sent={sent}
                 answer={answer}

@@ -40,10 +40,10 @@ export default function FlashcardArea({
 
   return (
     <section className={cn("flex-1", className)}>
-      <div className="space-y-4 rounded-[var(--radius)] border border-border bg-[hsl(var(--panel))] p-4 sm:p-5 lg:p-6">
+      <div className="space-y-4 rounded-[var(--radius)] border border-border bg-[hsl(var(--panel))] p-3 sm:p-5 lg:p-6">
         {/* Header row - unified control bar */}
         <div className="text-sm">
-          <div className="space-y-2 md:hidden">
+          <div className="space-y-2 lg:hidden">
             {sessionStats && (
               <SessionStatsInline
                 stats={sessionStats}
@@ -95,7 +95,7 @@ export default function FlashcardArea({
             </div>
           </div>
 
-          <div className="hidden md:flex md:flex-wrap md:items-start md:gap-3">
+          <div className="hidden lg:flex lg:flex-wrap lg:items-start lg:gap-3">
             <div className="flex flex-col items-start gap-0.5 min-w-0 shrink-0">
               <span className="text-xs font-medium text-muted-foreground truncate">
                 {progressText}

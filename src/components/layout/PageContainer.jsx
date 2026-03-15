@@ -12,7 +12,7 @@ export default function PageContainer({
     {
       className: cn(
         "mx-auto w-full",
-        "px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12",
+        "px-3 sm:px-6 lg:px-8 xl:px-10 2xl:px-12",
         "max-w-5xl md:max-w-6xl xl:max-w-7xl 2xl:max-w-[1600px]",
         className,
       ),

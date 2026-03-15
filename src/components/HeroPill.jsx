@@ -45,7 +45,7 @@ export default function HeroPill({
   return (
     <div
       className={cn(
-        "relative inline-flex max-w-[min(96vw,44rem)] overflow-visible",
+        "relative inline-flex max-w-full overflow-visible",
         "rounded-[1.15rem] p-[2.5px] sm:rounded-[1.35rem] sm:p-[3px]",
         "bg-[radial-gradient(140%_155%_at_50%_50%,hsl(var(--cymru-green))_0%,hsl(var(--cymru-green-light))_52%,hsl(var(--cymru-green))_100%)]",
         "shadow-[0_4px_10px_rgba(9,34,27,0.1),0_1px_3px_rgba(9,34,27,0.06),inset_0_1px_0_rgba(255,255,255,0.34)] sm:shadow-[0_7px_16px_rgba(9,34,27,0.12),0_2px_6px_rgba(9,34,27,0.08),inset_0_1px_0_rgba(255,255,255,0.36)]",
