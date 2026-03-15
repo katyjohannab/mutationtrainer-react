@@ -68,15 +68,14 @@ export const PRESET_ORDER = [
   "starter-all-verified",
   "starter-preps",
   "numbers-1-10",
-  "articles",
   "place-names",
+  "articles",
 ];
 
 // Curated user-facing starter packs (keeps compatibility with PRESET_DEFS/PRESET_ORDER).
 export const STARTER_PACK_ORDER = [
   "starter-preps",
   "numbers-1-10",
-  "articles",
   "place-names",
   "mynediad-place-names-pack-01",
 ];
@@ -84,7 +83,7 @@ export const STARTER_PACK_ORDER = [
 export const STARTER_PACK_GROUPS = [
   {
     id: "core",
-    presetIds: ["starter-preps", "numbers-1-10", "articles", "place-names"],
+    presetIds: ["starter-preps", "numbers-1-10", "place-names"],
   },
   {
     id: "mynediad",
@@ -104,7 +103,6 @@ export const STARTER_PACK_GROUPS = [
 export const FOUNDATION_PACKS = [
   "starter-preps",
   "numbers-1-10",
-  "articles",
   "place-names",
 ];
 
@@ -114,7 +112,7 @@ export const FOUNDATION_PACKS = [
  */
 export const DYSGU_PACKS_BY_LEVEL = {
   mynediad: ["mynediad-place-names-pack-01"],
-  sylfaen: [],
+  sylfaen: ["articles"],
   canolradd: [],
   uwch: [], // Note: uwch unit content exists but not organized as "packs" yet
 };

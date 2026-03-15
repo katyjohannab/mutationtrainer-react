@@ -192,15 +192,15 @@ export const STRINGS = {
 
     // Preset pack titles + descriptions
     "preset.starterPreps.title": "Pecynnau dechrau",
-    "preset.starterPreps.desc": "Set tywysedig i gynhesu.",
+    "preset.starterPreps.desc": "Ymarfer treiglad gyda rhai o'r sbardunwyr treiglad mwyaf cyffredin.",
     "preset.allVerified.title": "Pob cerdyn wedi'u gwirio",
     "preset.allVerified.desc": "Pob cerdyn craidd sydd wedi cael ei wirio.",
     "preset.numbers1to10.title": "Rhifau 1–10",
-    "preset.numbers1to10.desc": "Cardiau sy’n cael eu sbarduno gan rifau 1–10 ar draws pob CSV.",
-    "preset.articles.title": "Y fannod",
-    "preset.articles.desc": "Ffocws ar y fannod (Sylfaen).",
+    "preset.numbers1to10.desc": "Ymarfer treiglad wedi'i sbarduno gan rifau 1\u201310.",
+    "preset.articles.title": "Y Fannod",
+    "preset.articles.desc": "Deallwch sut mae rhyw enwau'n effeithio ar dreiglad drwy ddrilio rheolau'r fannod.",
     "preset.placeNames.title": "Enwau lleoedd",
-    "preset.placeNames.desc": "Ymarfer treiglad Cymraeg gan ddefnyddio enwau lleoedd.",
+    "preset.placeNames.desc": "Ymarfer treiglad a dysgu llawer o enwau lleoedd Cymraeg ar yr un pryd!",
     "preset.mynediadPlaceNamesPack01.title": "Dod o, Byw yn, Mynd i: Enwau Lleoedd",
     "preset.mynediadPlaceNamesPack01.desc": "Ymarfer treiglad meddal a thrwynol gydag enwau lleoedd Cymraeg gan ddefnyddio'r ymadroddion dod o, byw yn a mynd i.",
 
@@ -410,16 +410,16 @@ export const STRINGS = {
     onboardingDontShow: "Don't show this again",
 
     // Preset pack titles + descriptions
-    "preset.starterPreps.title": "Starter preps",
-    "preset.starterPreps.desc": "A curated guided set to warm up.",
+    "preset.starterPreps.title": "Starter Preps",
+    "preset.starterPreps.desc": "Practice mutation with some of the most common mutation triggers.",
     "preset.allVerified.title": "All verified cards",
     "preset.allVerified.desc": "Every core card that has been manually verified.",
     "preset.numbers1to10.title": "Numbers 1–10",
-    "preset.numbers1to10.desc": "Cards triggered by numbers 1–10 across all CSVs.",
-    "preset.articles.title": "Articles",
-    "preset.articles.desc": "Article focus (Sylfaen).",
+    "preset.numbers1to10.desc": "Practice mutation triggered by numbers 1\u201310.",
+    "preset.articles.title": "The Article",
+    "preset.articles.desc": "Get to grips with noun gender by drilling the mutation rules caused by the Article.",
     "preset.placeNames.title": "Place names",
-    "preset.placeNames.desc": "Practise Welsh mutation using place names.",
+    "preset.placeNames.desc": "Practice mutation and learn lots of Welsh place names at the same time!",
     "preset.mynediadPlaceNamesPack01.title": "Dod o, Byw yn, Mynd i: Welsh Place Names",
     "preset.mynediadPlaceNamesPack01.desc": "Practise soft and nasal mutation with Welsh place names using dod o (come from), byw yn (live in) and mynd i (go to).",
 
