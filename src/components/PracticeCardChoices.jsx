@@ -6,6 +6,7 @@ import HeroPill from "./HeroPill";
 import { deriveDysguBadges } from "../utils/dysguBadges";
 import CardTranslationPopover from "./card/CardTranslationPopover";
 import CardUtilityCluster from "./card/CardUtilityCluster";
+import SessionStatsInline from "./SessionStatsInline";
 
 function normalizeChoice(value) {
   return String(value ?? "")
@@ -38,6 +39,7 @@ export default function PracticeCardChoices({
   level,
   sourceFile,
   showDysguBadges = false,
+  sessionStats,
 }) {
   const isFeedback = cardState === "feedback";
   const baseword = sent?.base || "_____";
@@ -74,9 +76,15 @@ export default function PracticeCardChoices({
   const normalizedGuess = normalizeChoice(guess);
 
   return (
-    <div className="space-y-6">
+      <div className="space-y-8 sm:space-y-9 lg:space-y-12">
+      {sessionStats && (
+        <div className="flex justify-center lg:hidden">
+          <SessionStatsInline stats={sessionStats} />
+        </div>
+      )}
+
       {dysguBadges && (
-        <div className="flex w-full justify-start gap-2 px-2">
+        <div className="hidden sm:flex w-full justify-start gap-2 px-2">
           {dysguBadges.courseLabel && (
             <Badge
               variant="cymru-dark"
@@ -96,7 +104,7 @@ export default function PracticeCardChoices({
         </div>
       )}
 
-      <div className="flex flex-col items-center gap-2 w-full px-2">
+      <div className="flex flex-col items-center gap-2 w-full">
         <HeroPill
           text={baseword}
           showPin={false}
@@ -110,18 +118,21 @@ export default function PracticeCardChoices({
         />
       </div>
 
-      <div className="text-[clamp(1.05rem,0.6vw+0.95rem,1.45rem)] leading-relaxed text-foreground flex flex-wrap justify-center items-baseline gap-x-2.5 gap-y-2">
+      <p className="text-base sm:text-[clamp(1.05rem,0.6vw+0.95rem,1.45rem)] leading-relaxed text-foreground text-center px-1">
         <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
-        <div
+        {" "}
+        <span
           aria-hidden="true"
-          className="mx-0 inline-flex h-9 sm:h-10 min-w-[7.5ch] w-[9.5ch] sm:w-[11.5ch] lg:w-[12.5ch] max-w-full shrink-0 rounded-lg border-0 bg-[hsl(var(--cymru-gold)/0.08)] px-3 shadow-sm pointer-events-none select-none relative -top-px"
+          className="mx-1.5 sm:mx-1 inline-block h-[1.4em] min-w-[6ch] w-[8ch] sm:w-[11.5ch] lg:w-[12.5ch] max-w-full rounded-lg bg-[hsl(var(--cymru-gold)/0.08)] align-middle"
         />
+        {" "}
         <span className="whitespace-pre-wrap break-words">{sent?.after}</span>
-      </div>
+      </p>
 
-      <Separator />
+      <Separator className="hidden sm:block" />
 
-      <div className="mt-4 grid gap-2 sm:gap-3">
+      {/* Choice buttons — generous tap targets */}
+      <div className="grid gap-2.5 sm:gap-3">
         {choices.map((choice, idx) => {
           const normalizedChoice = normalizeChoice(choice);
           const isCorrectChoice = isFeedback && normalizedChoice === normalizedAnswer;
@@ -139,14 +150,19 @@ export default function PracticeCardChoices({
               disabled={disabled}
               onClick={() => onPick?.(choice)}
               className={cn(
-                "w-full rounded-2xl border border-border bg-card px-4 py-3 text-left text-sm sm:text-base shadow-sm transition hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+                "w-full min-h-[44px] rounded-xl border bg-card px-4 py-3 text-left text-[15px] sm:text-base font-medium shadow-sm transition-all",
+                "hover:bg-muted/60 hover:shadow-md",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+                "active:scale-[0.98]",
                 disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
+                !isSelected && !isCorrectChoice && !isWrongChoice && "border-border",
                 isSelected && "border-primary ring-2 ring-primary/15",
-                isCorrectChoice && "border-primary/40 bg-primary/10",
+                isCorrectChoice && "border-[hsl(var(--cymru-green-light)/0.5)] bg-[hsl(var(--cymru-green-wash)/0.6)]",
                 isWrongChoice && "border-destructive/40 bg-destructive/10"
               )}
             >
-              {idx + 1}. {choice}
+              <span className="text-muted-foreground/60 mr-2 font-semibold">{idx + 1}.</span>
+              {choice}
             </button>
           );
         })}
@@ -164,7 +180,7 @@ export default function PracticeCardChoices({
       />
 
       {showHint && hintText ? (
-        <div className="rounded-2xl border border-border bg-muted px-4 py-3 text-sm text-foreground">
+        <div className="rounded-xl border border-[hsl(var(--cymru-green-light)/0.3)] bg-[hsl(var(--cymru-green-wash)/0.5)] px-4 py-3 text-sm font-medium text-foreground">
           {hintText}
         </div>
       ) : null}

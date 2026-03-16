@@ -16,7 +16,7 @@ export default function CardTranslationPopover({
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const query = window.matchMedia("(max-width: 1023px)");
+    const query = window.matchMedia("(max-width: 768px)");
     const sync = () => setIsMobile(query.matches);
     sync();
     query.addEventListener("change", sync);

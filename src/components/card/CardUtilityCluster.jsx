@@ -26,8 +26,9 @@ export default function CardUtilityCluster({
   const shuffleLabel = t("shuffle") || "Shuffle";
   const showShuffle = typeof onShuffle === "function";
 
+  /* Mobile: compact 40px buttons to fit in single row. sm+: 44px */
   const utilityBaseClass =
-    "h-10 w-10 border border-transparent shadow-none transition-all duration-200 hover:-translate-y-px hover:shadow-sm focus-visible:ring-2 focus-visible:ring-ring/40";
+    "h-10 w-10 border border-transparent shadow-none rounded-xl transition-all duration-200 hover:-translate-y-px hover:shadow-sm focus-visible:ring-2 focus-visible:ring-ring/40 active:scale-95";
   const hintClass =
     "bg-[hsl(var(--cymru-green-light-wash))] text-[hsl(var(--cymru-green-light))] hover:bg-[hsl(var(--cymru-green-light-wash)/0.82)]";
   const revealClass =
@@ -39,8 +40,10 @@ export default function CardUtilityCluster({
 
   return (
     <TooltipProvider>
-      <div className="flex flex-wrap items-center justify-center gap-3 sm:justify-between">
-        <div className="flex flex-wrap items-center gap-2">
+      {/* Mobile: stacked — check button full-width below icons. sm+: single row */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 sm:gap-3">
+        {/* Icon row — centered on mobile, left-aligned on sm+ */}
+        <div className="flex items-center justify-center sm:justify-start gap-2">
           <ButtonGroup>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -52,14 +55,14 @@ export default function CardUtilityCluster({
                   className={cn(utilityBaseClass, hintClass)}
                   aria-label={hintLabel}
                 >
-                  <AppIcon icon={Lightbulb} className="h-4 w-4" aria-hidden="true" />
+                  <AppIcon icon={Lightbulb} className="h-4 w-4 sm:h-4 sm:w-4" aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>{hintLabel}</TooltipContent>
             </Tooltip>
           </ButtonGroup>
 
-          <ButtonGroup className="flex-wrap">
+          <ButtonGroup className="flex">
             {showShuffle ? (
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -71,7 +74,7 @@ export default function CardUtilityCluster({
                     className={cn(utilityBaseClass, shuffleClass)}
                     aria-label={shuffleLabel}
                   >
-                    <AppIcon icon={Shuffle} className="h-4 w-4" aria-hidden="true" />
+                    <AppIcon icon={Shuffle} className="h-4 w-4 sm:h-4 sm:w-4" aria-hidden="true" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>{shuffleLabel}</TooltipContent>
@@ -89,7 +92,7 @@ export default function CardUtilityCluster({
                   className={cn(utilityBaseClass, revealClass)}
                   aria-label={revealLabel}
                 >
-                  <AppIcon icon={MonitorPlay} className="h-4 w-4" aria-hidden="true" />
+                  <AppIcon icon={MonitorPlay} className="h-4 w-4 sm:h-4 sm:w-4" aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>{revealLabel}</TooltipContent>
@@ -106,7 +109,7 @@ export default function CardUtilityCluster({
                   className={cn(utilityBaseClass, skipClass)}
                   aria-label={skipLabel}
                 >
-                  <AppIcon icon={SkipForward} className="h-4 w-4" aria-hidden="true" />
+                  <AppIcon icon={SkipForward} className="h-4 w-4 sm:h-4 sm:w-4" aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>{skipLabel}</TooltipContent>
@@ -114,15 +117,16 @@ export default function CardUtilityCluster({
           </ButtonGroup>
         </div>
 
-        <ButtonGroup>
+        {/* Primary action — full-width on mobile, auto-width on sm+ */}
+        <ButtonGroup className="w-full sm:w-fit sm:flex-initial">
           <Button
             type="button"
             variant="default"
             onClick={onCheck}
             size="action"
-            className="w-full sm:w-auto bg-[hsl(var(--cymru-green))] text-white shadow-sm font-semibold transition-colors hover:bg-[hsl(var(--cymru-green)/0.9)]"
+            className="w-full sm:w-auto h-[52px] sm:h-auto text-base sm:text-sm rounded-xl bg-[hsl(var(--cymru-green))] text-white shadow-md sm:shadow-sm font-semibold transition-colors hover:bg-[hsl(var(--cymru-green)/0.9)] active:scale-[0.98]"
           >
-            <AppIcon icon={CheckCircle2} className="h-5 w-5" aria-hidden="true" />
+            <AppIcon icon={CheckCircle2} className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
             {checkLabel}
           </Button>
         </ButtonGroup>

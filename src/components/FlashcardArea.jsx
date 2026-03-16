@@ -1,5 +1,4 @@
 import PracticeCard from "./PracticeCard";
-import SessionStatsInline from "./SessionStatsInline";
 import ReportMistake from "./ReportMistake";
 import AdminCardControls from "./AdminCardControls";
 import { useI18n } from "../i18n/I18nContext";
@@ -40,27 +39,14 @@ export default function FlashcardArea({
 
   return (
     <section className={cn("flex-1", className)}>
-      <div className="space-y-4 rounded-[var(--radius)] border border-border bg-[hsl(var(--panel))] p-3 sm:p-5 lg:p-6">
+      {/* Mobile: no border/bg box. sm+: styled panel */}
+      <div className="space-y-7 sm:space-y-6 sm:rounded-[var(--radius)] sm:border sm:border-border sm:bg-[hsl(var(--panel))] sm:p-5 lg:p-6">
         {/* Header row - unified control bar */}
         <div className="text-sm">
-          <div className="space-y-2 lg:hidden">
-            {sessionStats && (
-              <SessionStatsInline
-                stats={sessionStats}
-                className="w-full rounded-lg border border-border/60 bg-card/65 px-2 py-1.5"
-              />
-            )}
-            <div className="flex flex-col items-start gap-0.5 leading-tight">
-              <span className="text-[11px] font-medium text-muted-foreground/70">
-                {progressText}
-              </span>
-              {cardId && (
-                <span className="text-[10px] font-medium text-muted-foreground/55">
-                  {t("reportCardId") || "Card ID"}: {cardId.toUpperCase()}
-                </span>
-              )}
-            </div>
-            <div className="flex flex-wrap items-start gap-2">
+          {/* ── Mobile / tablet (< lg) ── Single compact row */}
+          <div className="flex items-center justify-between gap-2 lg:hidden">
+            {/* Left: toggles */}
+            <div className="flex items-center gap-1.5">
               <ToggleGroup
                 type="single"
                 value={mode}
@@ -93,6 +79,11 @@ export default function FlashcardArea({
                 </ToggleGroup>
               )}
             </div>
+
+            {/* Right: progress only (no card ID on mobile) */}
+            <span className="text-[11px] font-medium text-muted-foreground/70 shrink-0">
+              {progressText}
+            </span>
           </div>
 
           <div className="hidden lg:flex lg:flex-wrap lg:items-start lg:gap-3">
@@ -142,11 +133,14 @@ export default function FlashcardArea({
           </div>
         </div>
 
-        <Separator />
+        <Separator className="opacity-60 hidden sm:block" />
 
+        <div>
         {!currentRow ? (
-          <div className="surface-card p-6 text-sm text-muted-foreground text-center">
-            {t("noCards")}
+          <div className="flex flex-col items-center justify-center py-12 sm:py-16 text-center">
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+              {t("noCards")}
+            </p>
           </div>
         ) : (
           <PracticeCard
@@ -161,13 +155,17 @@ export default function FlashcardArea({
             deckLabel={deckLabel}
             onShuffle={onShuffle}
             showDysguBadges={showDysguBadges}
+            sessionStats={sessionStats}
           />
         )}
+        </div>
 
         {currentRow && (
-          <div className="flex items-center justify-end gap-2 pt-3">
+          <div className="flex items-center justify-center sm:justify-end gap-2 pt-2 sm:pt-3">
             {!adminState?.authenticated ? <ReportMistake cardId={cardId} /> : null}
-            <AdminCardControls
+            {/* Admin controls hidden on mobile */}
+            <div className="hidden sm:block">
+              <AdminCardControls
               row={currentRow}
               isAuthenticated={Boolean(adminState?.authenticated)}
               authConfigured={adminState?.configured !== false}
@@ -176,6 +174,7 @@ export default function FlashcardArea({
               onLogout={onAdminLogout}
               onSave={onAdminSave}
             />
+            </div>
           </div>
         )}
       </div>

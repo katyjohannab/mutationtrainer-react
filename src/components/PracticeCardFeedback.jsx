@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { ButtonGroup } from "./ui/button-group";
 import { Card, CardContent } from "./ui/card";
-import { badgeVariants } from "./ui/badge";
 import { cn } from "../lib/cn";
 import {
   ArrowRight,
@@ -70,14 +69,9 @@ export default function PracticeCardFeedback({
   }, [last, t]);
   const isCorrect = last === "correct";
   const isRevealed = last === "revealed";
-  const hearButtonVariant = "cymru-light";
   const nextLabel = t("next") || "Next";
   const easyLabel = t("easy") || "Easy";
   const hardLabel = t("hard") || "Hard";
-  const greenOutlineClass =
-    "border-[hsl(var(--cymru-green))] text-[hsl(var(--cymru-green))] hover:bg-[hsl(var(--cymru-green-wash))] hover:text-[hsl(var(--cymru-green))] hover:shadow-sm";
-  const redOutlineClass =
-    "border-[hsl(var(--cymru-red))] text-[hsl(var(--cymru-red))] hover:bg-[hsl(var(--cymru-red-wash))] hover:text-[hsl(var(--cymru-red))] hover:shadow-sm";
   const statusIcon = useMemo(() => {
     if (!last) return null;
     if (last === "correct") return CheckCircle2;
@@ -86,8 +80,9 @@ export default function PracticeCardFeedback({
     if (last === "skipped") return Undo2;
     return null;
   }, [last]);
+  // Gradient panel at all sizes with nested white content window
   const panelClass = cn(
-    "rounded-2xl border border-border p-5 shadow-md",
+    "rounded-2xl border border-border p-3.5 sm:p-5 shadow-md",
     isCorrect
       ? "bg-[image:var(--gradient-correct)]"
       : isRevealed
@@ -108,36 +103,36 @@ export default function PracticeCardFeedback({
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4 sm:space-y-5">
       <Card className={panelClass}>
-        <CardContent className="space-y-5 p-0">
+        <CardContent className="space-y-4 sm:space-y-5 p-0">
           {statusLabel ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5 sm:gap-3">
               {statusIcon ? (
                 <AppIcon
                   icon={statusIcon}
-                  className="h-10 w-10 text-white flex-shrink-0"
+                  className="h-8 w-8 sm:h-10 sm:w-10 text-white flex-shrink-0"
                   aria-hidden="true"
                 />
               ) : null}
-              <h1 className="text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-white">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold uppercase tracking-tight text-white">
                 {statusLabel}
               </h1>
             </div>
           ) : null}
 
-          {/* White content window */}
-          <div className="rounded-xl bg-card p-3 sm:p-5 shadow-sm space-y-4">
-            <p className="text-xl sm:text-2xl leading-relaxed text-foreground font-medium">
+          {/* Nested white content window */}
+          <div className="rounded-xl bg-card p-3.5 sm:p-5 shadow-sm space-y-3 sm:space-y-4">
+            <p className="text-lg sm:text-xl md:text-2xl leading-relaxed font-medium text-foreground">
               <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
-              <span className="mx-1 rounded-md border border-[hsl(var(--cymru-gold))] bg-[hsl(var(--cymru-gold-wash))] px-2 py-0.5 font-semibold text-foreground">
+              <span className="mx-1.5 sm:mx-1 rounded-md border border-[hsl(var(--cymru-gold))] bg-[hsl(var(--cymru-gold-wash))] px-2.5 py-0.5 font-semibold text-foreground">
                 {answer}
               </span>
               <span className="whitespace-pre-wrap break-words">{sent?.after}</span>
             </p>
 
             {sentenceTranslation ? (
-              <div className="rounded-lg border border-border/70 bg-muted/35 px-4 py-3">
+              <div className="rounded-lg border border-border/70 bg-muted/35 px-3 sm:px-4 py-2.5 sm:py-3">
                 <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                   {sentenceTranslationLabel}
                 </p>
@@ -147,17 +142,17 @@ export default function PracticeCardFeedback({
               </div>
             ) : null}
 
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
               <button
                 type="button"
                 onClick={onHear}
                 className={cn(
-                  badgeVariants({ variant: hearButtonVariant }),
-                  "cursor-pointer select-none rounded-full px-3 py-1 text-xs font-semibold transition-colors",
-                  "inline-flex items-center gap-1.5"
+                  "cursor-pointer select-none rounded-full px-3 py-1.5 sm:py-1 text-xs font-semibold transition-colors min-h-[36px] sm:min-h-0",
+                  "inline-flex items-center gap-1.5",
+                  "bg-[hsl(var(--cymru-green-light-wash))] text-[hsl(var(--cymru-green-light))] border-transparent hover:bg-[hsl(var(--cymru-green-light-wash)/0.82)]"
                 )}
               >
-                <AppIcon icon={Volume2} className="h-3.5 w-3.5" aria-hidden="true" />
+                <AppIcon icon={Volume2} className="h-4 w-4 sm:h-3.5 sm:w-3.5" aria-hidden="true" />
                 {ttsLoading ? loadingLabel : hearLabel}
               </button>
 
@@ -174,7 +169,7 @@ export default function PracticeCardFeedback({
                       // ignore
                     }
                   }}
-                  className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                  className="h-5 w-5 sm:h-4 sm:w-4 rounded border-border text-primary focus:ring-primary"
                 />
                 Autoplay
               </label>
@@ -185,11 +180,11 @@ export default function PracticeCardFeedback({
             </div>
 
             {explanation ? (
-              <div className="rounded-lg bg-[hsl(var(--cymru-neutral)/0.35)] p-4 text-sm text-foreground">
+              <div className="rounded-xl bg-[hsl(var(--cymru-neutral)/0.35)] p-3 sm:p-4 text-sm">
                 <div className="text-xs font-semibold uppercase tracking-wide text-foreground/70">
                   {whyLabel}
                 </div>
-                <div className="mt-2 text-foreground/90">
+                <div className="mt-1.5 sm:mt-2 text-foreground/90 leading-relaxed">
                   {(() => {
                     // Simple bold parser for **text**
                     const parts = explanation.split(/(\*\*[^*]+\*\*)/g);
@@ -205,17 +200,21 @@ export default function PracticeCardFeedback({
             ) : null}
           </div>
 
-          <div className="flex flex-wrap justify-end gap-2">
+          {/* Action buttons — stacked full-width on mobile, inline on sm+ */}
+          <div className="flex flex-col sm:flex-row sm:flex-wrap sm:justify-end gap-2 pt-2 sm:pt-0">
             {isSmartMode ? (
               <>
-                <ButtonGroup className="flex-wrap">
+                <ButtonGroup className="flex w-full sm:w-auto gap-2">
                   <Button
                     type="button"
                     variant="outline"
                     onClick={() => handleSmartResult("again")}
                     size="action"
                     disabled={isSubmitting}
-                    className={redOutlineClass}
+                    className={cn(
+                      "flex-1 sm:flex-initial h-12 sm:h-auto rounded-xl active:scale-[0.98]",
+                      "bg-transparent border-[hsl(var(--cymru-red))] text-[hsl(var(--cymru-red))] hover:bg-[hsl(var(--cymru-red-wash))]"
+                    )}
                   >
                     <AppIcon icon={X} className="h-4 w-4" aria-hidden="true" />
                     {hardLabel}
@@ -226,18 +225,22 @@ export default function PracticeCardFeedback({
                     onClick={() => handleSmartResult("easy")}
                     size="action"
                     disabled={isSubmitting}
-                    className={greenOutlineClass}
+                    className={cn(
+                      "flex-1 sm:flex-initial h-12 sm:h-auto rounded-xl active:scale-[0.98]",
+                      "bg-transparent border-[hsl(var(--cymru-green))] text-[hsl(var(--cymru-green))] hover:bg-[hsl(var(--cymru-green-wash))]"
+                    )}
                   >
                     <AppIcon icon={CheckCircle2} className="h-4 w-4" aria-hidden="true" />
                     {easyLabel}
                   </Button>
                 </ButtonGroup>
-                <ButtonGroup>
+                <ButtonGroup className="w-full sm:w-auto">
                   <Button
                     type="button"
                     onClick={() => handleSmartResult("next")}
                     size="action"
                     disabled={isSubmitting}
+                    className="w-full sm:w-auto h-12 sm:h-auto rounded-xl active:scale-[0.98] bg-primary text-primary-foreground hover:bg-primary/90"
                   >
                     {nextLabel}
                     <AppIcon icon={ArrowRight} className="h-5 w-5" aria-hidden="true" />
@@ -245,7 +248,12 @@ export default function PracticeCardFeedback({
                 </ButtonGroup>
               </>
             ) : (
-              <Button type="button" onClick={onNext} size="action">
+              <Button
+                type="button"
+                onClick={onNext}
+                size="action"
+                className="w-full sm:w-auto h-12 sm:h-auto rounded-xl active:scale-[0.98] bg-primary text-primary-foreground hover:bg-primary/90"
+              >
                 {nextLabel}
                 <AppIcon icon={ArrowRight} className="h-5 w-5" aria-hidden="true" />
               </Button>

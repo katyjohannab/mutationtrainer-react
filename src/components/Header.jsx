@@ -22,21 +22,20 @@ import PageContainer from "./layout/PageContainer";
 export default function Header({
   onOpenFilters,
   onOpenHelp,
-  hasActiveFilters = false,
 }) {
   const { lang, setLang, t } = useI18n();
   const isCy = lang === "cy";
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur bg-card" style={{ boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05)' }}>
-      <PageContainer className="flex items-end justify-between gap-2 sm:gap-4 pt-2 pb-2.5 sm:pt-3 sm:pb-3 lg:pb-3.5">
+      <PageContainer className="flex items-end justify-between gap-2 sm:gap-4 pt-3 pb-3 sm:pt-3 sm:pb-3 lg:pb-3.5">
         
         {/* Logo lockup: dragon + wordmark */}
         <div className="brandLockup flex items-end min-w-0 shrink whitespace-nowrap">
           <img
             src="dragon.png"
             alt=""
-            className="brandMark h-8 w-auto sm:h-9 md:h-10 lg:h-11 flex-shrink-0"
+            className="brandMark h-9 w-auto sm:h-9 md:h-10 lg:h-11 flex-shrink-0"
             aria-hidden="true"
           />
           <h1
@@ -65,7 +64,7 @@ export default function Header({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="lg:hidden h-8 w-8 text-primary hover:bg-[hsl(var(--rail))]/70"
+                  className="sm:hidden h-8 w-8 text-primary hover:bg-[hsl(var(--rail))]/70"
                   aria-label={t("headerSwitchLang") || "Toggle language"}
                 >
                   <AppIcon icon={Globe} className="h-4 w-4" aria-hidden="true" />
@@ -101,7 +100,7 @@ export default function Header({
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <div className="hidden lg:flex items-center gap-1.5 lg:gap-2">
+            <div className="hidden sm:flex items-center gap-1.5 sm:gap-2">
               <span className={cn(
                 "text-[10px] sm:text-xs font-medium transition-colors",
                 !isCy ? "text-primary" : "text-muted-foreground"
@@ -128,7 +127,7 @@ export default function Header({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="lg:hidden h-8 w-8 relative text-primary hover:bg-[hsl(var(--rail))]/70"
+                  className="lg:hidden h-8 w-8 text-primary hover:bg-[hsl(var(--rail))]/70"
                   onClick={onOpenFilters}
                   aria-label={t("headerFilters") || "Filters"}
                 >
@@ -137,9 +136,6 @@ export default function Header({
                     className="h-4 w-4"
                     aria-hidden="true"
                   />
-                  {hasActiveFilters ? (
-                    <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-[hsl(var(--cymru-gold))] ring-2 ring-card" aria-hidden="true" />
-                  ) : null}
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom">

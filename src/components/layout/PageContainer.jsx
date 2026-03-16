@@ -2,22 +2,20 @@ import React from "react";
 import { cn } from "../../lib/cn";
 
 export default function PageContainer({
-  as = "div",
+  as: Component = "div",
   className,
   children,
   ...props
 }) {
-  return React.createElement(
-    as,
-    {
-      className: cn(
-        "mx-auto w-full",
-        "px-3 sm:px-6 lg:px-8 xl:px-10 2xl:px-12",
-        "max-w-5xl md:max-w-6xl xl:max-w-7xl 2xl:max-w-[1600px]",
+  return (
+    <Component
+      className={cn(
+        "mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-6 max-w-5xl md:max-w-6xl xl:max-w-7xl 2xl:max-w-[96rem]",
         className,
-      ),
-      ...props,
-    },
-    children,
+      )}
+      {...props}
+    >
+      {children}
+    </Component>
   );
 }

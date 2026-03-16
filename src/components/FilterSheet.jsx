@@ -13,16 +13,16 @@ export default function FilterSheet({ open, onOpenChange, title, children }) {
       <SheetContent 
         side="right" 
         showClose={false}
-        className="flex h-full w-[92vw] max-w-md flex-col overflow-hidden p-0"
+        className="flex h-full w-[88vw] max-w-md flex-col overflow-hidden p-0"
       >
         {/* Fixed header */}
-        <SheetHeader className="flex-shrink-0 flex flex-row items-center justify-between gap-2 border-b border-border px-4 py-3">
+        <SheetHeader className="flex-shrink-0 flex flex-row items-center justify-between gap-2 border-b border-border/60 px-5 py-3.5">
           <SheetTitle className="text-base font-semibold">{displayTitle}</SheetTitle>
           <SheetClose asChild>
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8"
+              className="h-9 w-9 rounded-lg"
               aria-label={t("close") || "Close"}
             >
               <AppIcon icon={X} className="h-4 w-4" aria-hidden="true" />
@@ -31,7 +31,7 @@ export default function FilterSheet({ open, onOpenChange, title, children }) {
         </SheetHeader>
 
         {/* Scrollable content area */}
-        <div className="flex-1 overflow-y-auto px-4 py-4">
+        <div className="flex-1 overflow-y-auto px-5 py-5">
           {children}
         </div>
       </SheetContent>

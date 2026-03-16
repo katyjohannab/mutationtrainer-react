@@ -12,10 +12,10 @@ export default function HeroPill({
   const textLength = normalizedText.trim().length;
   const textSizeClass =
     textLength >= 12
-      ? "text-[clamp(2.15rem,8.8vw,4.4rem)]"
+      ? "text-[clamp(2.15rem,8.8vw,4.4rem)] lg:text-[4.4rem]"
       : textLength >= 9
-      ? "text-[clamp(2.45rem,10.8vw,4.8rem)]"
-      : "text-[clamp(2.85rem,13.2vw,5.2rem)]";
+      ? "text-[clamp(2.45rem,10.8vw,4.8rem)] lg:text-[5.2rem]"
+      : "text-[clamp(2.85rem,13.2vw,5.2rem)] lg:text-[5.8rem]";
 
   const stateStyles = {
     default: {
@@ -104,5 +104,3 @@ export default function HeroPill({
     </div>
   );
 }
-
-

@@ -434,11 +434,11 @@ export default function App() {
         onClose={() => setShowWelcomeModal(false)}
       />
 
-      <PageContainer as="main" className="pb-4 pt-6 sm:pt-7 lg:pt-8 2xl:pt-10">
+      <PageContainer as="main" className="pb-4 pt-5 sm:pt-6 lg:pt-8 2xl:pt-10">
         {/* Responsive grid: stack on mobile/tablet, two-column from lg up */}
-        <div className="grid grid-cols-1 gap-6 mt-4 lg:grid-cols-[minmax(0,1fr)_360px] xl:grid-cols-[minmax(0,1fr)_400px] 2xl:grid-cols-[minmax(0,1fr)_440px]">
+        <div className="grid grid-cols-1 gap-3 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_360px] xl:grid-cols-[minmax(0,1fr)_400px] 2xl:grid-cols-[minmax(0,1fr)_440px]">
           {/* Main practice area */}
-          <div className="min-w-0">
+          <div className="min-w-0 lg:self-start">
             <FlashcardArea
               mode={mode}
               onModeChange={setMode}

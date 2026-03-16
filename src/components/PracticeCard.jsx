@@ -30,6 +30,7 @@ export default function PracticeCard({
   deckRows = [],
   onShuffle,
   showDysguBadges = false,
+  sessionStats,
 }) {
   const { t, lang } = useI18n();
 
@@ -218,10 +219,10 @@ export default function PracticeCard({
   );
 
   return (
-    <div className="relative w-full max-w-2xl lg:max-w-3xl mx-auto">
+    <div className="relative w-full max-w-3xl mx-auto">
       {!isFeedback && (
         <Card className={cardClassName}>
-          <div className="p-3 sm:p-5 md:p-7 lg:p-10">
+          <div className="p-6 sm:p-8 md:p-10 lg:p-16">
             {answerMode === "tap" ? (
               <PracticeCardChoices
                 sent={sent}
@@ -248,6 +249,7 @@ export default function PracticeCard({
                 level={row.level || row.Level}
                 sourceFile={row.__source}
                 showDysguBadges={showDysguBadges}
+                sessionStats={sessionStats}
               />
             ) : (
               <PracticeCardFront
@@ -275,6 +277,7 @@ export default function PracticeCard({
                 level={row.level || row.Level}
                 sourceFile={row.__source}
                 showDysguBadges={showDysguBadges}
+                sessionStats={sessionStats}
               />
             )}
           </div>
@@ -284,7 +287,7 @@ export default function PracticeCard({
       {isFeedback && (
         <div className="practice-card-reveal">
           <Card className={cardClassName}>
-            <div className="p-3 sm:p-5 md:p-7 lg:p-10">
+            <div className="p-6 sm:p-8 md:p-10 lg:p-16">
               <PracticeCardFeedback
                 sent={sent}
                 answer={answer}
