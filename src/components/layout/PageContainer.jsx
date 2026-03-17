@@ -10,7 +10,7 @@ export default function PageContainer({
   return (
     <Component
       className={cn(
-        "mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-6 max-w-5xl md:max-w-6xl xl:max-w-7xl 2xl:max-w-[96rem]",
+        "mx-auto w-full max-w-5xl px-4 sm:max-w-6xl sm:px-6 lg:px-8 xl:max-w-screen-xl 2xl:max-w-screen-2xl 2xl:px-6",
         className,
       )}
       {...props}
