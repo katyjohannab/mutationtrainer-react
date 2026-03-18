@@ -43,6 +43,9 @@ export default function PracticeCardChoices({
 }) {
   const isFeedback = cardState === "feedback";
   const baseword = sent?.base || "_____";
+  const trimmedBaseword = String(baseword).trim();
+  const isHeroStressed =
+    trimmedBaseword.length >= 12 || /\s/.test(trimmedBaseword);
   const dysguBadges = useMemo(
     () =>
       showDysguBadges
@@ -76,13 +79,18 @@ export default function PracticeCardChoices({
   const normalizedGuess = normalizeChoice(guess);
 
   return (
-      <div className="space-y-6 sm:space-y-9 lg:space-y-12 [@media(max-height:700px)]:space-y-5">
+    <div
+      className={cn(
+        "space-y-6 sm:space-y-8 lg:space-y-9 xl:space-y-12 [@media(max-height:700px)]:space-y-5",
+        isHeroStressed && "sm:space-y-7 lg:space-y-8 xl:space-y-11"
+      )}
+    >
       {dysguBadges && (
-        <div className="hidden sm:flex w-full justify-start gap-2 px-2">
+        <div className="hidden w-full justify-start gap-2 px-2 sm:flex">
           {dysguBadges.courseLabel && (
             <Badge
               variant="cymru-dark"
-              className="rounded-full px-3 py-1 text-xs font-semibold pointer-events-none"
+              className="pointer-events-none rounded-full px-3 py-1 text-xs font-semibold"
             >
               {dysguBadges.courseLabel}
             </Badge>
@@ -90,7 +98,7 @@ export default function PracticeCardChoices({
           {dysguBadges.unitLabel && (
             <Badge
               variant="cymru-light"
-              className="rounded-full px-3 py-1 text-xs font-semibold pointer-events-none"
+              className="pointer-events-none rounded-full px-3 py-1 text-xs font-semibold"
             >
               {dysguBadges.unitLabel}
             </Badge>
@@ -98,9 +106,10 @@ export default function PracticeCardChoices({
         </div>
       )}
 
-      <div className="flex flex-col items-center gap-1.5 w-full">
+      <div className="flex w-full flex-col items-center gap-1.5">
         <HeroPill
           text={baseword}
+          compositionMode="contained"
           showPin={false}
           cornerAction={
             <CardTranslationPopover
@@ -112,66 +121,81 @@ export default function PracticeCardChoices({
         />
       </div>
 
-      <p className="text-base sm:text-[clamp(1.05rem,0.6vw+0.95rem,1.45rem)] leading-relaxed text-foreground text-center px-1">
-        <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
-        {" "}
-        <span
-          aria-hidden="true"
-          className="mx-1.5 sm:mx-1 inline-block h-[1.4em] min-w-[6ch] w-[8ch] sm:w-[11.5ch] lg:w-[12.5ch] max-w-full rounded-lg bg-[hsl(var(--cymru-gold)/0.08)] align-middle"
-        />
-        {" "}
-        <span className="whitespace-pre-wrap break-words">{sent?.after}</span>
-      </p>
+      <div
+        className={cn(
+          "space-y-5 sm:space-y-6 lg:space-y-6 xl:space-y-8",
+          isHeroStressed && "sm:space-y-5 lg:space-y-5 xl:space-y-7"
+        )}
+      >
+        <div
+          className={cn(
+            "space-y-4 sm:space-y-5 lg:space-y-5 xl:space-y-6",
+            isHeroStressed && "sm:space-y-4 lg:space-y-4 xl:space-y-5"
+          )}
+        >
+          <p className="mx-auto max-w-[38rem] px-1 text-center text-[1.06rem] leading-[1.72] text-foreground sm:px-2 sm:text-[1.18rem] sm:leading-[1.66] lg:text-[1.28rem] xl:text-[clamp(1.08rem,0.62vw+0.98rem,1.45rem)] xl:leading-relaxed">
+            <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
+            {" "}
+            <span
+              aria-hidden="true"
+              className="mx-1.5 inline-flex h-[1.45em] min-w-[6ch] w-[7.8ch] items-center justify-center rounded-full border border-[hsl(var(--cymru-gold)/0.28)] bg-[hsl(var(--cymru-gold)/0.1)] align-middle shadow-[inset_0_1px_0_rgba(255,255,255,0.55)] sm:w-[9.8ch] lg:w-[10.8ch] xl:w-[12.5ch]"
+            />
+            {" "}
+            <span className="whitespace-pre-wrap break-words">{sent?.after}</span>
+          </p>
 
-      <Separator className="hidden sm:block" />
+          <div className="grid gap-2.5 sm:gap-3 lg:gap-3 xl:gap-3.5">
+            {choices.map((choice, idx) => {
+              const normalizedChoice = normalizeChoice(choice);
+              const isCorrectChoice = isFeedback && normalizedChoice === normalizedAnswer;
+              const isWrongChoice =
+                isFeedback &&
+                normalizedChoice === normalizedGuess &&
+                normalizedChoice !== normalizedAnswer;
+              const isSelected =
+                !isFeedback && normalizedGuess && normalizedChoice === normalizedGuess;
 
-      {/* Choice buttons — generous tap targets */}
-      <div className="grid gap-2.5 sm:gap-3">
-        {choices.map((choice, idx) => {
-          const normalizedChoice = normalizeChoice(choice);
-          const isCorrectChoice = isFeedback && normalizedChoice === normalizedAnswer;
-          const isWrongChoice =
-            isFeedback &&
-            normalizedChoice === normalizedGuess &&
-            normalizedChoice !== normalizedAnswer;
-          const isSelected =
-            !isFeedback && normalizedGuess && normalizedChoice === normalizedGuess;
+              return (
+                <button
+                  key={`${choice}-${idx}`}
+                  type="button"
+                  disabled={disabled}
+                  onClick={() => onPick?.(choice)}
+                  className={cn(
+                    "w-full min-h-[44px] rounded-xl border bg-card px-4 py-3 text-left text-[15px] font-medium shadow-sm transition-all sm:text-base",
+                    "hover:bg-muted/60 hover:shadow-md",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+                    "active:scale-[0.98]",
+                    disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
+                    !isSelected && !isCorrectChoice && !isWrongChoice && "border-border",
+                    isSelected && "border-primary ring-2 ring-primary/15",
+                    isCorrectChoice && "border-[hsl(var(--cymru-green-light)/0.5)] bg-[hsl(var(--cymru-green-wash)/0.6)]",
+                    isWrongChoice && "border-destructive/40 bg-destructive/10"
+                  )}
+                >
+                  <span className="mr-2 font-semibold text-muted-foreground/60">{idx + 1}.</span>
+                  {choice}
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
-          return (
-            <button
-              key={`${choice}-${idx}`}
-              type="button"
-              disabled={disabled}
-              onClick={() => onPick?.(choice)}
-              className={cn(
-                "w-full min-h-[44px] rounded-xl border bg-card px-4 py-3 text-left text-[15px] sm:text-base font-medium shadow-sm transition-all",
-                "hover:bg-muted/60 hover:shadow-md",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-                "active:scale-[0.98]",
-                disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
-                !isSelected && !isCorrectChoice && !isWrongChoice && "border-border",
-                isSelected && "border-primary ring-2 ring-primary/15",
-                isCorrectChoice && "border-[hsl(var(--cymru-green-light)/0.5)] bg-[hsl(var(--cymru-green-wash)/0.6)]",
-                isWrongChoice && "border-destructive/40 bg-destructive/10"
-              )}
-            >
-              <span className="text-muted-foreground/60 mr-2 font-semibold">{idx + 1}.</span>
-              {choice}
-            </button>
-          );
-        })}
+        <div className="space-y-4 sm:space-y-5 lg:space-y-5 xl:space-y-6">
+          <Separator className="hidden sm:block" />
+
+          <CardUtilityCluster
+            t={t}
+            isFeedback={isFeedback}
+            mode={mode}
+            onToggleHint={onToggleHint}
+            onReveal={onReveal}
+            onSkip={onSkip}
+            onShuffle={onShuffle}
+            onCheck={onCheck}
+          />
+        </div>
       </div>
-
-      <CardUtilityCluster
-        t={t}
-        isFeedback={isFeedback}
-        mode={mode}
-        onToggleHint={onToggleHint}
-        onReveal={onReveal}
-        onSkip={onSkip}
-        onShuffle={onShuffle}
-        onCheck={onCheck}
-      />
 
       {showHint && hintText ? (
         <div className="rounded-xl border border-[hsl(var(--cymru-green-light)/0.3)] bg-[hsl(var(--cymru-green-wash)/0.5)] px-4 py-3 text-sm font-medium text-foreground">
@@ -180,7 +204,7 @@ export default function PracticeCardChoices({
       ) : null}
 
       {sessionStats && (
-        <div className="flex justify-center lg:hidden">
+        <div className="flex justify-center xl:hidden">
           <SessionStatsInline stats={sessionStats} />
         </div>
       )}

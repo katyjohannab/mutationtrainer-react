@@ -4,18 +4,31 @@ import { cn } from "../lib/cn";
 export default function HeroPill({
   text,
   state = "default",
+  compositionMode = "roomy",
   showPin = true,
   cornerAction = null,
   className,
 }) {
   const normalizedText = String(text ?? "");
-  const textLength = normalizedText.trim().length;
-  const textSizeClass =
-    textLength >= 12
-      ? "text-[clamp(2.15rem,8.8vw,4.4rem)] lg:text-[4.4rem]"
-      : textLength >= 9
-      ? "text-[clamp(2.45rem,10.8vw,4.8rem)] lg:text-[5.2rem]"
-      : "text-[clamp(2.85rem,13.2vw,5.2rem)] lg:text-[5.8rem]";
+  const trimmedText = normalizedText.trim();
+  const textLength = trimmedText.length;
+  const isMultiWord = trimmedText.split(/\s+/).filter(Boolean).length > 1;
+  const effectiveLength = isMultiWord ? textLength + 3 : textLength;
+  const isContained = compositionMode === "contained";
+  const textSizeClass = isContained
+    ? effectiveLength >= 12
+      ? "text-[clamp(2.15rem,8.8vw,3.85rem)] xl:text-[4.4rem]"
+      : effectiveLength >= 9
+      ? "text-[clamp(2.45rem,10.2vw,4.1rem)] xl:text-[5.2rem]"
+      : "text-[clamp(2.8rem,12.4vw,4.55rem)] xl:text-[5.8rem]"
+    : textLength >= 12
+    ? "text-[clamp(2.15rem,8.8vw,4.4rem)] lg:text-[4.4rem]"
+    : textLength >= 9
+    ? "text-[clamp(2.45rem,10.8vw,4.8rem)] lg:text-[5.2rem]"
+    : "text-[clamp(2.85rem,13.2vw,5.2rem)] lg:text-[5.8rem]";
+  const innerPaddingClass = isContained
+    ? "px-[clamp(1.15rem,4.4vw,3rem)] py-[clamp(0.7rem,2.55vw,1.32rem)] xl:px-[clamp(1.3rem,4.8vw,3.4rem)] xl:py-[clamp(0.75rem,2.8vw,1.5rem)]"
+    : "px-[clamp(1.3rem,4.8vw,3.4rem)] py-[clamp(0.75rem,2.8vw,1.5rem)]";
 
   const stateStyles = {
     default: {
@@ -61,7 +74,7 @@ export default function HeroPill({
       <div
         className={cn(
           "relative inline-flex items-center justify-center rounded-[1rem] sm:rounded-[1.2rem]",
-          "px-[clamp(1.3rem,4.8vw,3.4rem)] py-[clamp(0.75rem,2.8vw,1.5rem)]",
+          innerPaddingClass,
           "shadow-[0_1px_0_rgba(255,255,255,0.32)_inset,0_4px_10px_rgba(10,34,27,0.08)] sm:shadow-[0_2px_0_rgba(255,255,255,0.35)_inset,0_7px_16px_rgba(10,34,27,0.1)]",
           styles.fill,
           styles.text,

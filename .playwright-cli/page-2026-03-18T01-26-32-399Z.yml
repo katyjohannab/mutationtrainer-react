@@ -1,0 +1,130 @@
+- generic [ref=e65]:
+  - banner [ref=e66]:
+    - generic [ref=e67]:
+      - generic [ref=e68]:
+        - img [ref=e69]
+        - heading "TREIGLAP" [level=1] [ref=e70]:
+          - generic "TREIGLAP" [ref=e71]:
+            - generic [ref=e72]: TREIGL
+            - generic [ref=e73]: AP
+      - generic [ref=e75]:
+        - generic [ref=e76]: EN
+        - switch "Newid iaith" [checked] [ref=e77] [cursor=pointer]
+        - generic [ref=e78]: CYM
+  - main [ref=e81]:
+    - generic [ref=e82]:
+      - generic [ref=e85]:
+        - generic [ref=e170]:
+          - generic [ref=e171]:
+            - generic [ref=e172]: Cerdyn 24 / 3499
+            - generic [ref=e173]: "ID Cerdyn: M-D-00377"
+          - generic [ref=e174]:
+            - group [ref=e175]:
+              - radio "Ar hap" [checked] [ref=e176]
+              - radio "Clyfar" [ref=e177]
+            - group [ref=e178]:
+              - radio "Teipio" [ref=e179]
+              - radio "Tapio" [checked] [ref=e180]
+        - generic [ref=e263]:
+          - generic [ref=e265]:
+            - button "Cyfieithu" [ref=e268]:
+              - generic [ref=e269]: "?"
+            - generic [ref=e272]: Blaenau Ffestiniog
+          - generic [ref=e273]:
+            - generic [ref=e274]:
+              - paragraph [ref=e275]:
+                - text: Dw i'n dod o
+                - text: .
+              - generic [ref=e277]:
+                - button "1.Mlaenau Ffestiniog" [ref=e435] [cursor=pointer]:
+                  - generic [ref=e436]: "1."
+                  - text: Mlaenau Ffestiniog
+                - button "2.Blaenau Ffestiniog" [ref=e437] [cursor=pointer]:
+                  - generic [ref=e438]: "2."
+                  - text: Blaenau Ffestiniog
+                - button "3.Flaenau Ffestiniog" [ref=e439] [cursor=pointer]:
+                  - generic [ref=e440]: "3."
+                  - text: Flaenau Ffestiniog
+            - generic [ref=e285]:
+              - generic [ref=e286]:
+                - group [ref=e287]:
+                  - button "Awgrym" [ref=e288]:
+                    - img
+                - group [ref=e289]:
+                  - button "Cymysgu" [active] [ref=e290]:
+                    - img
+                  - button "Datgelu" [ref=e291]:
+                    - img
+                  - button "Hepgor" [ref=e292]:
+                    - img
+              - group [ref=e293]:
+                - button "Gwirio" [ref=e294]:
+                  - img
+                  - text: Gwirio
+        - generic [ref=e156]:
+          - generic [ref=e157] [cursor=pointer]:
+            - img [ref=e158]
+            - text: Sylwi ar gamgymeriad?
+          - generic [ref=e164] [cursor=pointer]:
+            - img [ref=e165]
+            - text: Admin
+      - complementary [ref=e183]:
+        - generic [ref=e184]:
+          - generic [ref=e185]:
+            - generic [ref=e187]:
+              - generic [ref=e188]: Ystadegau sesiwn
+              - button "Ailosod sesiwn" [ref=e189] [cursor=pointer]:
+                - img [ref=e190]
+            - generic [ref=e194]:
+              - generic [ref=e195]:
+                - img [ref=e197]
+                - generic [ref=e199]: "0"
+                - generic [ref=e200]: Rhediad
+              - generic [ref=e201]:
+                - img [ref=e203]
+                - generic [ref=e209]: "0"
+                - generic [ref=e210]: Rhediad hiraf
+              - generic [ref=e211]:
+                - img [ref=e213]
+                - generic [ref=e217]: 0%
+                - generic [ref=e218]: Cywirdeb
+          - generic [ref=e220]:
+            - generic [ref=e221]:
+              - heading "Pecynnau Ymarfer" [level=3] [ref=e222]:
+                - button "Pecynnau Ymarfer" [expanded] [ref=e223]:
+                  - generic [ref=e224]:
+                    - img [ref=e225]
+                    - generic [ref=e228]: Pecynnau Ymarfer
+                  - img
+              - region "Pecynnau Ymarfer" [ref=e229]:
+                - generic [ref=e231]:
+                  - paragraph [ref=e232]: Dewiswch becyn i ddechrau arni.
+                  - generic [ref=e233]:
+                    - heading "Sylfaenol" [level=3] [ref=e234]
+                    - generic [ref=e235]:
+                      - button "Pecynnau dechrau Ymarfer treiglad gyda rhai o'r sbardunwyr treiglad mwyaf cyffredin." [ref=e236]:
+                        - generic [ref=e237]: Pecynnau dechrau
+                        - generic [ref=e238]: Ymarfer treiglad gyda rhai o'r sbardunwyr treiglad mwyaf cyffredin.
+                      - button "Rhifau 1–10 Ymarfer treiglad wedi'i sbarduno gan rifau 1–10." [ref=e239]:
+                        - generic [ref=e240]: Rhifau 1–10
+                        - generic [ref=e241]: Ymarfer treiglad wedi'i sbarduno gan rifau 1–10.
+                      - button "Enwau lleoedd Ymarfer treiglad a dysgu llawer o enwau lleoedd Cymraeg ar yr un pryd!" [ref=e242]:
+                        - generic [ref=e243]: Enwau lleoedd
+                        - generic [ref=e244]: Ymarfer treiglad a dysgu llawer o enwau lleoedd Cymraeg ar yr un pryd!
+                  - generic [ref=e245]:
+                    - heading "Dysgu Cymraeg" [level=3] [ref=e246]
+                    - generic [ref=e247]:
+                      - tablist [ref=e248]:
+                        - tab "Mynediad" [selected] [ref=e249]
+                        - tab "Sylfaen" [ref=e250]
+                        - tab "Canolradd" [disabled] [ref=e251]
+                        - tab "Uwch" [disabled] [ref=e252]
+                      - 'button "Dod o, Byw yn, Mynd i: Enwau Lleoedd Ymarfer treiglad meddal a thrwynol gydag enwau lleoedd Cymraeg gan ddefnyddio''r ymadroddion dod o, byw yn a mynd i." [ref=e254]':
+                        - generic [ref=e255]: "Dod o, Byw yn, Mynd i: Enwau Lleoedd"
+                        - generic [ref=e256]: Ymarfer treiglad meddal a thrwynol gydag enwau lleoedd Cymraeg gan ddefnyddio'r ymadroddion dod o, byw yn a mynd i.
+            - heading "Dyluniwch Eich Sesiwn" [level=3] [ref=e258]:
+              - button "Dyluniwch Eich Sesiwn" [ref=e259]:
+                - generic [ref=e260]:
+                  - img [ref=e261]
+                  - generic [ref=e262]: Dyluniwch Eich Sesiwn
+                - img

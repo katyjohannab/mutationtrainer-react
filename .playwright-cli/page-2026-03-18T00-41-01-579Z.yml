@@ -1,0 +1,120 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img [ref=e7]
+        - heading "TREIGLAP" [level=1] [ref=e8]:
+          - generic "TREIGLAP" [ref=e9]:
+            - generic [ref=e10]: TREIGL
+            - generic [ref=e11]: AP
+      - generic [ref=e13]:
+        - generic [ref=e14]: EN
+        - switch "Newid iaith" [checked] [ref=e15] [cursor=pointer]
+        - generic [ref=e16]: CYM
+  - main [ref=e17]:
+    - generic [ref=e18]:
+      - generic [ref=e21]:
+        - generic [ref=e23]:
+          - generic [ref=e24]:
+            - generic [ref=e25]: Cerdyn 1 / 900
+            - generic [ref=e156]: "ID Cerdyn: M-D-00707"
+          - generic [ref=e26]:
+            - group [ref=e27]:
+              - radio "Ar hap" [checked] [ref=e28]
+              - radio "Clyfar" [ref=e29]
+            - group [ref=e30]:
+              - radio "Teipio" [checked] [ref=e31]
+              - radio "Tapio" [ref=e32]
+        - generic [ref=e160]:
+          - generic [ref=e162]:
+            - button "Cyfieithu" [ref=e165]:
+              - generic [ref=e166]: "?"
+            - generic [ref=e169]: Morgannwg De
+          - paragraph [ref=e171]:
+            - text: Dw i'n byw ym
+            - textbox "Teipiwch y ffurf wedi treiglo…" [active] [ref=e173]
+            - text: .
+          - generic [ref=e174]:
+            - generic [ref=e175]:
+              - group [ref=e176]:
+                - button "Awgrym" [ref=e177]:
+                  - img
+              - group [ref=e178]:
+                - button "Cymysgu" [ref=e179]:
+                  - img
+                - button "Datgelu" [ref=e180]:
+                  - img
+                - button "Hepgor" [ref=e181]:
+                  - img
+            - group [ref=e182]:
+              - button "Gwirio" [ref=e183]:
+                - img
+                - text: Gwirio
+        - generic [ref=e184]:
+          - generic [ref=e185] [cursor=pointer]:
+            - img [ref=e186]
+            - text: Sylwi ar gamgymeriad?
+          - generic [ref=e192] [cursor=pointer]:
+            - img [ref=e193]
+            - text: Admin
+      - complementary [ref=e36]:
+        - generic [ref=e37]:
+          - generic [ref=e38]:
+            - generic [ref=e40]:
+              - generic [ref=e41]: Ystadegau sesiwn
+              - button "Ailosod sesiwn" [ref=e42] [cursor=pointer]:
+                - img [ref=e43]
+            - generic [ref=e47]:
+              - generic [ref=e48]:
+                - img [ref=e50]
+                - generic [ref=e52]: "0"
+                - generic [ref=e53]: Rhediad
+              - generic [ref=e54]:
+                - img [ref=e56]
+                - generic [ref=e62]: "0"
+                - generic [ref=e63]: Rhediad hiraf
+              - generic [ref=e64]:
+                - img [ref=e66]
+                - generic [ref=e70]: 0%
+                - generic [ref=e71]: Cywirdeb
+          - generic [ref=e73]:
+            - generic [ref=e74]:
+              - heading "Pecynnau Ymarfer" [level=3] [ref=e75]:
+                - button "Pecynnau Ymarfer" [expanded] [ref=e76]:
+                  - generic [ref=e77]:
+                    - img [ref=e78]
+                    - generic [ref=e81]: Pecynnau Ymarfer
+                  - img
+              - region "Pecynnau Ymarfer" [ref=e82]:
+                - generic [ref=e84]:
+                  - paragraph [ref=e85]: Dewiswch becyn i ddechrau arni.
+                  - generic [ref=e86]:
+                    - heading "Sylfaenol" [level=3] [ref=e87]
+                    - generic [ref=e88]:
+                      - button "Pecynnau dechrau Ymarfer treiglad gyda rhai o'r sbardunwyr treiglad mwyaf cyffredin." [ref=e89]:
+                        - generic [ref=e90]: Pecynnau dechrau
+                        - generic [ref=e91]: Ymarfer treiglad gyda rhai o'r sbardunwyr treiglad mwyaf cyffredin.
+                      - button "Rhifau 1–10 Ymarfer treiglad wedi'i sbarduno gan rifau 1–10." [ref=e92]:
+                        - generic [ref=e93]: Rhifau 1–10
+                        - generic [ref=e94]: Ymarfer treiglad wedi'i sbarduno gan rifau 1–10.
+                      - button "Enwau lleoedd Ymarfer treiglad a dysgu llawer o enwau lleoedd Cymraeg ar yr un pryd!" [ref=e95]:
+                        - img [ref=e197]
+                        - generic [ref=e96]: Enwau lleoedd
+                        - generic [ref=e97]: Ymarfer treiglad a dysgu llawer o enwau lleoedd Cymraeg ar yr un pryd!
+                  - generic [ref=e98]:
+                    - heading "Dysgu Cymraeg" [level=3] [ref=e99]
+                    - generic [ref=e100]:
+                      - tablist [ref=e101]:
+                        - tab "Mynediad" [selected] [ref=e102]
+                        - tab "Sylfaen" [ref=e103]
+                        - tab "Canolradd" [disabled] [ref=e104]
+                        - tab "Uwch" [disabled] [ref=e105]
+                      - 'button "Dod o, Byw yn, Mynd i: Enwau Lleoedd Ymarfer treiglad meddal a thrwynol gydag enwau lleoedd Cymraeg gan ddefnyddio''r ymadroddion dod o, byw yn a mynd i." [ref=e107]':
+                        - generic [ref=e108]: "Dod o, Byw yn, Mynd i: Enwau Lleoedd"
+                        - generic [ref=e109]: Ymarfer treiglad meddal a thrwynol gydag enwau lleoedd Cymraeg gan ddefnyddio'r ymadroddion dod o, byw yn a mynd i.
+            - heading "Dyluniwch Eich Sesiwn" [level=3] [ref=e111]:
+              - button "Dyluniwch Eich Sesiwn" [ref=e112]:
+                - generic [ref=e113]:
+                  - img [ref=e114]
+                  - generic [ref=e115]: Dyluniwch Eich Sesiwn
+                - img

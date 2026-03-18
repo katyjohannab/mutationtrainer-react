@@ -1,0 +1,80 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img [ref=e7]
+        - heading "TREIGLAP" [level=1] [ref=e8]:
+          - generic "TREIGLAP" [ref=e9]:
+            - generic [ref=e10]: TREIGL
+            - generic [ref=e11]: AP
+      - generic [ref=e12]:
+        - button "Newid iaith" [ref=e117]:
+          - img
+        - button "Hidlwyr" [ref=e118]:
+          - img
+        - button "Cymorth" [ref=e119]:
+          - img
+  - main [ref=e17]:
+    - generic [ref=e21]:
+      - generic [ref=e120]:
+        - generic [ref=e121]:
+          - group [ref=e122]:
+            - radio "Ar hap" [checked] [ref=e123]
+            - radio "Clyfar" [ref=e124]
+          - group [ref=e125]:
+            - radio "Teipio" [ref=e126]
+            - radio "Tapio" [checked] [active] [ref=e127]
+        - generic [ref=e129]: Cerdyn 1 / 3499
+      - generic [ref=e190]:
+        - generic [ref=e192]:
+          - button "Cyfieithu" [ref=e195]:
+            - generic [ref=e196]: "?"
+          - generic [ref=e199]: dyddiadur
+        - paragraph [ref=e200]:
+          - text: Mae'r
+          - text: yn y bag.
+        - generic [ref=e202]:
+          - button "1.nyddiadur" [ref=e203] [cursor=pointer]:
+            - generic [ref=e204]: "1."
+            - text: nyddiadur
+          - button "2.dyddiadur" [ref=e205] [cursor=pointer]:
+            - generic [ref=e206]: "2."
+            - text: dyddiadur
+          - button "3.ddyddiadur" [ref=e207] [cursor=pointer]:
+            - generic [ref=e208]: "3."
+            - text: ddyddiadur
+        - generic [ref=e209]:
+          - generic [ref=e210]:
+            - group [ref=e211]:
+              - button "Awgrym" [ref=e212]:
+                - img
+            - group [ref=e213]:
+              - button "Cymysgu" [ref=e214]:
+                - img
+              - button "Datgelu" [ref=e215]:
+                - img
+              - button "Hepgor" [ref=e216]:
+                - img
+          - group [ref=e217]:
+            - button "Gwirio" [ref=e218]:
+              - img
+              - text: Gwirio
+        - generic [ref=e220]:
+          - generic "Rhediad" [ref=e221]:
+            - generic [ref=e222]:
+              - img [ref=e223]
+              - generic [ref=e225]: "0"
+            - generic [ref=e226]: Rhediad
+          - generic "Rhediad hiraf" [ref=e227]:
+            - generic [ref=e228]:
+              - img [ref=e229]
+              - generic [ref=e235]: "0"
+            - generic [ref=e236]: Rhediad hiraf
+          - generic "Cywirdeb" [ref=e237]:
+            - generic [ref=e238]:
+              - img [ref=e239]
+              - generic [ref=e243]: 0%
+            - generic [ref=e244]: Cywirdeb
+      - generic [ref=e185] [cursor=pointer]:
+        - img [ref=e186]
+        - text: Sylwi ar gamgymeriad?

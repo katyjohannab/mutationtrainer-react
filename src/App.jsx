@@ -435,10 +435,10 @@ export default function App() {
       />
 
       <PageContainer as="main" className="pb-4 pt-3 sm:pt-6 lg:pt-8 2xl:pt-10 [@media(max-height:700px)]:pt-2.5">
-        {/* Responsive grid: stack on mobile/tablet, fluid-but-bounded rail from lg up */}
-        <div className="grid grid-cols-1 gap-3 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_clamp(19rem,31vw,21.5rem)] xl:grid-cols-[minmax(0,1fr)_clamp(21rem,29vw,24rem)] 2xl:grid-cols-[minmax(0,1fr)_clamp(22.5rem,27vw,26rem)]">
+        {/* Responsive grid: single column through tablet/laptop, rail returns once xl has real room */}
+        <div className="grid grid-cols-1 gap-3 sm:gap-6 xl:grid-cols-[minmax(0,1fr)_clamp(21rem,29vw,24rem)] 2xl:grid-cols-[minmax(0,1fr)_clamp(22.5rem,27vw,26rem)]">
           {/* Main practice area */}
-          <div className="min-w-0 lg:self-start">
+          <div className="min-w-0 xl:self-start">
             <FlashcardArea
               mode={mode}
               onModeChange={setMode}
@@ -459,8 +459,8 @@ export default function App() {
             />
           </div>
 
-          {/* Right rail - hidden on mobile/tablet, sticky sidebar on lg+ */}
-          <aside className="hidden lg:block lg:sticky lg:top-[4.5rem] lg:self-start lg:max-h-[calc(100dvh-5.5rem)] lg:overflow-y-auto space-y-4">
+          {/* Right rail - hidden through the laptop band, sticky sidebar on xl+ */}
+          <aside className="hidden xl:block xl:sticky xl:top-[4.5rem] xl:self-start xl:max-h-[calc(100dvh-5.5rem)] xl:overflow-y-auto space-y-4">
             <RailContent
               variant="sidebar"
               stats={sessionStats}

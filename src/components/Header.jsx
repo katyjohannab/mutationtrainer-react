@@ -127,7 +127,7 @@ export default function Header({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="lg:hidden h-8 w-8 text-primary hover:bg-[hsl(var(--rail))]/70"
+                  className="xl:hidden h-8 w-8 text-primary hover:bg-[hsl(var(--rail))]/70"
                   onClick={onOpenFilters}
                   aria-label={t("headerFilters") || "Filters"}
                 >
@@ -149,7 +149,7 @@ export default function Header({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="lg:hidden h-8 w-8 text-primary hover:bg-[hsl(var(--rail))]/70"
+                  className="xl:hidden h-8 w-8 text-primary hover:bg-[hsl(var(--rail))]/70"
                   onClick={onOpenHelp}
                   aria-label={t("headerHelp") || "Help"}
                 >
