@@ -212,7 +212,7 @@ export default function PracticeCardFeedback({
                     size="action"
                     disabled={isSubmitting}
                     className={cn(
-                      "flex-1 sm:flex-initial h-12 sm:h-auto rounded-xl active:scale-[0.98]",
+                      "flex-1 sm:flex-initial rounded-xl active:scale-[0.98]",
                       "bg-transparent border-[hsl(var(--cymru-red))] text-[hsl(var(--cymru-red))] hover:bg-[hsl(var(--cymru-red-wash))]"
                     )}
                   >
@@ -226,7 +226,7 @@ export default function PracticeCardFeedback({
                     size="action"
                     disabled={isSubmitting}
                     className={cn(
-                      "flex-1 sm:flex-initial h-12 sm:h-auto rounded-xl active:scale-[0.98]",
+                      "flex-1 sm:flex-initial rounded-xl active:scale-[0.98]",
                       "bg-transparent border-[hsl(var(--cymru-green))] text-[hsl(var(--cymru-green))] hover:bg-[hsl(var(--cymru-green-wash))]"
                     )}
                   >
@@ -240,7 +240,7 @@ export default function PracticeCardFeedback({
                     onClick={() => handleSmartResult("next")}
                     size="action"
                     disabled={isSubmitting}
-                    className="w-full sm:w-auto h-12 sm:h-auto rounded-xl active:scale-[0.98] bg-primary text-primary-foreground hover:bg-primary/90"
+                    className="w-full sm:w-auto rounded-xl active:scale-[0.98] bg-primary text-primary-foreground hover:bg-primary/90"
                   >
                     {nextLabel}
                     <AppIcon icon={ArrowRight} className="h-5 w-5" aria-hidden="true" />
@@ -252,7 +252,7 @@ export default function PracticeCardFeedback({
                 type="button"
                 onClick={onNext}
                 size="action"
-                className="w-full sm:w-auto h-12 sm:h-auto rounded-xl active:scale-[0.98] bg-primary text-primary-foreground hover:bg-primary/90"
+                className="w-full sm:w-auto rounded-xl active:scale-[0.98] bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 {nextLabel}
                 <AppIcon icon={ArrowRight} className="h-5 w-5" aria-hidden="true" />

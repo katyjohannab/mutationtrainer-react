@@ -7,13 +7,14 @@ import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 import { Separator } from "./ui/separator";
 
 const toggleItemClass = cn(
-  "h-8 min-w-[2.75rem] px-2.5 sm:px-3 py-0 rounded-md text-xs font-semibold leading-none",
+  "h-9 min-w-[3.125rem] rounded-lg px-3 text-[13px] font-semibold leading-none sm:h-10 sm:min-w-[3.5rem] sm:px-3.5 sm:text-sm",
   "border border-transparent transition-colors",
   "hover:bg-muted/50",
   "data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/60"
 );
 
-const toggleGroupClass = "flex items-center gap-0.5 rounded-lg border border-border bg-card p-0.5";
+const toggleGroupClass =
+  "flex max-w-full items-center gap-1 rounded-xl border border-border bg-card p-1";
 
 export default function FlashcardArea({
   className,
@@ -44,9 +45,8 @@ export default function FlashcardArea({
         {/* Header row - unified control bar */}
         <div className="text-sm">
           {/* ── Mobile / tablet (< lg) ── Single compact row */}
-          <div className="flex items-center justify-between gap-2 lg:hidden">
-            {/* Left: toggles */}
-            <div className="flex items-center gap-1.5">
+          <div className="flex flex-col gap-2.5 lg:hidden">
+            <div className="flex flex-wrap items-center gap-2">
               <ToggleGroup
                 type="single"
                 value={mode}
@@ -80,14 +80,15 @@ export default function FlashcardArea({
               )}
             </div>
 
-            {/* Right: progress only (no card ID on mobile) */}
-            <span className="text-[11px] font-medium text-muted-foreground/70 shrink-0">
-              {progressText}
-            </span>
+            <div className="flex items-center justify-end">
+              <span className="text-[11px] sm:text-xs font-medium text-muted-foreground/70">
+                {progressText}
+              </span>
+            </div>
           </div>
 
-          <div className="hidden lg:flex lg:flex-wrap lg:items-start lg:gap-3">
-            <div className="flex flex-col items-start gap-0.5 min-w-0 shrink-0">
+          <div className="hidden lg:flex lg:flex-wrap lg:items-center lg:gap-3">
+            <div className="flex min-w-0 shrink-0 flex-col items-start gap-1">
               <span className="text-xs font-medium text-muted-foreground truncate">
                 {progressText}
               </span>
@@ -97,7 +98,7 @@ export default function FlashcardArea({
                 </span>
               )}
             </div>
-            <div className="flex flex-wrap items-start gap-2 ml-auto">
+            <div className="ml-auto flex flex-wrap items-center gap-2">
               <ToggleGroup
                 type="single"
                 value={mode}

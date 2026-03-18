@@ -35,12 +35,18 @@ export default function CardTranslationPopover({
             size="icon"
             aria-label={t("translationButton") || "Translate"}
             className={cn(
-              "h-5 w-5 sm:h-6 sm:w-6 rounded-full !border-2 !border-[hsl(var(--cymru-gold))] !bg-card !text-[hsl(var(--cymru-gold))] shadow-[0_1px_4px_rgba(0,0,0,0.18)] transition-[transform,box-shadow,color,border-color,background-color] duration-150 hover:!border-[hsl(var(--cymru-gold))] hover:!bg-card hover:!text-[hsl(var(--cymru-gold))] focus-visible:ring-2 focus-visible:ring-[hsl(var(--cymru-gold)/0.5)]",
-              !open &&
-                "hover:-translate-y-px hover:shadow-[0_4px_10px_rgba(0,0,0,0.22)] active:translate-y-0 active:shadow-[0_1px_4px_rgba(0,0,0,0.18)]"
+              "group relative h-8 w-8 rounded-full border-0 bg-transparent p-0 text-[hsl(var(--cymru-gold))] shadow-none hover:bg-transparent sm:h-9 sm:w-9 focus-visible:ring-2 focus-visible:ring-[hsl(var(--cymru-gold)/0.5)]"
             )}
           >
-            <span className="text-[10px] sm:text-xs font-extrabold leading-none">?</span>
+            <span
+              className={cn(
+                "absolute right-0.5 top-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full border-2 border-[hsl(var(--cymru-gold))] bg-card text-[10px] font-extrabold leading-none text-[hsl(var(--cymru-gold))] shadow-[0_1px_4px_rgba(0,0,0,0.18)] transition-[transform,box-shadow,color,border-color,background-color] duration-150 sm:h-6 sm:w-6 sm:text-xs",
+                !open &&
+                  "group-hover:-translate-y-px group-hover:shadow-[0_4px_10px_rgba(0,0,0,0.22)] group-active:translate-y-0 group-active:shadow-[0_1px_4px_rgba(0,0,0,0.18)]"
+              )}
+            >
+              ?
+            </span>
           </Button>
         </PopoverTrigger>
         <PopoverContent
