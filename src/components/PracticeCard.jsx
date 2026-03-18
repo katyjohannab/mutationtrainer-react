@@ -217,12 +217,14 @@ export default function PracticeCard({
   const cardClassName = cn(
     "w-full rounded-[var(--radius)] shadow-sm bg-card border border-border"
   );
+  const frontCardPaddingClass =
+    "px-5 pt-5 pb-6 sm:p-8 md:p-10 lg:p-16 [@media(max-height:700px)]:px-4 [@media(max-height:700px)]:pt-4 [@media(max-height:700px)]:pb-5";
 
   return (
     <div className="relative mx-auto w-full lg:max-w-3xl xl:max-w-[49rem] 2xl:max-w-[50rem]">
       {!isFeedback && (
         <Card className={cardClassName}>
-          <div className="p-6 sm:p-8 md:p-10 lg:p-16">
+          <div className={frontCardPaddingClass}>
             {answerMode === "tap" ? (
               <PracticeCardChoices
                 sent={sent}

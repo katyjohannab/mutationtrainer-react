@@ -41,12 +41,12 @@ export default function FlashcardArea({
   return (
     <section className={cn("flex-1", className)}>
       {/* Mobile: no border/bg box. sm+: styled panel */}
-      <div className="space-y-7 sm:space-y-6 sm:rounded-[var(--radius)] sm:border sm:border-border sm:bg-[hsl(var(--panel))] sm:p-5 lg:p-6">
+      <div className="space-y-5 sm:space-y-6 sm:rounded-[var(--radius)] sm:border sm:border-border sm:bg-[hsl(var(--panel))] sm:p-5 lg:p-6 [@media(max-height:700px)]:space-y-4">
         {/* Header row - unified control bar */}
         <div className="text-sm">
           {/* ── Mobile / tablet (< lg) ── Single compact row */}
-          <div className="flex flex-col gap-2.5 lg:hidden">
-            <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-col gap-2 lg:hidden [@media(max-height:700px)]:gap-1.5">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
               <ToggleGroup
                 type="single"
                 value={mode}

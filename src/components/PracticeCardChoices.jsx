@@ -76,13 +76,7 @@ export default function PracticeCardChoices({
   const normalizedGuess = normalizeChoice(guess);
 
   return (
-      <div className="space-y-8 sm:space-y-9 lg:space-y-12">
-      {sessionStats && (
-        <div className="flex justify-center lg:hidden">
-          <SessionStatsInline stats={sessionStats} />
-        </div>
-      )}
-
+      <div className="space-y-6 sm:space-y-9 lg:space-y-12 [@media(max-height:700px)]:space-y-5">
       {dysguBadges && (
         <div className="hidden sm:flex w-full justify-start gap-2 px-2">
           {dysguBadges.courseLabel && (
@@ -104,7 +98,7 @@ export default function PracticeCardChoices({
         </div>
       )}
 
-      <div className="flex flex-col items-center gap-2 w-full">
+      <div className="flex flex-col items-center gap-1.5 w-full">
         <HeroPill
           text={baseword}
           showPin={false}
@@ -184,6 +178,12 @@ export default function PracticeCardChoices({
           {hintText}
         </div>
       ) : null}
+
+      {sessionStats && (
+        <div className="flex justify-center lg:hidden">
+          <SessionStatsInline stats={sessionStats} />
+        </div>
+      )}
     </div>
   );
 }

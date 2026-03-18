@@ -53,7 +53,7 @@ export default function HeroPill({
       )}
     >
       {cornerAction ? (
-        <div className="absolute right-0 top-0 z-20 translate-x-[32%] -translate-y-[44%]">
+        <div className="absolute right-[1px] top-[1px] z-20 translate-x-[28%] -translate-y-[18%] sm:translate-x-[30%] sm:-translate-y-[20%]">
           {cornerAction}
         </div>
       ) : null}

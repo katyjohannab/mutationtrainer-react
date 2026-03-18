@@ -434,7 +434,7 @@ export default function App() {
         onClose={() => setShowWelcomeModal(false)}
       />
 
-      <PageContainer as="main" className="pb-4 pt-5 sm:pt-6 lg:pt-8 2xl:pt-10">
+      <PageContainer as="main" className="pb-4 pt-3 sm:pt-6 lg:pt-8 2xl:pt-10 [@media(max-height:700px)]:pt-2.5">
         {/* Responsive grid: stack on mobile/tablet, fluid-but-bounded rail from lg up */}
         <div className="grid grid-cols-1 gap-3 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_clamp(19rem,31vw,21.5rem)] xl:grid-cols-[minmax(0,1fr)_clamp(21rem,29vw,24rem)] 2xl:grid-cols-[minmax(0,1fr)_clamp(22.5rem,27vw,26rem)]">
           {/* Main practice area */}

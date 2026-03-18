@@ -62,13 +62,7 @@ export default function PracticeCardFront({
   }, [cardId, isFeedback, focusVisibleInput]);
 
   return (
-      <div className="space-y-8 sm:space-y-9 lg:space-y-12">
-      {sessionStats && (
-        <div className="flex justify-center lg:hidden">
-          <SessionStatsInline stats={sessionStats} />
-        </div>
-      )}
-
+      <div className="space-y-6 sm:space-y-9 lg:space-y-12 [@media(max-height:700px)]:space-y-5">
       {dysguBadges && (
         <div className="hidden sm:flex w-full justify-start gap-2 px-2">
           {dysguBadges.courseLabel && (
@@ -90,7 +84,7 @@ export default function PracticeCardFront({
         </div>
       )}
 
-      <div className="flex flex-col items-center gap-2 w-full">
+      <div className="flex flex-col items-center gap-1.5 w-full">
         <HeroPill
           text={baseword}
           showPin={false}
@@ -105,7 +99,7 @@ export default function PracticeCardFront({
       </div>
 
       {/* Sentence prompt + input: stacked on mobile, inline on desktop */}
-      <div className="flex flex-col items-center gap-5 sm:gap-6 lg:gap-7 w-full">
+      <div className="flex flex-col items-center gap-4 sm:gap-6 lg:gap-7 w-full [@media(max-height:700px)]:gap-3.5">
         <p className="text-base sm:text-[clamp(1.05rem,0.6vw+0.95rem,1.45rem)] leading-relaxed text-foreground text-center">
           <span className="whitespace-pre-wrap break-words">{sent?.before}</span>
           <span className="hidden sm:inline">{" "}</span>
@@ -160,6 +154,12 @@ export default function PracticeCardFront({
           {hintText}
         </div>
       ) : null}
+
+      {sessionStats && (
+        <div className="flex justify-center lg:hidden">
+          <SessionStatsInline stats={sessionStats} />
+        </div>
+      )}
     </div>
   );
 }

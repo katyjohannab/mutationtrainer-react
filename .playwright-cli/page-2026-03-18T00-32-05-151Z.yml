@@ -1,0 +1,73 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img [ref=e7]
+        - heading "TREIGLAP" [level=1] [ref=e8]:
+          - generic "TREIGLAP" [ref=e9]:
+            - generic [ref=e10]: TREIGL
+            - generic [ref=e11]: AP
+      - generic [ref=e12]:
+        - button "Newid iaith" [ref=e14]:
+          - img
+        - button "Hidlwyr" [ref=e15]:
+          - img
+        - button "Cymorth" [ref=e16]:
+          - img
+  - main [ref=e17]:
+    - generic [ref=e21]:
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - group [ref=e25]:
+            - radio "Ar hap" [checked] [ref=e26]
+            - radio "Clyfar" [ref=e27]
+          - group [ref=e28]:
+            - radio "Teipio" [checked] [ref=e29]
+            - radio "Tapio" [ref=e30]
+        - generic [ref=e32]: Cerdyn 1 / 3499
+      - generic [ref=e39]:
+        - generic [ref=e41]:
+          - button "Cyfieithu" [ref=e44]:
+            - generic [ref=e45]: "?"
+          - generic [ref=e48]: Rhuthun
+        - generic [ref=e49]:
+          - paragraph [ref=e50]:
+            - text: Dw i'n dod o
+            - generic [ref=e51]: ______
+            - text: .
+          - textbox "Teipiwch y ffurf wedi treiglo…" [active] [ref=e53]
+        - generic [ref=e54]:
+          - generic [ref=e55]:
+            - group [ref=e56]:
+              - button "Awgrym" [ref=e57]:
+                - img
+            - group [ref=e58]:
+              - button "Cymysgu" [ref=e59]:
+                - img
+              - button "Datgelu" [ref=e60]:
+                - img
+              - button "Hepgor" [ref=e61]:
+                - img
+          - group [ref=e62]:
+            - button "Gwirio" [ref=e63]:
+              - img
+              - text: Gwirio
+        - generic [ref=e65]:
+          - generic "Rhediad" [ref=e66]:
+            - generic [ref=e67]:
+              - img [ref=e68]
+              - generic [ref=e70]: "0"
+            - generic [ref=e71]: Rhediad
+          - generic "Rhediad hiraf" [ref=e72]:
+            - generic [ref=e73]:
+              - img [ref=e74]
+              - generic [ref=e80]: "0"
+            - generic [ref=e81]: Rhediad hiraf
+          - generic "Cywirdeb" [ref=e82]:
+            - generic [ref=e83]:
+              - img [ref=e84]
+              - generic [ref=e88]: 0%
+            - generic [ref=e89]: Cywirdeb
+      - generic [ref=e91] [cursor=pointer]:
+        - img [ref=e92]
+        - text: Sylwi ar gamgymeriad?
