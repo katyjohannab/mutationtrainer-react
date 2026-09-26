@@ -212,7 +212,6 @@ export default function App() {
       }
     }
     if (!filtered.length) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentIdx(-1);
       setSessionCardCount(0);
       recentRef.current = [];
