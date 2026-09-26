@@ -1,0 +1,57 @@
+[
+  {
+    "file": "public/data/cards.tsv",
+    "bytes": 542552,
+    "sha256": "e9ab8511021f83c26f790ba2d17839c8f6405d469faddf392848f09fe18274a1"
+  },
+  {
+    "file": "public/data/prep.csv",
+    "bytes": 171734,
+    "sha256": "a7aea5148e575bccf220d3dd6017b77fb4a23c8b1ca9d7086a8f0fdab62680ea"
+  },
+  {
+    "file": "public/data/article-sylfaen.csv",
+    "bytes": 102685,
+    "sha256": "2f67263009a47506a37aafa8e745c60367747d0c6643ad436efbc0a868f14efd"
+  },
+  {
+    "file": "public/data/Uwch1/unit1.csv",
+    "bytes": 27282,
+    "sha256": "ce2deb29f6287683e02bc56b633f948f5dd689e234fc374158f8da0061a8e857"
+  },
+  {
+    "file": "public/data/Uwch1/unit2.csv",
+    "bytes": 31822,
+    "sha256": "16fd60be4201730c55fd792853d1e3b9edcf2d04f415523c814643881c280447"
+  },
+  {
+    "file": "public/data/Mynediad-De/packs/myn-de-p01-places.tsv",
+    "bytes": 520031,
+    "sha256": "f7518aaf3f0439ead95926b56886b7af7d5ad0583bf69cf37611aab0d835afcc"
+  },
+  {
+    "file": "src/data/csvSources.js",
+    "bytes": 1133,
+    "sha256": "0366b9331681befa94dd7930ad3ef3f2811e018eb150a406c3a7fc853e09bc44"
+  },
+  {
+    "file": "src/data/csvSources.test.js",
+    "bytes": 1361,
+    "sha256": "5b7950082abc73ca9eb80465e94e7a2c9110296fb133b1680773a48b3db35d44"
+  },
+  {
+    "file": "src/data/packRegistry.js",
+    "bytes": 4248,
+    "sha256": "7635c4555de3741da689ad1fb394a653844ac8788889924a5d223430dcc37455"
+  },
+  {
+    "file": "src/data/presets.js",
+    "bytes": 1323,
+    "sha256": "56d7e81f1e6b2a059d3dfa2bf8d6848eca3a2acce3fdf8069088c336cda3d165"
+  },
+  {
+    "file": "src/data/presets.test.js",
+    "bytes": 1936,
+    "sha256": "5078fd2b7f1f8809065c89c41f8947f2669572578aea601d5071f2905b24c2cd"
+  }
+]

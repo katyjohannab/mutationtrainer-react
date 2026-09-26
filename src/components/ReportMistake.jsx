@@ -22,11 +22,13 @@ import AppIcon from "./icons/AppIcon";
 const GITHUB_REPO = "katyjohannab/mutationtrainer-react";
 const CONTACT_EMAIL = "katyjohannabenson@gmail.com";
 
-function buildGithubIssueUrl({ cardId, mistakeType, description }) {
+function buildGithubIssueUrl({ cardId, source, sourceRevision, mistakeType, description }) {
   const params = new URLSearchParams({
     title: `[Mutation Trainer] Card report: ${cardId}`,
     body: [
       `Card ID: ${cardId}`,
+      `Source: ${source || "unknown"}`,
+      `Content revision: ${sourceRevision || "unknown"}`,
       `Mistake type: ${mistakeType === "current" ? "Current card" : "Something else"}`,
       `Description: ${description}`,
     ].join("\n"),
@@ -36,11 +38,13 @@ function buildGithubIssueUrl({ cardId, mistakeType, description }) {
   return `https://github.com/${GITHUB_REPO}/issues/new?${params.toString()}`;
 }
 
-function buildMailToUrl({ cardId, mistakeType, description }) {
+function buildMailToUrl({ cardId, source, sourceRevision, mistakeType, description }) {
   const params = new URLSearchParams({
     subject: `[Mutation Trainer] Card report: ${cardId}`,
     body: [
       `Card ID: ${cardId}`,
+      `Source: ${source || "unknown"}`,
+      `Content revision: ${sourceRevision || "unknown"}`,
       `Mistake type: ${mistakeType === "current" ? "Current card" : "Something else"}`,
       `Description: ${description}`,
     ].join("\n"),
@@ -54,7 +58,7 @@ function buildMailToUrl({ cardId, mistakeType, description }) {
  *
  * @param {string} cardId - Current card ID from CSV
  */
-export default function ReportMistake({ cardId }) {
+export default function ReportMistake({ cardId, source, sourceRevision }) {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [mistakeType, setMistakeType] = useState("current"); // "current" | "other"
@@ -74,9 +78,9 @@ export default function ReportMistake({ cardId }) {
     e.preventDefault();
 
     if (notifyVia === "github") {
-      window.open(buildGithubIssueUrl({ cardId, mistakeType, description }), "_blank", "noopener,noreferrer");
+      window.open(buildGithubIssueUrl({ cardId, source, sourceRevision, mistakeType, description }), "_blank", "noopener,noreferrer");
     } else {
-      window.location.href = buildMailToUrl({ cardId, mistakeType, description });
+      window.location.href = buildMailToUrl({ cardId, source, sourceRevision, mistakeType, description });
     }
 
     setOpen(false);

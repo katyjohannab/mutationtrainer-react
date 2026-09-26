@@ -25,6 +25,7 @@ describe("csv runtime source lock", () => {
   it("provides source metadata for registered pack tsv files", () => {
     expect(CSV_SOURCE_META["Mynediad-De/packs/myn-de-p01-places.tsv"]).toMatchObject({
       sourceType: "dysgu-pack",
+      registryId: "mynediad-place-names-pack-01",
       course: "mynediad",
       level: "mynediad",
       dialect: "south",

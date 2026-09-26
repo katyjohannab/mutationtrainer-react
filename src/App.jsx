@@ -62,6 +62,7 @@ export default function App() {
   // always have the latest Leitner map available synchronously
   const leitnerRef = useRef(leitnerMap);
   const handledReviewIdsRef = useRef(new Set());
+  const savedCardToKeepRef = useRef(null);
 
   useEffect(() => {
     leitnerRef.current = leitnerMap;
@@ -201,6 +202,15 @@ export default function App() {
   // Pick an initial card ONLY when the deck or mode changes.
   // CRITICAL: do NOT depend on leitnerMap here, or it will jump on Check.
   useEffect(() => {
+    const savedCardId = savedCardToKeepRef.current;
+    savedCardToKeepRef.current = null;
+    if (savedCardId) {
+      const savedIndex = filtered.findIndex(row => row.cardId === savedCardId);
+      if (savedIndex >= 0) {
+        setCurrentIdx(savedIndex);
+        return;
+      }
+    }
     if (!filtered.length) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentIdx(-1);
@@ -321,13 +331,6 @@ export default function App() {
     }
   }
 
-  function handleSetPreset(idOrNull) {
-    setActivePresetId(idOrNull ?? null);
-    if (idOrNull !== null) {
-      setFilters({ families: new Set(), categories: new Set(), levels: new Set() });
-    }
-  }
-
   const toggleFilter = (kind, id) => {
     // Applying any advanced filter clears the active pack
     setActivePresetId(null);
@@ -383,16 +386,18 @@ export default function App() {
         source: row?.__source,
         rowIndex: row?.__rowIndex,
         expectedCardId: row?.cardId || row?.CardId || "",
+        expectedSourceRevision: row?.__sourceRevision,
         patch,
       });
 
       const updatedRow = response?.updatedRow || {};
+      savedCardToKeepRef.current = updatedRow.cardId;
 
       setRows((prev) =>
         prev.map((entry) => {
           if (entry.__source !== row.__source) return entry;
-          if (entry.__rowIndex !== row.__rowIndex) return entry;
-          return { ...entry, ...updatedRow };
+          const current = entry.__rowIndex === row.__rowIndex ? { ...entry, ...updatedRow } : entry;
+          return { ...current, __sourceRevision: response.sourceRevision };
         })
       );
 

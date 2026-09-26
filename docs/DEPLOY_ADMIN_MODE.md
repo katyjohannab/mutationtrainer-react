@@ -1,208 +1,91 @@
-# Admin Mode Deployment (Writable Runtime, VPS-First)
+# Local editing and writable runtime
 
-Last updated: 2026-03-07
+Last updated: 2026-09-26
 
-This is the production runbook for Option 2: one Node process on a VPS/VM, saving admin edits directly to `public/data/**`.
+Phase 1 provides a tested Node runtime and safe local editing. No hosting provider has been selected or deployed. The owner needs assistance with hosting; the older VPS templates are optional deployment examples, not a requirement to administer a VPS.
 
-## 1. Why Static Hosting Cannot Work
-Admin mode writes files through API endpoints:
-- `GET /api/admin/session`
-- `POST /api/admin/login`
-- `POST /api/admin/logout`
-- `POST /api/admin/save-card`
+## Two publishing arrangements
 
-A static host (for example GitHub Pages without a server) cannot execute these endpoints and cannot write CSV/TSV files.
+- **Current static publishing:** learners use the built site on GitHub Pages. Make and validate corrections locally, review the changes in source control, then deploy the build. A static site cannot save source files through an admin API.
+- **Writable Node runtime:** serve the built UI and the canonical CSV/TSV directory from `server/httpServer.js`. The learner data route reads the same files that editing writes, so a correction is visible without rebuilding. For hosting, both data and revision history need persistent storage outside replaceable deployment files.
 
-## 2. Required Environment Contract
-- Required:
-  - `WM_ADMIN_PASSWORD` (shared admin password)
-- Optional:
-  - `PORT` (default `4173`)
-  - `WM_BIND_HOST` (default `0.0.0.0`)
-  - `WM_ADMIN_SESSION_TTL_HOURS` (default `12`, clamp `0.25` to `168`)
-  - `NODE_ENV=production` (recommended in VPS service env)
+The learner app works with no admin password. Login is enabled only when a password is configured. Do not expose a writable deployment publicly until its HTTPS, login abuse protection, backup/retention and restore arrangements are in place. Phase 1 tests local persistence; public operations remain Phase 5 work.
 
-## 3. Local Dry Run (Before VPS)
-Run from repo root.
+## Start on this Windows computer
 
-### Windows PowerShell
+From the repository directory, with dependencies installed:
+
 ```powershell
-npm install
-$env:WM_ADMIN_PASSWORD="choose-a-strong-password"
 npm run build
 npm run start:prod
 ```
-Open: `http://localhost:4173/mutationtrainer-react/`
 
-### macOS/Linux
-```bash
-npm install
-export WM_ADMIN_PASSWORD="choose-a-strong-password"
+The default address is `http://127.0.0.1:4173/`. Use the address printed at startup if a base path is configured. `start:prod` loads `.env.local` when present without printing its contents; externally set environment variables take precedence. Development and preview also expose the same data/admin middleware, but the Node server is the supported built runtime.
+
+To enable the existing admin controls, add a strong `WM_ADMIN_PASSWORD` to `.env.local` or set it in the server environment, then restart. `.env.local` is ignored by Git. Verify configuration without displaying the password:
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:4173/api/admin/session
+```
+
+`configured: true` means a password is set. `authenticated: false` is normal before login. If using a base path, prepend it to `/api/admin/session`.
+
+Open Admin, sign in, edit the current card and save. Opening the editor retains the authored answer. Its existing suggestion button is optional; suggestions can be linguistically wrong and must be checked. If a save reports a source revision conflict, preserve the intended correction, reload and reapply it to the latest version. No conflicting edit is silently overwritten. Without HTTPS or localhost, some browsers cannot calculate editing revisions; use localhost for local editing and HTTPS for hosting.
+
+## Configuration
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `WM_ADMIN_PASSWORD` (or `ADMIN_PASSWORD`) | unset | Enables shared-password admin login |
+| `WM_BIND_HOST` (or `HOST`) | `127.0.0.1` | Network interface; a host may require `0.0.0.0` |
+| `WM_PORT` (or `PORT`) | `4173` | HTTP port |
+| `WM_BASE_PATH` | `/` | Must match the build path, e.g. `/mutationtrainer-react/` |
+| `WM_DATA_DIR` | `<repo>/public/data` | Canonical registered source files, preserving relative paths |
+| `WM_REVISION_DIR` | `<repo>/.content-revisions` | Private revision backups/locks; must be outside public, dist and data directories |
+| `WM_ADMIN_SESSION_TTL_HOURS` | `12` | Session expiry; limited to 0.25–168 hours |
+| `NODE_ENV` | process default | `production` marks cookies Secure; a public host needs HTTPS |
+
+Admin sessions are in process memory and require a new login after restart. The data file lock works across processes sharing one volume; distributed sessions/replicas are not configured. Keep a single application instance until that is deliberately addressed.
+
+On a managed host, configure persistent `WM_DATA_DIR` **and** `WM_REVISION_DIR`. Seed an empty data volume once from the validated registered files in `public/data`; never overwrite existing edited files during a release. Starting the Node server validates every registered source. A newly registered source must be copied to the persistent volume before starting that release. The build validates the repository's publishing data; the server validates the actual runtime directory.
+
+## Backups and restore
+
+Each changed source has immutable, hash-verified copies under:
+
+```text
+<WM_REVISION_DIR>/<source-relative-path>/<sha256>.source
+```
+
+The hash is also the source revision carried by cards and report drafts. An unchanged form causes no rewrite. Rejected validation, backup failure and rename failure preserve the existing source. Temporary files are siblings of their sources so replacement stays on one filesystem. This protects ordinary write failures; it is not a guarantee against storage hardware failure or sudden power loss. Keep an off-machine copy of the data and history when hosted.
+
+To list backups for the default local `cards.tsv` source:
+
+```powershell
+Get-ChildItem -LiteralPath .content-revisions/cards.tsv -Filter *.source
+(Get-FileHash -LiteralPath public/data/cards.tsv -Algorithm SHA256).Hash.ToLowerInvariant()
+```
+
+The second command supplies the current revision. Choose the backup hash and run:
+
+```text
+node scripts/restore-content.mjs cards.tsv BACKUP_SHA256 CURRENT_SHA256 --apply
+```
+
+Substitute the real hashes. The restore uses the same environment paths as saving, validates the backup, rejects a stale current revision and retains a backup of the current version before restoring. It deliberately refuses a restore that adds/removes/renames card IDs; use a reviewed repository migration for those changes. Reload the browser afterward. These steps are covered by isolated automated save/restore tests.
+
+A process crash can leave `write.lock` in a source's history folder. Only after stopping all editing/server processes and verifying no save is running, remove that specific stale lock and restart. Never clear a live process's lock to force a save.
+
+## Release checks
+
+```powershell
+npm run lint
+npm run verify:manual-csv
+npm run verify:csv-sources
+npm test -- --run
 npm run build
-npm run start:prod
-```
-Open: `http://localhost:4173/mutationtrainer-react/`
-
-
-## 3.1 Permanent Password Setup
-
-### Windows workstation (local production testing)
-Set once:
-```powershell
-setx WM_ADMIN_PASSWORD "your-strong-password"
-```
-Then close and reopen terminal/VS Code.
-
-Verify in the new shell:
-```powershell
-echo $env:WM_ADMIN_PASSWORD
 ```
 
-If you need it only for current shell session:
-```powershell
-$env:WM_ADMIN_PASSWORD="your-strong-password"
-```
+The test suite saves copies of the real data in temporary directories. It checks one-cell TSV edits, unchanged forms, invalid content, concurrent/stale writes, failure recovery, restore, and anonymous data fetches after save and restart at `/` and `/mutationtrainer-react/`.
 
-### VPS/systemd (recommended)
-Do not rely on shell exports. Put password in the systemd env file:
-```env
-WM_ADMIN_PASSWORD=your-real-password
-```
-Location used in this repo:
-- `/etc/mutationtrainer/mutationtrainer.env`
-
-Apply changes:
-```bash
-sudo systemctl daemon-reload
-sudo systemctl restart mutationtrainer.service
-sudo systemctl status mutationtrainer.service
-```
-## 4. VPS Install (Ubuntu example)
-
-### 4.1 Prepare app directory
-```bash
-sudo mkdir -p /srv/mutationtrainer-react
-sudo chown -R $USER:$USER /srv/mutationtrainer-react
-# copy repo files into /srv/mutationtrainer-react
-cd /srv/mutationtrainer-react
-npm install
-npm run build
-```
-
-### 4.2 Create service env file
-```bash
-sudo mkdir -p /etc/mutationtrainer
-sudo cp deploy/systemd/mutationtrainer.env.example /etc/mutationtrainer/mutationtrainer.env
-sudo nano /etc/mutationtrainer/mutationtrainer.env
-```
-Set at least:
-```env
-WM_ADMIN_PASSWORD=your-real-password
-PORT=4173
-WM_BIND_HOST=0.0.0.0
-NODE_ENV=production
-```
-
-### 4.3 Install systemd service
-```bash
-sudo cp deploy/systemd/mutationtrainer.service /etc/systemd/system/mutationtrainer.service
-sudo systemctl daemon-reload
-sudo systemctl enable mutationtrainer.service
-sudo systemctl start mutationtrainer.service
-sudo systemctl status mutationtrainer.service
-```
-
-### 4.4 Logs
-```bash
-journalctl -u mutationtrainer.service -f
-```
-
-## 5. Reverse Proxy (Nginx)
-Use template:
-- `deploy/nginx/mutationtrainer.conf`
-
-Key requirement: forward `X-Forwarded-Proto` so secure admin cookie behavior works correctly behind HTTPS.
-
-After configuring Nginx:
-```bash
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
-## 6. Writable + Persistent Data Requirement
-The service user must have write access to:
-- `public/data/cards.tsv`
-- `public/data/prep.csv`
-- `public/data/article-sylfaen.csv`
-- all registered unit/pack files under `public/data/**`
-
-For VPS, persistence is usually the VM disk. For containers/cloud, mount a persistent volume to the app `public/data` path.
-
-## 7. Backup and Restore (Before/After Admin Editing)
-
-### Backup
-```bash
-cd /srv/mutationtrainer-react
-mkdir -p backups
-stamp=$(date +%Y%m%d-%H%M%S)
-tar -czf "backups/public-data-$stamp.tgz" public/data
-```
-
-### Restore
-```bash
-cd /srv/mutationtrainer-react
-tar -xzf backups/public-data-YYYYMMDD-HHMMSS.tgz
-sudo systemctl restart mutationtrainer.service
-```
-
-## 8. VPS Smoke Test Checklist
-1. Service starts with no errors.
-2. Open app and verify normal learner flow still works.
-3. Admin login succeeds with `WM_ADMIN_PASSWORD`.
-4. Edit one card and save.
-5. Verify changed content appears in app immediately.
-6. Verify source file changed on disk (`public/data/...`).
-7. Restart service and confirm change persists.
-8. Negative test: remove write permission temporarily and verify save returns clear writable-path error.
-
-
-## 8.1 Daily Admin Use (Operator Steps)
-1. Open app URL and start normal practice.
-2. Click `Admin`.
-3. Enter the shared password and sign in.
-4. Click `Edit current card`.
-5. Edit only fields you need to correct.
-6. Click `Save to source`.
-7. Wait for `Saved to source file.` notice.
-8. Move to the next card and repeat.
-
-Notes:
-- `configured: true` + `authenticated: false` means password exists, but you are not logged in yet.
-- If login modal says admin API unavailable, you are likely running static hosting instead of `npm run start:prod`.
-## 9. Troubleshooting
-
-### A) "Admin password is not configured on this server"
-Cause: `WM_ADMIN_PASSWORD` missing in runtime environment.
-Fix: set env var in systemd env file and restart service.
-
-### B) 401 on save-card
-Cause: session missing/expired or not logged in.
-Fix: login again; check browser cookies; confirm reverse proxy forwards headers correctly.
-
-### C) "rowIndex is out of range" or card mismatch
-Cause: data changed between load and save, or stale card state.
-Fix: refresh app deck and retry edit.
-
-### D) "Server cannot write ... public/data"
-Cause: filesystem permission issue (or read-only mount).
-Fix: grant write permissions to service user; ensure mounted disk is read-write.
-
-### E) Cookie/session issues behind proxy
-Cause: proxy not forwarding scheme or HTTPS misconfiguration.
-Fix: forward `X-Forwarded-Proto $scheme`; terminate TLS correctly at proxy.
-
-## 10. Static-Only Deployment Block (Intentional)
-Do not deploy admin-enabled workflow to static-only hosting. You need a running Node server for `/api/admin/*` and disk writes.
-
-
-
+A public hosting walkthrough, provider/cost choice, login throttling, backup retention schedule and remote recovery test remain to be completed with the owner. No service, account or paid resource was created in Phase 1.

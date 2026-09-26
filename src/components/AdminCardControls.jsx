@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { mutateWord } from "../utils/grammar";
 import { normalizeOutcomeValue } from "../services/csvFieldMap";
 import {
@@ -74,12 +74,23 @@ export default function AdminCardControls({
   const [editorBusy, setEditorBusy] = useState(false);
   const [editorError, setEditorError] = useState("");
   const [editorNotice, setEditorNotice] = useState("");
-  const [manualAnswer, setManualAnswer] = useState(false);
+  const editingCardId = useRef(null);
 
   useEffect(() => {
-    if (!editorOpen) return;
+    if (!editorOpen) {
+      editingCardId.current = null;
+      return;
+    }
+    // A successful save refreshes this row's revision. Keep the form and its
+    // confirmation; never silently replace an open form with another card.
+    if (editingCardId.current === row?.cardId) return;
+    if (editingCardId.current !== null) {
+      setEditorOpen(false);
+      editingCardId.current = null;
+      return;
+    }
+    editingCardId.current = row?.cardId;
     setForm(makeInitialForm(row));
-    setManualAnswer(false);
     setEditorError("");
     setEditorNotice("");
   }, [editorOpen, row]);
@@ -87,11 +98,6 @@ export default function AdminCardControls({
   const suggestedAnswer = useMemo(() => {
     return mutateWord(form.base, form.outcome || "none");
   }, [form.base, form.outcome]);
-
-  useEffect(() => {
-    if (!editorOpen || manualAnswer) return;
-    setForm((prev) => ({ ...prev, answer: suggestedAnswer }));
-  }, [editorOpen, manualAnswer, suggestedAnswer]);
 
   const explanationPairIncomplete = Boolean(
     (form.why && !form.whyCym) || (!form.why && form.whyCym)
@@ -280,7 +286,6 @@ export default function AdminCardControls({
                       id="admin-answer"
                       value={form.answer}
                       onChange={(event) => {
-                        setManualAnswer(true);
                         setForm((prev) => ({ ...prev, answer: event.target.value }));
                       }}
                     />
@@ -291,7 +296,6 @@ export default function AdminCardControls({
                         variant="ghost"
                         size="sm"
                         onClick={() => {
-                          setManualAnswer(false);
                           setForm((prev) => ({ ...prev, answer: suggestedAnswer }));
                         }}
                       >

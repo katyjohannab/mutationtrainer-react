@@ -170,7 +170,7 @@ export default function FlashcardArea({
 
         {currentRow && (
           <div className="mx-auto flex w-full items-center justify-center gap-2 pt-2 sm:justify-end sm:pt-3 lg:max-w-3xl xl:max-w-none">
-            {!adminState?.authenticated ? <ReportMistake cardId={cardId} /> : null}
+            {!adminState?.authenticated ? <ReportMistake cardId={cardId} source={currentRow?.__source} sourceRevision={currentRow?.__sourceRevision} /> : null}
             <div className="hidden sm:block">
               <AdminCardControls
                 row={currentRow}

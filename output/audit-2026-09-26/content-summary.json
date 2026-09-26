@@ -1,0 +1,188 @@
+{
+  "date": "2026-09-26",
+  "total": 3499,
+  "bySource": {
+    "cards.tsv": 1699,
+    "prep.csv": 479,
+    "article-sylfaen.csv": 405,
+    "Uwch1/unit1.csv": 59,
+    "Uwch1/unit2.csv": 65,
+    "Mynediad-De/packs/myn-de-p01-places.tsv": 792
+  },
+  "byOutcome": {
+    "soft": 1887,
+    "none": 1274,
+    "nasal": 212,
+    "aspirate": 121,
+    "annibynnol": 1,
+    "gytbwys": 1,
+    "gais": 1,
+    "dant": 1,
+    "berchen": 1
+  },
+  "byLevel": {
+    "Uwch": 4,
+    "(missing)": 2579,
+    "uwch": 124,
+    "mynediad": 792
+  },
+  "byCategory": {
+    "Adjective+Noun": 114,
+    "Article": 636,
+    "Numerals": 134,
+    "Possessive": 148,
+    "Preposition": 835,
+    "Relative": 6,
+    "Particle": 18,
+    "Presentative": 3,
+    "Deictic": 2,
+    "Intensifier": 47,
+    "Interrogative": 55,
+    "Conjunction": 39,
+    "Complement": 75,
+    "PlaceName": 88,
+    "Negation": 76,
+    "SubjectBoundary": 53,
+    "Subordinator": 25,
+    "TimeExpressions": 22,
+    "Determiner": 52,
+    "Bod+yn": 225,
+    "Idiom": 54,
+    "(missing)": 792
+  },
+  "missing": {
+    "cardId": 0,
+    "base": 0,
+    "answer": 0,
+    "translate": 0,
+    "translateSent": 1564,
+    "why": 2,
+    "whyCym": 3,
+    "ruleId": 3499,
+    "level": 2579
+  },
+  "presets": {
+    "starter-all-verified": 2583,
+    "starter-preps": 479,
+    "numbers-1-10": 79,
+    "place-names": 900,
+    "articles": 404,
+    "mynediad-place-names-pack-01": 792,
+    "uwch-south-u1": 59,
+    "uwch-south-u2": 65,
+    "uwch-south-all-units": 124
+  },
+  "issueCounts": {
+    "duplicates": 5,
+    "mismatches": 132,
+    "ambiguous": 0,
+    "singleChoices": 528,
+    "pipeAnswers": 0,
+    "neu": 3,
+    "articlesLlrh": 40,
+    "nasalYn": 48,
+    "unregisteredMynediad": 54
+  },
+  "rulesUsed": {},
+  "unusedRules": [
+    "soft-prep-general",
+    "soft-prep-i",
+    "soft-prep-o",
+    "nasal-prep-general",
+    "nasal-prep-yn",
+    "none-prep-contract",
+    "none-prep-contract-vowel",
+    "none-prep-contract-i",
+    "soft-poss-dy",
+    "soft-poss-general",
+    "nasal-poss-fy",
+    "aspirate-poss-ei",
+    "soft-adj-fem",
+    "soft-art-fem",
+    "soft-num-dwy",
+    "soft-num-general",
+    "aspirate-num-general",
+    "soft-quest-direct",
+    "soft-verb-short-subj",
+    "soft-verb-quest-word",
+    "soft-verb-neg",
+    "aspirate-verb-neg-cmd",
+    "soft-part-yn",
+    "soft-bod-yn-adj",
+    "none-bod-yn-verbnoun",
+    "aspirate-conj-neu",
+    "none-art-masc",
+    "none-art-vowel",
+    "none-general-yn",
+    "nasal-misc-recog",
+    "none-misc-general",
+    "none-art-plural",
+    "none-verb-eisiau",
+    "soft-pref-cyn",
+    "soft-pref-uwch",
+    "soft-pref-is",
+    "soft-pref-dirprwy",
+    "soft-pref-af",
+    "soft-pref-go",
+    "soft-pref-gor",
+    "mixed-mutation-neg",
+    "soft-prefix-af",
+    "soft-prefix-di",
+    "nasal-prefix-an",
+    "none-vowel-soft",
+    "none-vowel-aspirate",
+    "none-vowel-nasal"
+  ],
+  "grammarProbes": [
+    {
+      "base": "chwaer",
+      "soft": "ghwaer",
+      "nasal": "nghhwaer",
+      "aspirate": "chhwaer"
+    },
+    {
+      "base": "ddim",
+      "soft": "dddim",
+      "nasal": "ndim",
+      "aspirate": "ddim"
+    },
+    {
+      "base": "thad",
+      "soft": "dhad",
+      "nasal": "nhhad",
+      "aspirate": "thhad"
+    },
+    {
+      "base": "phlentyn",
+      "soft": "bhlentyn",
+      "nasal": "mhhlentyn",
+      "aspirate": "phhlentyn"
+    },
+    {
+      "base": "ffrind",
+      "soft": "ffrind",
+      "nasal": "ffrind",
+      "aspirate": "ffrind"
+    },
+    {
+      "base": "llaw",
+      "soft": "law",
+      "nasal": "llaw",
+      "aspirate": "llaw"
+    },
+    {
+      "base": "rhan",
+      "soft": "ran",
+      "nasal": "rhan",
+      "aspirate": "rhan"
+    }
+  ],
+  "pipeProbe": {
+    "choices": [
+      "ci",
+      "gi|ghi",
+      "gi"
+    ],
+    "acceptLiteralPipe": false
+  }
+}

@@ -1,76 +1,31 @@
 # Architecture
 
-Last updated: 2026-02-18
+Last updated: 2026-09-26
 
-Docs navigation:
-- `docs/DOCS_INDEX.md`
+See the [agreed plan](IMPROVEMENT_PLAN.md) and [Phase 1 delivery](PHASE_1_DELIVERY.md) for scope and outstanding defects.
 
-## 1. Runtime Architecture (CSV-First)
-Runtime data comes from:
-- protected manual data files: `cards.tsv`, `prep.csv`, `article-sylfaen.csv`
-- registered Dysgu Cymraeg unit CSV files from `src/data/dysguUnitRegistry.js`
+## Data flow
 
-Source composition and metadata map:
-- `src/data/csvSources.js`
+1. `src/data/csvSources.js` composes protected manual files, `dysguUnitRegistry.js` source registrations and `packRegistry.js` topic-pack registrations.
+2. `src/services/loadCsv.js` fetches each registered source without caching. `cardFormat.js` parses and validates the authored model, stamps source metadata and reports provenance. The combined load checks global IDs and rejects a partial/broken bank.
+3. `src/utils/applyFilters.js` filters the full pool using presets and learner filters. Unknown outcomes are not interpreted as no mutation.
+4. `pickNext.js` selects by stable card ID. `leitner.js` retains versioned local learning history. Revisions identify source contents, not card identity.
+5. `checkAnswer.js` grades the authored accepted answers. Grammar/helper and session-state defects identified in the audit remain Phase 3 work.
 
-## 2. Runtime Data Flow
-1. Source list + metadata registration (`src/data/csvSources.js`)
-2. CSV load and normalization (`src/services/loadCsv.js`)
-3. Source metadata stamping (`course/level/dialect/unit`)
-4. Preset + manual filtering (`src/utils/applyFilters.js`)
-5. Card selection (`src/utils/pickNext.js`, `src/utils/leitner.js`)
-6. Answer checking (`src/utils/checkAnswer.js`)
+## Catalogue versus storage
 
-## 3. Course Navigation Model
-Courses UI is driven by:
-- `src/data/dysguUnitRegistry.js` (single source of truth)
-- `src/data/courses.js` (derived course model)
-- `src/data/presets.js` (preset map)
+Topic/construction packs and learner-designed sessions are the agreed product model. Dysgu course level/dialect/unit metadata provides alignment and provenance. An authored file, unit reference and learner session are different things; do not require one session per unit. Existing course/picker code is partly legacy and will be reconciled through the plan, with permission before design changes.
 
-Flow:
-- Course -> Dialect -> Unit (single unit selectable)
-- Starter packs remain separate
-- Advanced filters can still shape a general mixed pool
+## Validation and saves
 
-## 4. CSV Hygiene and Governance
-Strict verification command:
-```bash
-npm run verify:csv-sources
-```
+`cardFormat.js` is shared by browser loading, server editing and `server/validateContent.js`. Vite's build plugin validates the entire registered bank. `scripts/verify-csv-sources.cjs` provides command-line diagnostics, including `--json`. Structural errors block publication; editorial metadata warnings remain a separate full-bank review backlog.
 
-Checks include:
-- registered files exist
-- unit filename pattern `unit<number>.csv` (lowercase)
-- canonical header row is present
-- required CSV columns are present
-- no source duplication/mismatch
+`server/adminApi.js` implements session/login/logout/save endpoints. A save carries source, row index, expected card ID, loaded source hash and changed fields. The server checks identity and revision, validates the resulting file and preserves all IDs. `contentRepository.js` locks the source, makes a verified immutable backup, writes/flushed a sibling temporary file, then atomically replaces the source. `restoreSourceRevision` uses the same safeguards.
 
-## 5. Parked Generator Infrastructure
-The JS unit-data generator stack remains in repo for future scale:
-- `src/content-gen/*`
+`server/httpServer.js` serves built assets and admin routes with Node. `dataMiddleware.js` serves the canonical data directory before any built data copy can be reached. Vite development/preview uses the same data/admin middleware. Static hosting serves the validated build and cannot perform live edits.
 
-Status:
-- kept
-- parked
-- excluded from active runtime workflow
+Defaults are `public/data` and private `.content-revisions`; persistent hosted locations are configured through `WM_DATA_DIR` and `WM_REVISION_DIR`. See the [runbook](DEPLOY_ADMIN_MODE.md). No hosted server has been deployed.
 
-## 6. Generated Markdown Artifacts
-Markdown under `generated/` is output data, not canonical documentation.
+## Parked infrastructure
 
-## 7. Admin Runtime (Writable Mode)
-Admin mode is backed by server endpoints and filesystem writes:
-- `GET /api/admin/session`
-- `POST /api/admin/login`
-- `POST /api/admin/logout`
-- `POST /api/admin/save-card`
-
-Persistence model:
-- source of truth remains `public/data/**` CSV/TSV files
-- server runtime must have write access and persistent disk
-
-Environment contract:
-- required: `WM_ADMIN_PASSWORD`
-- optional: `PORT`, `WM_BIND_HOST`, `WM_ADMIN_SESSION_TTL_HOURS`
-
-Operational runbook:
-- `docs/DEPLOY_ADMIN_MODE.md`
+`src/content-gen/` remains in the repository for future work but is not the active authoring/runtime pipeline. Markdown in `generated/` and diagnostic files in `output/` are artifacts. Active source/test discovery excludes copied baseline tests under `output/`.

@@ -1,211 +1,46 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { loadCsvFromPublicData } from "./loadCsv";
+import { loadCsvFromPublicData, loadManyCsvFiles, sourceRevision } from "./loadCsv.js";
 
-describe("loadCsvFromPublicData", () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
+const header = "Card ID,Base,Answer,Outcome,Sentence With Gap";
+const valid = `${header}\ncard-1,cath,gath,SM,Mae [] yma.`;
+function respond(text, ok = true, status = 200) {
+  vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok, status, text: async () => text }));
+}
+afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals(); });
+describe("validated runtime loader", () => {
+  it("normalizes authored answers and includes a stable source revision", async () => {
+    respond(valid);
+    expect(await loadCsvFromPublicData("sample.csv")).toEqual([expect.objectContaining({ cardId: "card-1", base: "cath", answer: "gath", outcome: "soft", before: "Mae", after: "yma.", __sourceRevision: await sourceRevision(valid) })]);
+    expect(fetch).toHaveBeenCalledWith("/data/sample.csv", { cache: "no-store" });
   });
-
-  it("parses CSV files with existing behavior", async () => {
-    const csvText = [
-      "Card ID\tBase\tOutcome",
-      "card-1\tcath\tsm",
-    ].join("\n");
-
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        text: vi.fn().mockResolvedValue(csvText),
-      })
-    );
-
-    const rows = await loadCsvFromPublicData("cards.tsv");
-
-    expect(rows).toHaveLength(1);
-    expect(rows[0]).toMatchObject({
-      cardId: "card-1",
-      base: "cath",
-      outcome: "soft",
-      answer: "gath",
-      __source: "cards.tsv",
-    });
+  it("parses literal TSV quotes and case-insensitive aliases", async () => {
+    respond('card_seq\tbase\tTarget Word\tOutcomes (SM/NM/AM/NONE)\tSentence With Gap\ncard-2\tpen\tmhen\tNm\t"Fy [ ] i"');
+    const rows = await loadCsvFromPublicData("sample.TSV");
+    expect(rows[0]).toMatchObject({ cardId: "card-2", answer: "mhen", outcome: "nasal", before: '"Fy', after: 'i"' });
   });
-
-  it("parses TSV files into multiple fields", async () => {
-    const tsvText = [
-      "Card ID\tBase\tOutcome",
-      "card-2\tpen\tnm",
-    ].join("\n");
-
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        text: vi.fn().mockResolvedValue(tsvText),
-      })
-    );
-
-    const rows = await loadCsvFromPublicData("unit-data.TSV");
-
-    expect(rows).toHaveLength(1);
-    expect(rows[0]).toMatchObject({
-      cardId: "card-2",
-      base: "pen",
-      outcome: "nasal",
-      answer: "mhen",
-      __source: "unit-data.TSV",
-    });
-    expect(rows[0]).not.toHaveProperty("cardid\tbase\toutcome");
+  it("supports gap marker spacing and template prompts", async () => {
+    respond(`${header}\ncard-1,cath,gath,sm,Mae [ ] yma.\ncard-2,cath,gath,sm,Mae [  ] yna.`);
+    expect((await loadCsvFromPublicData("sample.csv")).map(row => row.before)).toEqual(["Mae", "Mae"]);
+    respond("CardId,Base,Answer,Outcome,Template\nc1,pen,ben,sm,Dyma {answer} heddiw.");
+    expect((await loadCsvFromPublicData("sample.csv"))[0]).toMatchObject({ before: "Dyma", after: "heddiw." });
   });
-
-
-  it("derives before/after from sentenceWithGap marker variants", async () => {
-    const csvText = [
-      "Card ID,Sentence With Gap",
-      "card-3,Mae [] hi yma.",
-      "card-4,Roedd [ ] e'n hwyr.",
-      "card-5,Dyma [  ] brawf!",
-      "card-6,Dim marcwr fan hyn.",
-    ].join("\n");
-
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        text: vi.fn().mockResolvedValue(csvText),
-      })
-    );
-
-    const rows = await loadCsvFromPublicData("sentence-gap.csv");
-
-    expect(rows).toHaveLength(4);
-
-    expect(rows[0]).toMatchObject({
-      cardId: "card-3",
-      before: "Mae",
-      after: "hi yma.",
-      sentenceWithGap: "Mae hi yma.",
-    });
-
-    expect(rows[1]).toMatchObject({
-      cardId: "card-4",
-      before: "Roedd",
-      after: "e'n hwyr.",
-      sentenceWithGap: "Roedd e'n hwyr.",
-    });
-
-    expect(rows[2]).toMatchObject({
-      cardId: "card-5",
-      before: "Dyma",
-      after: "brawf!",
-      sentenceWithGap: "Dyma brawf!",
-    });
-
-    expect(rows[3]).toMatchObject({
-      cardId: "card-6",
-      before: "Dim marcwr fan hyn.",
-      after: "",
-      sentenceWithGap: "Dim marcwr fan hyn.",
-    });
+  it("does not turn broken or missing data into a valid empty deck", async () => {
+    respond(valid, false, 404);
+    await expect(loadCsvFromPublicData("missing.csv")).rejects.toThrow(/missing.csv.*404/);
+    respond(valid.replace(",gath,", ",,"));
+    await expect(loadCsvFromPublicData("bad.csv")).rejects.toThrow(/Missing answer/);
+    respond(`${header}\ncard-1,cath,gath,sm,No marker`);
+    await expect(loadCsvFromPublicData("bad.csv")).rejects.toThrow(/gap/);
   });
-
-  it("keeps template {answer} split behavior", async () => {
-    const csvText = [
-      "Card ID,Template",
-      "card-7,Dw i'n {answer} rwan",
-    ].join("\n");
-
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        text: vi.fn().mockResolvedValue(csvText),
-      })
-    );
-
-    const rows = await loadCsvFromPublicData("template.csv");
-
-    expect(rows).toHaveLength(1);
-    expect(rows[0]).toMatchObject({
-      cardId: "card-7",
-      before: "Dw i'n",
-      after: "rwan",
-    });
+  it("fails the whole load when any source fails or IDs collide", async () => {
+    respond(valid);
+    await expect(loadManyCsvFiles(["one.csv", "two.csv"])).rejects.toThrow(/Duplicate ID/);
+    vi.stubGlobal("fetch", vi.fn(async url => ({ ok: url.includes("one.csv"), status: 404, text: async () => valid })));
+    await expect(loadManyCsvFiles(["one.csv", "two.csv"])).rejects.toThrow(/two.csv/);
   });
-
-  it("keeps fallback cardId behavior", async () => {
-    const csvText = [
-      "Base,Outcome",
-      "bara,sm",
-    ].join("\n");
-
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        text: vi.fn().mockResolvedValue(csvText),
-      })
-    );
-
-    const rows = await loadCsvFromPublicData("fallback.csv");
-
-    expect(rows).toHaveLength(1);
-    expect(rows[0].cardId).toBe("fallback-csv-r2");
-    expect(rows[0]).toMatchObject({
-      base: "bara",
-      outcome: "soft",
-      answer: "fara",
-    });
-  });
-
-  it("normalizes canonicalized TSV headers and outcome shortcodes case-insensitively", async () => {
-    const tsvText = [
-      "Sentence With Gap\tSentence Eng\tTarget Word\tRule Cat\tWhy Eng\tOutcomes (SM/NM/AM/NONE)\tQA Status (SM/NM/AM/NONE)",
-      "Dw i'n _____ nawr\tI am _____ now\tcath\tSubjectBoundary\tTriggers soft mutation\tAm\tNM",
-    ].join("\n");
-
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        text: vi.fn().mockResolvedValue(tsvText),
-      })
-    );
-
-    const rows = await loadCsvFromPublicData("canonicalized-headers.tsv");
-
-    expect(rows).toHaveLength(1);
-    expect(rows[0]).toMatchObject({
-      sentenceWithGap: "Dw i'n _____ nawr",
-      translateSent: "I am _____ now",
-      answer: "cath",
-      category: "SubjectBoundary",
-      why: "Triggers soft mutation",
-      outcome: "aspirate",
-      qaStatus: "NM",
-      __source: "canonicalized-headers.tsv",
-    });
-  });
-
-  it("maps NONE outcome shortcode case-insensitively", async () => {
-    const tsvText = [
-      "Base\tOutcomes (SM/NM/AM/NONE)",
-      "cath\tNoNe",
-    ].join("\n");
-
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        text: vi.fn().mockResolvedValue(tsvText),
-      })
-    );
-
-    const rows = await loadCsvFromPublicData("none-outcome.tsv");
-
-    expect(rows).toHaveLength(1);
-    expect(rows[0].outcome).toBe("none");
-    expect(rows[0].answer).toBe("cath");
+  it("hashes the original UTF-8 BOM bytes for editing", async () => {
+    const withBom = `\uFEFF${valid}`;
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(withBom)));
+    expect((await loadCsvFromPublicData("sample.csv"))[0].__sourceRevision).toBe(await sourceRevision(withBom));
   });
 });

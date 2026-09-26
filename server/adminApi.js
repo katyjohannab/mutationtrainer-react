@@ -1,16 +1,14 @@
 import crypto from "node:crypto";
-import fs from "node:fs/promises";
 import path from "node:path";
-import Papa from "papaparse";
+import { normaliseRow, serializeCardSource } from "../src/services/cardFormat.js";
+import { updateSource } from "./contentRepository.js";
 import { ALL_RUNTIME_DATA_FILES } from "../src/data/csvSources.js";
 import {
   ADMIN_EDITABLE_FIELDS,
   buildCanonicalHeaderMap,
-  getMappedKeyFromHeader,
   normalizeOutcomeValue,
   toOutcomeCode,
 } from "../src/services/csvFieldMap.js";
-import { mutateWord } from "../src/utils/grammar.js";
 
 const SESSION_COOKIE = "wm_admin_session";
 const DEFAULT_SESSION_TTL_HOURS = 12;
@@ -24,14 +22,6 @@ function normalizeSource(source) {
     .trim()
     .replace(/\\/g, "/")
     .replace(/^\/+/, "");
-}
-
-function fallbackCardId(source, rowIndex) {
-  const sourceKey = normalizeSource(source)
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-  return `${sourceKey || "csv"}-r${rowIndex + 2}`;
 }
 
 function parseCookies(cookieHeader) {
@@ -222,37 +212,6 @@ function sanitizePatch(rawPatch) {
   return out;
 }
 
-function normalizeSavedRow(row, source, rowIndex) {
-  const out = {
-    __source: source,
-    __rowIndex: rowIndex,
-    __fileType: source.toLowerCase().endsWith(".tsv") ? "tsv" : "csv",
-  };
-
-  for (const [header, value] of Object.entries(row || {})) {
-    const cleanVal = typeof value === "string" ? value.trim() : value;
-    const mapped = getMappedKeyFromHeader(header);
-    if (mapped && cleanVal !== "") out[mapped] = cleanVal;
-  }
-
-  if (out.outcome) out.outcome = normalizeOutcomeValue(out.outcome);
-
-  if (out.sentenceWithGap && !out.before && !out.after) {
-    const { before, after } = splitSentenceWithGap(out.sentenceWithGap);
-    out.before = before;
-    out.after = after;
-    out.sentenceWithGap = `${before}${after ? ` ${after}` : ""}`;
-  }
-
-  if (!out.answer && out.base && out.outcome) {
-    out.answer = mutateWord(out.base, out.outcome);
-  }
-
-  if (!out.cardId) out.cardId = fallbackCardId(source, rowIndex);
-
-  return out;
-}
-
 export function mapSaveOperationalError(error, sourcePath, stage) {
   const code = String(error?.code || "").toUpperCase();
 
@@ -353,101 +312,40 @@ export function applyPatchToParsedRow({ row, canonicalToHeader, patch }) {
   }
 }
 
-export async function saveCardPatch({
-  rootDir,
-  source,
-  rowIndex,
-  expectedCardId,
-  rawPatch,
-}) {
+export async function saveCardPatch({ rootDir, dataDir, revisionDir, source, rowIndex, expectedCardId, expectedSourceRevision, rawPatch }) {
   const normalizedSource = normalizeSource(source);
-  if (!allowedSources.has(normalizedSource)) {
-    throw Object.assign(new Error("Unsupported source file."), { statusCode: 400 });
-  }
-
-  if (!Number.isInteger(rowIndex) || rowIndex < 0) {
-    throw Object.assign(new Error("rowIndex must be a non-negative integer."), { statusCode: 400 });
-  }
-
-  const sourcePath = path.resolve(rootDir, "public", "data", normalizedSource);
-  const dataRoot = path.resolve(rootDir, "public", "data");
-
-  if (!sourcePath.startsWith(dataRoot)) {
-    throw Object.assign(new Error("Invalid source path."), { statusCode: 400 });
-  }
-
-  let raw;
+  if (!allowedSources.has(normalizedSource)) throw Object.assign(new Error("Unsupported source file."), { statusCode: 400 });
+  if (!Number.isInteger(rowIndex) || rowIndex < 0) throw Object.assign(new Error("rowIndex must be a non-negative integer."), { statusCode: 400 });
+  if (!expectedCardId) throw Object.assign(new Error("Expected card ID is required."), { statusCode: 400 });
   try {
-    raw = await fs.readFile(sourcePath, "utf8");
-  } catch (error) {
-    throw mapSaveOperationalError(error, sourcePath, "read");
-  }
-
-  const isTsv = normalizedSource.toLowerCase().endsWith(".tsv");
-  const delimiter = isTsv ? "\t" : ",";
-  const newline = raw.includes("\r\n") ? "\r\n" : "\n";
-
-  const parsed = Papa.parse(raw, {
-    header: true,
-    skipEmptyLines: true,
-    delimiter,
-    ...(isTsv ? { quoteChar: "\0" } : {}),
-  });
-
-  if (parsed.errors?.length) {
-    throw Object.assign(new Error(`Source parse failed: ${parsed.errors[0].message}`), { statusCode: 500 });
-  }
-
-  const rows = parsed.data || [];
-  const headers = parsed.meta?.fields || Object.keys(rows[0] || {});
-
-  if (!headers.length || !rows.length) {
-    throw Object.assign(new Error("Source file has no editable rows."), { statusCode: 400 });
-  }
-
-  if (rowIndex >= rows.length) {
-    throw Object.assign(new Error("rowIndex is out of range for source file."), { statusCode: 400 });
-  }
-
-  const targetRow = rows[rowIndex];
-  const canonicalToHeader = buildCanonicalHeaderMap(headers);
-  const sourceCardId =
-    getCanonicalValue(targetRow, canonicalToHeader, "cardId") || fallbackCardId(normalizedSource, rowIndex);
-
-  if (expectedCardId && normalizeCardId(sourceCardId) !== normalizeCardId(expectedCardId)) {
-    throw Object.assign(new Error("Card mismatch. Source row no longer matches expected card."), {
-      statusCode: 409,
+    const result = await updateSource({ rootDir, dataDir, revisionDir, source: normalizedSource, expectedSourceRevision }, ({ raw, parsed }) => {
+      const targetRow = parsed.rows[rowIndex];
+      if (!targetRow) throw Object.assign(new Error("rowIndex is out of range for source file."), { statusCode: 400 });
+      const canonicalToHeader = buildCanonicalHeaderMap(parsed.headers);
+      const sourceCardId = getCanonicalValue(targetRow, canonicalToHeader, "cardId");
+      if (normalizeCardId(sourceCardId) !== normalizeCardId(expectedCardId)) throw Object.assign(new Error("Card mismatch. Source row no longer matches expected card."), { statusCode: 409 });
+      const patch = sanitizePatch(rawPatch);
+      // Compare against the displayed model, so an unchanged form preserves source whitespace.
+      const current = normaliseRow(targetRow, normalizedSource, rowIndex);
+      for (const field of Object.keys(patch)) {
+        if (String(current[field] ?? "") === patch[field]) delete patch[field];
+        else if (!canonicalToHeader.has(field) && !(["before", "after"].includes(field) && canonicalToHeader.has("sentenceWithGap"))) {
+          throw Object.assign(new Error("This source has no editable column for " + field + "."), { statusCode: 422 });
+        }
+      }
+      if (!Object.keys(patch).length) return raw;
+      applyPatchToParsedRow({ row: targetRow, canonicalToHeader, patch });
+      return serializeCardSource(parsed, normalizedSource, raw);
     });
-  }
-
-  const patch = sanitizePatch(rawPatch);
-  applyPatchToParsedRow({ row: targetRow, canonicalToHeader, patch });
-
-  const output = Papa.unparse(
-    {
-      fields: headers,
-      data: rows,
-    },
-    {
-      delimiter,
-      newline,
-    }
-  );
-
-  try {
-    await fs.writeFile(sourcePath, output, "utf8");
+    return { source: normalizedSource, rowIndex, sourceRevision: result.sourceRevision, previousRevision: result.previousRevision, changed: result.changed,
+      updatedRow: { ...result.parsed.cards[rowIndex], __sourceRevision: result.sourceRevision } };
   } catch (error) {
-    throw mapSaveOperationalError(error, sourcePath, "write");
+    if (error.statusCode) throw error;
+    throw mapSaveOperationalError(error, path.join(dataDir || rootDir || ".", normalizedSource), "save");
   }
-
-  return {
-    source: normalizedSource,
-    rowIndex,
-    updatedRow: normalizeSavedRow(targetRow, normalizedSource, rowIndex),
-  };
 }
 
-export function createAdminApiMiddleware({ rootDir }) {
+export function createAdminApiMiddleware({ rootDir, dataDir, revisionDir }) {
   const root = rootDir || process.cwd();
   const sessionTtlMs = getSessionTtlMs();
 
@@ -458,14 +356,12 @@ export function createAdminApiMiddleware({ rootDir }) {
     const markerIndex = pathname.indexOf(marker);
 
     if (markerIndex < 0) {
-      next();
-      return;
+      return next();
     }
 
     const afterMarker = pathname.slice(markerIndex + marker.length);
     if (afterMarker && !afterMarker.startsWith("/")) {
-      next();
-      return;
+      return next();
     }
 
     const adminPath = `${marker}${afterMarker}`;
@@ -526,9 +422,12 @@ export function createAdminApiMiddleware({ rootDir }) {
         const body = await parseJsonBody(req);
         const result = await saveCardPatch({
           rootDir: root,
+          dataDir,
+          revisionDir,
           source: body?.source,
           rowIndex: body?.rowIndex,
           expectedCardId: body?.expectedCardId,
+          expectedSourceRevision: body?.expectedSourceRevision,
           rawPatch: body?.patch,
         });
         sendJson(res, 200, result);

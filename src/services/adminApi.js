@@ -91,13 +91,14 @@ export async function logoutAdmin() {
   return requestAdmin("logout", { method: "POST" });
 }
 
-export async function saveAdminCard({ source, rowIndex, expectedCardId, patch }) {
+export async function saveAdminCard({ source, rowIndex, expectedCardId, expectedSourceRevision, patch }) {
   return requestAdmin("save-card", {
     method: "POST",
     body: {
       source,
       rowIndex,
       expectedCardId,
+      expectedSourceRevision,
       patch,
     },
   });

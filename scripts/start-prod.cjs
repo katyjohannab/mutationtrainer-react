@@ -1,63 +1,14 @@
-const { spawn } = require("node:child_process");
-const fs = require("node:fs");
-const path = require("node:path");
-
-const host = String(process.env.WM_BIND_HOST || process.env.HOST || "0.0.0.0").trim() || "0.0.0.0";
-const port = String(process.env.WM_PORT || process.env.PORT || "4173").trim() || "4173";
-const configuredAdminPassword = String(
-  process.env.WM_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || ""
-).trim();
-
-if (!configuredAdminPassword) {
-  console.error(
-    "Missing admin password. Set WM_ADMIN_PASSWORD (or ADMIN_PASSWORD) before running start:prod."
-  );
-  process.exit(1);
-}
-
-function resolveViteBin() {
-  const pkgJsonPath = require.resolve("vite/package.json");
-  const pkg = JSON.parse(fs.readFileSync(pkgJsonPath, "utf8"));
-
-  const binEntry =
-    typeof pkg.bin === "string"
-      ? pkg.bin
-      : pkg.bin && typeof pkg.bin.vite === "string"
-        ? pkg.bin.vite
-        : null;
-
-  if (!binEntry) {
-    throw new Error("Unable to resolve Vite CLI entry from vite/package.json");
-  }
-
-  return path.resolve(path.dirname(pkgJsonPath), binEntry);
-}
-
-const viteBin = resolveViteBin();
-const previewArgs = ["preview", "--host", host, "--port", port];
-
-const distDir = path.resolve(process.cwd(), "dist");
-if (!fs.existsSync(distDir)) {
-  console.error(
-    "Missing dist/ build output. Run `npm run build` before `npm run start:prod`."
-  );
-  process.exit(1);
-}
-
-const previewChild = spawn(process.execPath, [viteBin, ...previewArgs], {
-  stdio: "inherit",
-  env: process.env,
-});
-
-previewChild.on("exit", (code, signal) => {
-  if (signal) {
-    process.kill(process.pid, signal);
-    return;
-  }
-  process.exit(code ?? 0);
-});
-
-previewChild.on("error", (error) => {
-  console.error(error instanceof Error ? error.message : String(error));
-  process.exit(1);
-});
+// Serve the built app with a regular Node HTTP server, not Vite preview.
+(async () => {
+  // Local convenience only; deployment environments should supply their own secrets.
+  const fs = require('node:fs');
+  if (fs.existsSync('.env.local')) process.loadEnvFile('.env.local');
+  const { createAppServer } = await import('../server/httpServer.js');
+  const host = process.env.WM_BIND_HOST || process.env.HOST || '127.0.0.1';
+  const port = Number(process.env.WM_PORT || process.env.PORT || 4173);
+  let base = process.env.WM_BASE_PATH || '/';
+  if (!base.endsWith('/')) base += '/';
+  const server = await createAppServer({ base });
+  server.listen(port, host, () => console.log(`Treiglap: http://${host}:${port}${base}`));
+  server.on('error', error => { console.error(error.message); process.exitCode = 1; });
+})().catch(error => { console.error(error.message); process.exitCode = 1; });

@@ -3,6 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { PassThrough } from "node:stream";
 import Papa from "papaparse";
+import { revisionOf } from "./validateContent.js";
 import { afterEach, describe, expect, it } from "vitest";
 import { createAdminApiMiddleware, mapSaveOperationalError, saveCardPatch } from "./adminApi";
 
@@ -111,6 +112,7 @@ describe("admin api", () => {
         source: "cards.tsv",
         rowIndex: 0,
         expectedCardId: "wrong-id",
+        expectedSourceRevision: revisionOf(await readFile(cardsPath, "utf8")),
         rawPatch: { base: "pen" },
       })
     ).rejects.toMatchObject({ statusCode: 409 });
@@ -120,6 +122,7 @@ describe("admin api", () => {
       source: "cards.tsv",
       rowIndex: 0,
       expectedCardId: "c1",
+      expectedSourceRevision: revisionOf(await readFile(cardsPath, "utf8")),
       rawPatch: { base: "pen", answer: "ben" },
     });
 
@@ -155,6 +158,7 @@ describe("admin api", () => {
       source: "Mynediad-De/packs/myn-de-p01-places.tsv",
       rowIndex: 0,
       expectedCardId: "M-D-00001",
+      expectedSourceRevision: revisionOf(tsv),
       rawPatch: {
         before: "Dw i'n dod o",
         after: "yn aml",

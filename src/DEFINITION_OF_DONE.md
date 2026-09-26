@@ -1,18 +1,21 @@
 # Definition of Done
 
-Last updated: 2026-02-18
+Last updated: 2026-09-26
 
 ## 1. Runtime Safety
-- Runtime source list includes protected manual CSV files and explicitly registered Dysgu unit CSV files.
+- Runtime source list includes protected manual files and explicitly registered course-derived and topic-pack sources.
 - `npm run verify:manual-csv` passes.
 - `npm run verify:csv-sources` passes.
 - Protected manual files are not removed or overwritten by automation.
 
 ## 2. Content Quality (CSV-First)
-- New unit content exists as `public/data/<CourseFolder>/unit<N>.csv`.
-- Unit file is registered in `src/data/dysguUnitRegistry.js`.
-- Unit filename is lowercase and matches `unit<number>.csv`.
+- New content is registered in the pack or course-source registry and passes the shared whole-bank validator.
+- Sessions serve a learner need/topic/construction; do not require one session per unit.
+- IDs are globally unique and stable. Record evidence/review status; structural validity is not Welsh approval.
 - Canonical CSV header row is present.
+
+## Design preservation
+- Preserve the existing design, mobile responsiveness and touch targets. Obtain owner permission before any design change.
 
 ## 3. Engineering Quality
 - `npm run lint` passes.

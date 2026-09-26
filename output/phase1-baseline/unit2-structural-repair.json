@@ -1,0 +1,155 @@
+[
+  {
+    "record": 1,
+    "oldId": "U110055",
+    "newId": "UWCH-S-U2-0055",
+    "before": "Rydyn ni’n dal i ddysgu mwy am y ",
+    "after": "wrth i’r dystiolaeth newydd ddod i’r fei.",
+    "answer": "blaned",
+    "outcome": "SM"
+  },
+  {
+    "record": 2,
+    "oldId": "U110056",
+    "newId": "UWCH-S-U2-0056",
+    "before": "Mae’r drafodaeth wedi symud o moeseg i gwestiynau caled am ",
+    "after": "data a phŵer.",
+    "answer": "reolaeth",
+    "outcome": "SM"
+  },
+  {
+    "record": 3,
+    "oldId": "U110057",
+    "newId": "UWCH-S-U2-0057",
+    "before": "Roedd hi’n flin bod ei ",
+    "after": "wedi cael ei chamddyfynnu a’i rannu ar-lein.",
+    "answer": "thudalen flaen",
+    "outcome": "AM"
+  },
+  {
+    "record": 4,
+    "oldId": "U110058",
+    "newId": "UWCH-S-U2-0058",
+    "before": "Es i i holi ",
+    "after": "am fywyd ar yr orsaf ofod a’r pwysau seicolegol.",
+    "answer": "ofodwr",
+    "outcome": "SM"
+  },
+  {
+    "record": 5,
+    "oldId": "U110059",
+    "newId": "UWCH-S-U2-0059",
+    "before": "Cafodd y pwyllgor gyngor gan ",
+    "after": "a oedd yn gwrthwynebu’r casgliadau swyddogol.",
+    "answer": "wyddonydd",
+    "outcome": "SM"
+  },
+  {
+    "record": 6,
+    "oldId": "U110060",
+    "newId": "U110060",
+    "before": "Mae fy ",
+    "after": "i’n bwysicach na’r cyfleustra pan fo apiau’n casglu gormod o ddata.",
+    "answer": "mhreifatrwydd",
+    "outcome": "NM"
+  },
+  {
+    "record": 7,
+    "oldId": "U110061",
+    "newId": "U110061",
+    "before": "Dwi’n deall eich ",
+    "after": "ond mae angen mwy o dystiolaeth cyn penderfynu.",
+    "answer": "sicrwydd",
+    "outcome": "NONE"
+  },
+  {
+    "record": 8,
+    "oldId": "U110062",
+    "newId": "U110062",
+    "before": "Mae’r lefelau allyriadau wedi ",
+    "after": "yn raddol ers i’r targedau newid.",
+    "answer": "ostwng",
+    "outcome": "SM"
+  },
+  {
+    "record": 9,
+    "oldId": "U110063",
+    "newId": "U110063",
+    "before": "Roedden nhw’n bygwth ",
+    "after": "y cyfryngau pe baen nhw’n cyhoeddi’r dogfennau.",
+    "answer": "ymosod",
+    "outcome": "NONE"
+  },
+  {
+    "record": 10,
+    "oldId": "U110064",
+    "newId": "U110064",
+    "before": "Yn ôl y tystion, mae’r corff newydd yn ",
+    "after": "ac felly’n llai agored i bwysau gwleidyddol.",
+    "answer": "annibynnol",
+    "outcome": "NONE"
+  },
+  {
+    "record": 11,
+    "oldId": "U110065",
+    "newId": "U110065",
+    "before": "Er bod y ddadl yn chwerw, roedd y cyflwyniad yn ",
+    "after": "ac yn deg i bawb.",
+    "answer": "gytbwys",
+    "outcome": "SM"
+  },
+  {
+    "record": 12,
+    "oldId": "U110066",
+    "newId": "U110066",
+    "before": "Roedd yr adroddiad yn ",
+    "after": "ond doedd y casgliad ddim mor glir â hynny.",
+    "answer": "wyddonol",
+    "outcome": "SM"
+  },
+  {
+    "record": 13,
+    "oldId": "U110067",
+    "newId": "U110067",
+    "before": "Roedd y cwestiwn yn ",
+    "after": "felly doedd dim modd osgoi’r ateb.",
+    "answer": "uniongyrchol",
+    "outcome": "NONE"
+  },
+  {
+    "record": 14,
+    "oldId": "U110068",
+    "newId": "U110068",
+    "before": "Cafodd yr ymchwiliad ei ailagor ar ",
+    "after": "y teulu, ar ôl i wybodaeth newydd ddod i’r amlwg.",
+    "answer": "gais",
+    "outcome": "SM"
+  },
+  {
+    "record": 15,
+    "oldId": "U110069",
+    "newId": "U110069",
+    "before": "Os wyt ti’n hoffi bwyd sbeislyd, bydd y lle ’ma at eich ",
+    "after": "yn bendant.",
+    "answer": "dant",
+    "outcome": "NONE"
+  },
+  {
+    "record": 16,
+    "oldId": "U110070",
+    "newId": "U110070",
+    "before": "Er gwaethaf y sïon, dydy’r cwmni ddim yn ",
+    "after": "ar y patent bellach.",
+    "answer": "berchen",
+    "outcome": "NONE"
+  },
+  {
+    "record": 17,
+    "oldId": "U110071",
+    "newId": "U110071",
+    "before": "Roedd pawb yn disgwyl canlyniad siomedig; i’r ",
+    "after": "ddigwyddodd.",
+    "answer": "gwrthwyneb",
+    "outcome": "NONE"
+  }
+]

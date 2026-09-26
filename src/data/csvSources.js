@@ -1,4 +1,4 @@
-// src/data/csvSources.js
+import { RUNTIME_PACK_SOURCE_FILES, RUNTIME_PACK_SOURCES } from "./packRegistry.js";
 import { ACTIVE_DYSGU_UNITS } from "./dysguUnitRegistry.js";
 
 export const PROTECTED_MANUAL_CSV_FILES = [
@@ -8,9 +8,8 @@ export const PROTECTED_MANUAL_CSV_FILES = [
 ];
 
 const REGISTERED_UNIT_FILES = ACTIVE_DYSGU_UNITS.map((unit) => unit.file);
-const REGISTERED_PACK_FILES = ["Mynediad-De/packs/myn-de-p01-places.tsv"];
+const REGISTERED_PACK_FILES = RUNTIME_PACK_SOURCE_FILES;
 
-// Runtime dataset list for all delimited files (CSV and TSV).
 export const ALL_RUNTIME_DATA_FILES = [
   ...new Set([
     ...PROTECTED_MANUAL_CSV_FILES,
@@ -19,7 +18,6 @@ export const ALL_RUNTIME_DATA_FILES = [
   ]),
 ];
 
-// Backwards-compatible alias while call-sites migrate.
 export const ALL_CSV_FILES = ALL_RUNTIME_DATA_FILES;
 
 export const CSV_SOURCE_META = {
@@ -39,12 +37,5 @@ export const CSV_SOURCE_META = {
       },
     ])
   ),
-  "Mynediad-De/packs/myn-de-p01-places.tsv": {
-    sourceType: "dysgu-pack",
-    course: "mynediad",
-    level: "mynediad",
-    dialect: "south",
-    unit: "p01",
-    pack: "myn-de-p01-places",
-  },
+  ...Object.fromEntries(RUNTIME_PACK_SOURCES.map(({ file, ...meta }) => [file, meta])),
 };

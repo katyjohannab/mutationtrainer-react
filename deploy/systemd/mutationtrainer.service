@@ -1,5 +1,5 @@
 [Unit]
-Description=Mutation Trainer (Vite Preview + Admin API)
+Description=Mutation Trainer (Node HTTP + Admin API)
 After=network.target
 
 [Service]
@@ -18,7 +18,7 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=full
 ProtectHome=true
-ReadWritePaths=/srv/mutationtrainer-react/public/data
+ReadWritePaths=/srv/mutationtrainer-react/public/data /srv/mutationtrainer-react/.content-revisions
 
 [Install]
 WantedBy=multi-user.target

@@ -1,109 +1,48 @@
-# Hyfforddwr Treiglad (Welsh Mutation Trainer)
+# Treiglap — Welsh Mutation Trainer
 
-Last updated: 2026-02-18
+Last updated: 2026-09-26
 
-React/Vite flashcard trainer focused on Welsh mutation practice.
+React/Vite mutation practice for an adult learner pilot, retaining a broad range of Welsh contexts. The current bank contains 3,499 cards; structural checks pass, but the Welsh editorial audit remains in progress.
 
-## Start Here (Humans + Agents)
-Read first:
-- `docs/DOCS_INDEX.md`
-- `docs/AGENT_HANDOFF.md`
+Start with the [improvement plan](docs/IMPROVEMENT_PLAN.md), [Phase 1 delivery](docs/PHASE_1_DELIVERY.md) and [docs index](docs/DOCS_INDEX.md). Preserve the existing design; ask the owner before visual changes. Useful topic/construction practice and learner-designed filtered sessions are central. Coursebook unit references must not turn into a compulsory session for every unit.
 
-## Active Runtime Model (CSV-First)
-Runtime loads:
-- protected manual CSVs in `public/data`
-- registered Dysgu Cymraeg unit CSVs from `src/data/dysguUnitRegistry.js`
+## Run locally
 
-Source list and metadata stamping:
-- `src/data/csvSources.js`
-- `src/services/loadCsv.js`
+Use Node 22.18 or later in the Node 22 line and the lockfile:
 
-## Content Authoring (Current)
-Use GPT/manual workflow to create per-unit CSV files under `public/data/...` and register each unit in:
-- `src/data/dysguUnitRegistry.js`
-
-Required commands:
-```bash
-npm run verify:manual-csv
-npm run verify:csv-sources
-npm run check:docs
-npm run test -- --run
-npm run build
-```
-
-## UI Model
-Filter rail now uses:
-- `Dysgu Cymraeg Courses` (course -> dialect -> unit)
-- `Starter Packs`
-- `Advanced Filters`
-
-## Parked Infrastructure
-`src/content-gen/*` is kept for future scale but is currently parked and not part of active runtime workflow.
-
-## Development
-```bash
-npm install
+```powershell
+npm ci
 npm run dev
-npm run lint
-npm run test -- --run
-npm run build
 ```
 
-## Operator Quickstart (Admin Mode, VPS-First)
-For writable admin editing in production-like setup:
-1. Set `WM_ADMIN_PASSWORD`
-2. Build the app (`npm run build`)
-3. Start server runtime (`npm run start:prod`)
-4. Ensure `public/data/**` is writable and persistent
+Open the local address Vite prints. If dependencies are already installed, `npm run dev` is sufficient. If the Windows npm launcher is broken, the installed app can be started directly with `node node_modules/vite/bin/vite.js`; repair npm separately before dependency installation.
 
-Full runbook:
-- `docs/DEPLOY_ADMIN_MODE.md`
-- systemd template: `deploy/systemd/mutationtrainer.service`
-- env template: `deploy/systemd/mutationtrainer.env.example`
+For a built local app:
 
-## Admin Mode (Simple Setup + Daily Use)
-
-### Set Password Permanently (Windows)
-Run once:
-```powershell
-setx WM_ADMIN_PASSWORD "your-strong-password"
-```
-Important:
-- Close and reopen terminal/VS Code after running `setx`.
-- `setx` does not update the current shell immediately.
-
-Verify:
-```powershell
-echo $env:WM_ADMIN_PASSWORD
-```
-
-### Temporary Password (Current Terminal Only)
-```powershell
-$env:WM_ADMIN_PASSWORD="your-strong-password"
-```
-
-### Start Admin-Enabled Runtime
 ```powershell
 npm run build
 npm run start:prod
 ```
-Open:
-- `http://localhost:4173/mutationtrainer-react/`
 
-### Use Admin Mode (Step-by-Step)
-1. Open the app and practice normally.
-2. Click the `Admin` badge near the `Noticed a mistake?` area.
-3. Enter your admin password and sign in.
-4. Click `Edit current card`.
-5. Fix fields you want (`before`, `base`, `after`, `answer`, `outcome`, `trigger`, `category`, `translate`, `translateSent`, `why`, `whyCym`).
-6. Click `Save to source`.
-7. Confirm you see `Saved to source file.`.
-8. Click next card and continue.
+Open the address printed by the server (normally `http://127.0.0.1:4173/`). `WM_BASE_PATH` changes the path and must be the same at build and startup. `start:prod` now runs the Node HTTP server, not Vite preview. It defaults to local access; this command alone does not publish a website.
 
-### Quick Check: Is Server Password Configured?
+## Content and editing
+
+The runtime source list is `src/data/csvSources.js`, combining protected manual files, registered course-derived files and `src/data/packRegistry.js` topic packs. `src/services/cardFormat.js` supplies the shared content contract. The generator under `src/content-gen/` remains parked.
+
+For local browser editing, set `WM_ADMIN_PASSWORD` in the git-ignored `.env.local` or the current process environment, then restart the local server. Do not print or commit the password. The existing Admin badge opens login and editing. A save validates, backs up and replaces the canonical file; a fresh page sees it immediately. Without a password the learner app still works and admin login is unavailable.
+
+The [admin runbook](docs/DEPLOY_ADMIN_MODE.md) explains revision conflicts, backups, restoration and persistent data. GitHub Pages remains static: make corrections locally, validate and publish through the normal repository workflow. Choosing and setting up a writable hosted service remains a separate task with the owner.
+
+## Checks
+
 ```powershell
-Invoke-RestMethod http://localhost:4173/api/admin/session
+npm run lint
+npm run verify:manual-csv
+npm run verify:csv-sources
+npm run check:docs
+npm test -- --run
+npm run build
 ```
-Expected:
-- `configured: True` means password is set.
-- `authenticated: False` means not logged in yet (normal before login).
+
+Missing editorial metadata is reported separately from structural failures. A successful build is not Welsh linguistic approval. See [content workflow](docs/CONTENT_WORKFLOW.md) and [agent handoff](docs/AGENT_HANDOFF.md) before changing teaching material.

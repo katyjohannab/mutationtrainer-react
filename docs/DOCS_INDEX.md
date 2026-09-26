@@ -1,6 +1,6 @@
 # Docs Index
 
-Last updated: 2026-02-18
+Last updated: 2026-09-26
 
 Use this file as the starting point for any human or agent onboarding.
 
@@ -14,6 +14,12 @@ Use this file as the starting point for any human or agent onboarding.
 - `docs/DEPLOY_ADMIN_MODE.md`
 - `docs/TAXONOMY.md`
 - `src/DEFINITION_OF_DONE.md`
+
+## Audit and Improvement Planning
+
+- [Audit and refresher — 26 September 2026](AUDIT_2026-09-26.md): historical baseline, confirmed defects, content inventory and verification limits.
+- [Improvement plan](IMPROVEMENT_PLAN.md): agreed full-bank/topic/custom-session direction and remaining phases.
+- [Phase 1 delivery](PHASE_1_DELIVERY.md): completed local changes, validation boundary and reference inventory.
 
 ## 2) Parked Docs (Retained, Not Active)
 These are intentionally retained for future scale-up but are not part of current day-to-day operation:

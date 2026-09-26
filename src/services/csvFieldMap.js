@@ -63,6 +63,7 @@ export const CANON_MAP = {
   tags: "tags",
   location: "location",
   frameid: "frameId",
+  template: "template",
 };
 
 export const ADMIN_EDITABLE_FIELDS = [

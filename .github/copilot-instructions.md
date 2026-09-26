@@ -1,6 +1,6 @@
 ﻿# Copilot Instructions
 
-Last updated: 2026-02-14
+Last updated: 2026-09-26
 
 ## Project Snapshot
 React/Vite Welsh mutation trainer.
@@ -13,15 +13,14 @@ Runtime data is manual-CSV-first and protected:
 ## Important Commands
 ```bash
 npm run verify:manual-csv
-npm run validate:unit-data
+npm run verify:csv-sources
 npm run lint
 npm run test -- --run
 npm run build
 ```
 
 ## Active Authoring Model
-New coursebook extraction is authored in:
-- `src/content-gen/unit-data/<level>/<dialect>/unit<N>.js`
+The generator is parked. Author validated CSV/TSV and register topic packs or course-derived sources through `src/data/csvSources.js`. Follow `docs/IMPROVEMENT_PLAN.md`: retain/correct the full bank, support custom sessions, and do not require one session per unit. Ask the owner before any design change.
 
 Use:
 - `docs/AI_DATA_ENTRY_PROMPT.md`

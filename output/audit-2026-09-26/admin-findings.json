@@ -1,0 +1,32 @@
+{
+  "tsv": {
+    "unrelatedCellsChanged": 90,
+    "unrelatedRowsChanged": 65,
+    "examples": [
+      {
+        "row": 76,
+        "column": "WhyEng",
+        "before": "The possessive \"eu\" does not usually cause any mutation on the word that follows",
+        "after": "\"The possessive \"\"eu\"\" does not usually cause any mutation on the word that follows\""
+      },
+      {
+        "row": 78,
+        "column": "WhyEng",
+        "before": "The possessive \"eu\" does not usually cause any mutation on the word that follows",
+        "after": "\"The possessive \"\"eu\"\" does not usually cause any mutation on the word that follows\""
+      },
+      {
+        "row": 342,
+        "column": "sentence_with_gap",
+        "before": " [ ] i ddim.",
+        "after": "\" [ ] i ddim.\""
+      }
+    ]
+  },
+  "preview": {
+    "sourceChanged": true,
+    "servedUpdated": false,
+    "served": "CardId,Base,Answer,Outcome\np-audit,ci,ci,NONE\n",
+    "source": "CardId,Base,Answer,Outcome\np-audit,ci,gi,NONE"
+  }
+}

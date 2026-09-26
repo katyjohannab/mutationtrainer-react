@@ -54,7 +54,7 @@ function matchesCategory(cellValue, presetCategory) {
 
 function mutationKeyFromOutcome(value) {
   const raw = (value ?? "").toString().trim().toLowerCase();
-  if (!raw) return "none";
+  if (!raw) return null;
   
   if (raw === "soft") return "soft";
   if (raw === "nasal") return "nasal";
@@ -65,7 +65,7 @@ function mutationKeyFromOutcome(value) {
   if (letters.startsWith("nm")) return "nasal";
   if (letters.startsWith("am")) return "aspirate";
   if (letters === "none") return "none";
-  return "none";
+  return null;
 }
 
 export function applyFilters(rows, state) {
